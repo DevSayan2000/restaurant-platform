@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/restaurant_db
+    username: mysql
+    password: mysql
+    driver-class-name: com.mysql.cj.jdbc.Driver

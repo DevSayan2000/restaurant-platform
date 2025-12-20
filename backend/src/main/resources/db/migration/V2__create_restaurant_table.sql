@@ -1,0 +1,8 @@
+CREATE TABLE restaurant (
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    city VARCHAR(100) NOT NULL,
+    area VARCHAR(100),
+    cuisine VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
