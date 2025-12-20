@@ -18,7 +18,7 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping
-    public ResponseEntity<Void> createRestaurant(
+    public ResponseEntity<RestaurantResponse> createRestaurant(
             @RequestBody CreateRestaurantRequest request) {
 
         restaurantService.createRestaurant(request);

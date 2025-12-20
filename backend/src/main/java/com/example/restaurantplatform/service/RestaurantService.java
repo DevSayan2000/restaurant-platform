@@ -21,7 +21,7 @@ public class RestaurantService {
     private final RatingRepository ratingRepository;
     private final FootfallRepository footfallRepository;
 
-    public void createRestaurant(CreateRestaurantRequest request) {
+    public RestaurantResponse createRestaurant(CreateRestaurantRequest request) {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(request.getName());
         restaurant.setCity(request.getCity());
@@ -29,6 +29,7 @@ public class RestaurantService {
         restaurant.setCuisine(request.getCuisine());
 
         restaurantRepository.save(restaurant);
+        return null;
     }
 
     public List<RestaurantResponse> getRestaurantsByCity(String city) {
