@@ -8,6 +8,8 @@ import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +23,7 @@ public class RestaurantService {
     private final RatingRepository ratingRepository;
     private final FootfallRepository footfallRepository;
 
-    public RestaurantResponse createRestaurant(CreateRestaurantRequest request) {
+    public ResponseEntity<String> createRestaurant(CreateRestaurantRequest request) {
         Restaurant restaurant = new Restaurant();
         restaurant.setName(request.getName());
         restaurant.setCity(request.getCity());
@@ -29,7 +31,7 @@ public class RestaurantService {
         restaurant.setCuisine(request.getCuisine());
 
         restaurantRepository.save(restaurant);
-        return null;
+        return new ResponseEntity<>("Success", HttpStatus.CREATED);
     }
 
     public List<RestaurantResponse> getRestaurantsByCity(String city) {

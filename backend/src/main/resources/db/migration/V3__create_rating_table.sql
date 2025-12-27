@@ -1,5 +1,5 @@
 CREATE TABLE rating (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     restaurant_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     rating INT CHECK (rating BETWEEN 1 AND 5),

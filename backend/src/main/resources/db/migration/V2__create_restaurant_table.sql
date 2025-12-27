@@ -1,5 +1,5 @@
 CREATE TABLE restaurant (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     city VARCHAR(100) NOT NULL,
     area VARCHAR(100),

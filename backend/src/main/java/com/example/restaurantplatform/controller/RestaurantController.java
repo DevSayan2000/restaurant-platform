@@ -4,7 +4,6 @@ import com.example.restaurantplatform.dto.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.RestaurantResponse;
 import com.example.restaurantplatform.service.RestaurantService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,11 +17,10 @@ public class RestaurantController {
     private final RestaurantService restaurantService;
 
     @PostMapping
-    public ResponseEntity<RestaurantResponse> createRestaurant(
+    public ResponseEntity<String> createRestaurant(
             @RequestBody CreateRestaurantRequest request) {
 
-        restaurantService.createRestaurant(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return restaurantService.createRestaurant(request);
     }
 
     @GetMapping

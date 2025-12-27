@@ -1,5 +1,5 @@
 CREATE TABLE footfall (
-    id BIGSERIAL PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     restaurant_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
     visit_date DATE NOT NULL,
