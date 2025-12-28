@@ -16,6 +16,7 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
+    // POST /api/restaurants
     @PostMapping
     public ResponseEntity<String> createRestaurant(
             @RequestBody CreateRestaurantRequest request) {
@@ -23,8 +24,16 @@ public class RestaurantController {
         return restaurantService.createRestaurant(request);
     }
 
+    // GET /api/restaurants
     @GetMapping
-    public List<RestaurantResponse> getRestaurants(
+    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity() {
+
+        return restaurantService.getRestaurants();
+    }
+
+    // GET /api/restaurants?city=Durgapur
+    @GetMapping(params = "city")
+    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity(
             @RequestParam String city) {
 
         return restaurantService.getRestaurantsByCity(city);
