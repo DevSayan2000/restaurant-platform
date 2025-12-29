@@ -1,4 +1,4 @@
-package com.example.restaurantplatform.dto;
+package com.example.restaurantplatform.dto.rating;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;

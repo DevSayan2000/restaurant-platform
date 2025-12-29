@@ -1,5 +1,6 @@
 package com.example.restaurantplatform.entity;
 
+import com.example.restaurantplatform.enums.FoodType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,12 +22,18 @@ public class Restaurant
     private Long id;
 
     @Column(nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String city;
 
-    private String area;
+    @Column(nullable = false)
+    private FoodType foodType;
+
+    @Column(nullable = false)
     private String cuisine;
 
     @Column(name = "created_at")

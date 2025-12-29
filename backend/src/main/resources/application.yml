@@ -14,3 +14,6 @@ spring:
   docker:
     compose:
       enabled: false
+jwt:
+  secret: "restaurant-platform-secret-key-very-long"
+  expiration: 3600000 # 1 hour (ms)

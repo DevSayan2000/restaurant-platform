@@ -1,7 +1,7 @@
-package com.example.restaurantplatform.service;
+package com.example.restaurantplatform.service.interfaces;
 
-import com.example.restaurantplatform.dto.CreateUserRequest;
-import com.example.restaurantplatform.dto.UserResponse;
+import com.example.restaurantplatform.dto.user.CreateUserRequest;
+import com.example.restaurantplatform.dto.user.UserResponse;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;

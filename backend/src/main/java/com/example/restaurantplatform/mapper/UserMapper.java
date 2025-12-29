@@ -1,4 +1,4 @@
 package com.example.restaurantplatform.mapper;
 
-public class FootfallMapper {
+public class UserMapper {
 }

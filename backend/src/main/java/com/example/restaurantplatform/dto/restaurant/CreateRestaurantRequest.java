@@ -1,5 +1,6 @@
-package com.example.restaurantplatform.dto;
+package com.example.restaurantplatform.dto.restaurant;
 
+import com.example.restaurantplatform.enums.FoodType;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,6 +9,6 @@ import lombok.Setter;
 public class CreateRestaurantRequest {
     private String name;
     private String city;
-    private String area;
+    private FoodType foodType;
     private String cuisine;
 }

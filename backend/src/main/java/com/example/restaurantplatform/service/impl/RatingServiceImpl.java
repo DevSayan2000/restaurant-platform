@@ -1,13 +1,14 @@
 package com.example.restaurantplatform.service.impl;
 
-import com.example.restaurantplatform.dto.CreateRatingRequest;
+import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.entity.Rating;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
-import com.example.restaurantplatform.service.RatingService;
+import com.example.restaurantplatform.service.interfaces.RatingService;
+import com.example.restaurantplatform.util.CommonUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,18 +23,21 @@ public class RatingServiceImpl implements RatingService {
     private final RatingRepository ratingRepository;
     private final RestaurantRepository restaurantRepository;
     private final UserRepository userRepository;
+    private final CommonUtils commonUtils;
 
     @Override
-    public ResponseEntity<String> addOrUpdateRating(Long restaurantId, Long userId, CreateRatingRequest request) {
+    public ResponseEntity<String> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
+
+        String email = commonUtils.getEmailFromAuthToken().get("email");
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
 
-        User user = userRepository.findById(userId)
+        User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new IllegalArgumentException("User not found"));
 
         Rating rating = ratingRepository
-                .findByRestaurantIdAndUserId(restaurantId, userId)
+                .findByRestaurantIdAndUserId(restaurantId, user.getId())
                 .orElseGet(Rating::new);
 
         rating.setRestaurant(restaurant);
