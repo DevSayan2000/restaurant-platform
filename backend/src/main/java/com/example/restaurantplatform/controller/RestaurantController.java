@@ -14,7 +14,7 @@ import java.util.List;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/api/restaurant")
+@RequestMapping("/api/restaurants")
 @RequiredArgsConstructor
 public class RestaurantController {
 
@@ -25,7 +25,7 @@ public class RestaurantController {
             summary = "Create restaurant",
             description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
     )
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @PostMapping
     public ResponseEntity<String> createRestaurant(
             @RequestBody CreateRestaurantRequest request) {
@@ -38,9 +38,9 @@ public class RestaurantController {
             summary = "Get restaurant",
             description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
     )
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @GetMapping
-    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity() {
+    public ResponseEntity<List<RestaurantResponse>> getRestaurants() {
 
         return restaurantService.getRestaurants();
     }
@@ -56,5 +56,18 @@ public class RestaurantController {
             @RequestParam String city) {
 
         return restaurantService.getRestaurantsByCity(city);
+    }
+
+    // DELETE /api/restaurant/{restaurantId}
+    @Operation(
+            summary = "Delete restaurant",
+            description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
+    )
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
+    @DeleteMapping("/{restaurantId}")
+    public ResponseEntity<String> deleteRestaurant(
+            @PathVariable Long restaurantId) {
+
+        return restaurantService.deleteRestaurant(restaurantId);
     }
 }

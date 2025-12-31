@@ -28,7 +28,7 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public ResponseEntity<String> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
 
-        String email = commonUtils.getEmailFromAuthToken().get("email");
+        String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
@@ -40,13 +40,23 @@ public class RatingServiceImpl implements RatingService {
                 .findByRestaurantIdAndUserId(restaurantId, user.getId())
                 .orElseGet(Rating::new);
 
-        rating.setRestaurant(restaurant);
-        rating.setUser(user);
-        rating.setRating(request.getRating());
-        rating.setReview(request.getReview());
+        if (rating.getRating() == null || rating.getRating() == 0) {
+            rating.setRestaurant(restaurant);
+            rating.setUser(user);
+            rating.setRating(request.getRating());
+            rating.setReview(request.getReview());
+            ratingRepository.save(rating);
+            return new ResponseEntity<>("Rating/Review added successfully", HttpStatus.CREATED);
+        }
 
+        if (request.getRating() != null) {
+            rating.setRating(request.getRating());
+        }
+        if (request.getReview() != null &&  !request.getReview().isEmpty()) {
+            rating.setReview(request.getReview());
+        }
         ratingRepository.save(rating);
-        return new ResponseEntity<>("Rating added successfully", HttpStatus.CREATED);
+        return new ResponseEntity<>("Rating/Review updated successfully", HttpStatus.OK);
     }
 
     @Override

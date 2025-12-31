@@ -13,4 +13,6 @@ public interface RestaurantService {
     ResponseEntity<List<RestaurantResponse>> getRestaurants();
 
     ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity(String city);
+
+    ResponseEntity<String> deleteRestaurant(Long restaurantId);
 }

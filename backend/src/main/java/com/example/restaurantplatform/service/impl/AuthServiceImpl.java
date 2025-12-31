@@ -16,8 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -44,14 +42,11 @@ public class AuthServiceImpl implements AuthService {
         return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<UserProfileResponse>> me() {
-        return new ResponseEntity<>(userRepository.findAll()
-                .stream()
-                .map(this::toResponse)
-                .toList(), HttpStatus.OK);
-    }
-
-    private UserProfileResponse toResponse(User user) {
-        return new UserProfileResponse(user.getName(), user.getEmail());
+    public ResponseEntity<UserProfileResponse> me() {
+        String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
+        String role = commonUtils.getEmailAndRoleFromAuthToken().get("role");
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));
+        UserProfileResponse userProfileResponse = new UserProfileResponse(user.getId(), user.getName(), user.getEmail(), role);
+        return new ResponseEntity<>(userProfileResponse, HttpStatus.OK);
     }
 }

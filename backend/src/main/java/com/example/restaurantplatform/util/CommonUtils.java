@@ -13,7 +13,7 @@ import java.util.Map;
 @Component
 public class CommonUtils {
 
-    public Map<String,String> getEmailFromAuthToken() {
+    public Map<String,String> getEmailAndRoleFromAuthToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);

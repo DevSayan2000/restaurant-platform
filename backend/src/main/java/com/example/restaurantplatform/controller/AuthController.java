@@ -11,8 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -34,9 +32,8 @@ public class AuthController {
             summary = "Get login details",
             description = "Fetches login details like name, email"
     )
-    @PreAuthorize("hasRole('ROLE_SUPER_ADMIN')")
     @GetMapping("/me")
-    public ResponseEntity<List<UserProfileResponse>> me() {
+    public ResponseEntity<UserProfileResponse> me() {
         return authService.me();
     }
 }

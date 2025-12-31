@@ -1,10 +1,11 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/restaurant_db
-    username: root
+    url: jdbc:postgresql://localhost:5432/restaurant_db
+    username: postgres
     password: sayan@12345
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
     show-sql: true
@@ -16,4 +17,4 @@ spring:
       enabled: false
 jwt:
   secret: "restaurant-platform-secret-key-very-long"
-  expiration: 3600000 # 1 hour (ms)
+  expiration: 14400000 # 4 hours (ms)

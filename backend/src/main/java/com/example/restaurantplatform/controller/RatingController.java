@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/api/restaurants/{restaurantId}/rating")
+@RequestMapping("/api/restaurants/{restaurantId}/ratings")
 @RequiredArgsConstructor
 public class RatingController {
 
@@ -23,7 +23,7 @@ public class RatingController {
             summary = "Add or update rating",
             description = "Accessible only by ROLE_USER"
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<String> addOrUpdateRating(
             @PathVariable Long restaurantId,
@@ -37,7 +37,7 @@ public class RatingController {
             summary = "Get average rating",
             description = "Accessible only by ROLE_USER"
     )
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/average")
     public ResponseEntity<Double> getAverageRating(@PathVariable Long restaurantId) {
         return ratingService.getAverageRating(restaurantId);
