@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -19,8 +18,8 @@ public class AuthController {
     private final AuthService authService;
 
     @Operation(
-            summary = "Create login",
-            description = "Creates login for Restaurant_Admin, User"
+            summary = "Login your account",
+            description = "Login as one of Super_Admin, Restaurant_Admin, User"
     )
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
@@ -29,7 +28,7 @@ public class AuthController {
     }
 
     @Operation(
-            summary = "Get login details",
+            summary = "Get your login details",
             description = "Fetches login details like name, email"
     )
     @GetMapping("/me")

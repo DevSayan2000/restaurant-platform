@@ -101,7 +101,9 @@ public class UserServiceImpl implements UserService {
                 restaurant.getCity(),
                 restaurant.getFoodType(),
                 restaurant.getCuisine(),
-                avgRating
+                avgRating,
+                null,
+                null
         );
     }
 }

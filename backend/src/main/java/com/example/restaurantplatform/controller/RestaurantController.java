@@ -20,10 +20,10 @@ public class RestaurantController {
 
     private final RestaurantService restaurantService;
 
-    // POST /api/restaurant
+    // POST /api/restaurants
     @Operation(
             summary = "Create restaurant",
-            description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
+            description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @PostMapping
@@ -33,10 +33,10 @@ public class RestaurantController {
         return restaurantService.createRestaurant(request);
     }
 
-    // GET /api/restaurant
+    // GET /api/restaurants
     @Operation(
             summary = "Get restaurant",
-            description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
+            description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @GetMapping
@@ -45,10 +45,10 @@ public class RestaurantController {
         return restaurantService.getRestaurants();
     }
 
-    // GET /api/restaurant?city=Durgapur
+    // GET /api/restaurants?city=Durgapur
     @Operation(
             summary = "Get restaurant by city",
-            description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
+            description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_RESTAURANT_ADMIN')")
     @GetMapping(params = "city")
@@ -58,10 +58,10 @@ public class RestaurantController {
         return restaurantService.getRestaurantsByCity(city);
     }
 
-    // DELETE /api/restaurant/{restaurantId}
+    // DELETE /api/restaurants/{restaurantId}
     @Operation(
             summary = "Delete restaurant",
-            description = "Accessible only by ROLE_SUPER_ADMIN, ROLE_RESTAURANT_ADMIN"
+            description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @DeleteMapping("/{restaurantId}")

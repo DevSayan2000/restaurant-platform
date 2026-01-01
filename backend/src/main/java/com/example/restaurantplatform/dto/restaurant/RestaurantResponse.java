@@ -1,10 +1,14 @@
 package com.example.restaurantplatform.dto.restaurant;
 
 import com.example.restaurantplatform.enums.FoodType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -16,4 +20,6 @@ public class RestaurantResponse {
     private FoodType foodType;
     private String cuisine;
     private Double avgRating;
+    private String createdBy;
+    private LocalDateTime createdDate;
 }

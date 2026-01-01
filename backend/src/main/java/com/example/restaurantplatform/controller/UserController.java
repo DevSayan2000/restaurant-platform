@@ -22,7 +22,7 @@ public class UserController {
     // POST /api/users
     @Operation(
             summary = "Create user",
-            description = "Creates ROLE_RESTAURANT_ADMIN/ROLE_USER"
+            description = "Creates Restaurant_Admin/User"
     )
     @PostMapping
     public ResponseEntity<String> createUser(
@@ -33,8 +33,8 @@ public class UserController {
 
     // GET /api/users
     @Operation(
-            summary = "Get user",
-            description = "Get ROLE_RESTAURANT_ADMIN/ROLE_USER"
+            summary = "Get all users",
+            description = "Accessible only by Super_Admin"
     )
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping
@@ -45,8 +45,8 @@ public class UserController {
 
     // GET /api/users/restaurants
     @Operation(
-            summary = "Get user",
-            description = "Get ROLE_RESTAURANT_ADMIN/ROLE_USER"
+            summary = "Get all restaurant details for users",
+            description = "Accessible only by User"
     )
     @PreAuthorize("hasRole('USER')")
     @GetMapping("restaurants")
@@ -57,8 +57,8 @@ public class UserController {
 
     // DELETE /api/users
     @Operation(
-            summary = "Create user",
-            description = "Creates ROLE_RESTAURANT_ADMIN/ROLE_USER"
+            summary = "Delete user",
+            description = "Accessible only by Super_Admin"
     )
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{userId}")

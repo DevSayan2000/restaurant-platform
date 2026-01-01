@@ -3,7 +3,7 @@ package com.example.restaurantplatform.security.user;
 import com.example.restaurantplatform.entity.User;
 import com.example.restaurantplatform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.NonNull;
+import org.springframework.lang.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

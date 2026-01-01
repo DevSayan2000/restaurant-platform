@@ -74,7 +74,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return new ResponseEntity<>(restaurantRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
-                .map(this::toResponse)
+                .map(this::toResponseForSA)
                 .toList(), HttpStatus.OK);
     }
 
@@ -92,7 +92,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return new ResponseEntity<>(restaurantRepository.findByCity(city)
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
-                .map(this::toResponse)
+                .map(this::toResponseForSA)
                 .toList(), HttpStatus.OK);
     }
 
@@ -105,7 +105,24 @@ public class RestaurantServiceImpl implements RestaurantService {
                 restaurant.getCity(),
                 restaurant.getFoodType(),
                 restaurant.getCuisine(),
-                avgRating
+                avgRating,
+                null,
+                null
+        );
+    }
+
+    private RestaurantResponse toResponseForSA(Restaurant restaurant) {
+        Double avgRating = ratingRepository.findAverageRating(restaurant.getId());
+
+        return new RestaurantResponse(
+                restaurant.getId(),
+                restaurant.getName(),
+                restaurant.getCity(),
+                restaurant.getFoodType(),
+                restaurant.getCuisine(),
+                avgRating,
+                restaurant.getEmail(),
+                restaurant.getCreatedAt()
         );
     }
 }

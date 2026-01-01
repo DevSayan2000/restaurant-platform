@@ -4,6 +4,7 @@ import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.entity.Rating;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
+import com.example.restaurantplatform.enums.Role;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,6 +65,24 @@ public class RatingServiceImpl implements RatingService {
     @Override
     @Transactional(readOnly = true)
     public ResponseEntity<Double> getAverageRating(Long restaurantId) {
+        verifyRestaurantExistsAndEmailIdAccess(restaurantId);
         return new ResponseEntity<>(ratingRepository.findAverageRating(restaurantId), HttpStatus.OK);
+    }
+
+    public ResponseEntity<List<String>> getAllReviews(Long restaurantId) {
+        verifyRestaurantExistsAndEmailIdAccess(restaurantId);
+        return new ResponseEntity<>(ratingRepository.findAllReviewsByRestaurantId(restaurantId), HttpStatus.OK);
+    }
+
+    private void verifyRestaurantExistsAndEmailIdAccess(Long restaurantId) {
+        String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
+        String role = commonUtils.getEmailAndRoleFromAuthToken().get("role");
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+        if (restaurant == null){
+            throw new IllegalArgumentException("Restaurant not found");
+        }
+        if (role.equals(Role.ROLE_RESTAURANT_ADMIN.name()) && !restaurant.getEmail().equals(email)) {
+            throw new IllegalArgumentException("User not authorized to access the restaurant");
+        }
     }
 }
