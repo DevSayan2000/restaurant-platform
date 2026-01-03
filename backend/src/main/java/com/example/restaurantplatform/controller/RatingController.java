@@ -2,14 +2,21 @@ package com.example.restaurantplatform.controller;
 
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.service.interfaces.RatingService;
+import com.example.restaurantplatform.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 
 @SecurityRequirement(name = "bearerAuth")
@@ -25,6 +32,29 @@ public class RatingController {
             summary = "Add or update rating",
             description = "Accessible only by User"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully added or updated ratings",
+                    content = @Content(
+                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<String> addOrUpdateRating(
@@ -39,6 +69,29 @@ public class RatingController {
             summary = "Get average rating",
             description = "Accessible by Super_Admin/Restaurant_Admin/User"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched average ratings for a restaurant",
+                    content = @Content(
+                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                            schema = @Schema(implementation = Double.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN','USER')")
     @GetMapping("/average")
     public ResponseEntity<Double> getAverageRating(@PathVariable Long restaurantId) {
@@ -50,6 +103,29 @@ public class RatingController {
             summary = "Get all reviews for that restaurant",
             description = "Accessible by Super_Admin/Restaurant_Admin/User"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched all reviews for a restaurant",
+                    content = @Content(
+                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                            schema = @Schema(implementation = Arrays.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN','USER')")
     @GetMapping("/reviews")
     public ResponseEntity<List<String>> getAllReviews(@PathVariable Long restaurantId) {

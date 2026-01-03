@@ -2,10 +2,16 @@ package com.example.restaurantplatform.controller;
 
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
+import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +31,29 @@ public class RestaurantController {
             summary = "Create restaurant",
             description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "201",
+                    description = "Successfully created a restaurant",
+                    content = @Content(
+                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @PostMapping
     public ResponseEntity<String> createRestaurant(
@@ -38,6 +67,29 @@ public class RestaurantController {
             summary = "Get restaurant",
             description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched all restaurant details",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = RestaurantResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @GetMapping
     public ResponseEntity<List<RestaurantResponse>> getRestaurants() {
@@ -50,6 +102,29 @@ public class RestaurantController {
             summary = "Get restaurant by city",
             description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched all restaurant details for a city",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = RestaurantResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_RESTAURANT_ADMIN')")
     @GetMapping(params = "city")
     public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity(
@@ -63,6 +138,29 @@ public class RestaurantController {
             summary = "Delete restaurant",
             description = "Accessible only by Super_Admin, Restaurant_Admin"
     )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully deleted a restaurant",
+                    content = @Content(
+                            mediaType = MediaType.TEXT_PLAIN_VALUE,
+                            schema = @Schema(implementation = String.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @DeleteMapping("/{restaurantId}")
     public ResponseEntity<String> deleteRestaurant(

@@ -5,6 +5,9 @@ import com.example.restaurantplatform.entity.Rating;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
 import com.example.restaurantplatform.enums.Role;
+import com.example.restaurantplatform.exception.ErrorCode;
+import com.example.restaurantplatform.exception.ErrorMessage;
+import com.example.restaurantplatform.exception.RestaurantPlatformException;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
@@ -28,16 +31,15 @@ public class RatingServiceImpl implements RatingService {
     private final UserRepository userRepository;
     private final CommonUtils commonUtils;
 
-    @Override
     public ResponseEntity<String> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
 
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
-        Restaurant restaurant = restaurantRepository.findById(restaurantId)
-                .orElseThrow(() -> new IllegalArgumentException("Restaurant not found"));
-
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+                .orElseThrow(() -> new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND));
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId)
+                .orElseThrow(() -> new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND));
 
         Rating rating = ratingRepository
                 .findByRestaurantIdAndUserId(restaurantId, user.getId())
@@ -49,7 +51,7 @@ public class RatingServiceImpl implements RatingService {
             rating.setRating(request.getRating());
             rating.setReview(request.getReview());
             ratingRepository.save(rating);
-            return new ResponseEntity<>("Rating/Review added successfully", HttpStatus.CREATED);
+            return new ResponseEntity<>("Rating/Review added successfully", HttpStatus.OK);
         }
 
         if (request.getRating() != null) {
@@ -62,8 +64,6 @@ public class RatingServiceImpl implements RatingService {
         return new ResponseEntity<>("Rating/Review updated successfully", HttpStatus.OK);
     }
 
-    @Override
-    @Transactional(readOnly = true)
     public ResponseEntity<Double> getAverageRating(Long restaurantId) {
         verifyRestaurantExistsAndEmailIdAccess(restaurantId);
         return new ResponseEntity<>(ratingRepository.findAverageRating(restaurantId), HttpStatus.OK);
@@ -79,10 +79,10 @@ public class RatingServiceImpl implements RatingService {
         String role = commonUtils.getEmailAndRoleFromAuthToken().get("role");
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         if (restaurant == null){
-            throw new IllegalArgumentException("Restaurant not found");
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND);
         }
         if (role.equals(Role.ROLE_RESTAURANT_ADMIN.name()) && !restaurant.getEmail().equals(email)) {
-            throw new IllegalArgumentException("User not authorized to access the restaurant");
+            throw new RestaurantPlatformException(ErrorCode.UNAUTHORIZED, ErrorMessage.UNAUTHORIZED);
         }
     }
 }

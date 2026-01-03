@@ -4,6 +4,9 @@ import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.enums.Role;
+import com.example.restaurantplatform.exception.ErrorCode;
+import com.example.restaurantplatform.exception.ErrorMessage;
+import com.example.restaurantplatform.exception.RestaurantPlatformException;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.service.interfaces.RestaurantService;
@@ -13,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -33,7 +35,7 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Restaurant restaurant = restaurantRepository.findByEmailAndName(email, request.getName()).orElse(null);
         if (restaurant != null){
-            return new ResponseEntity<>("Restaurant already exists", HttpStatus.CONFLICT);
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_ALREADY_EXISTS, ErrorMessage.RESTAURANT_ALREADY_EXISTS);
         }
 
         restaurant = new Restaurant();
@@ -50,12 +52,14 @@ public class RestaurantServiceImpl implements RestaurantService {
     public ResponseEntity<String> deleteRestaurant(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         if (restaurant == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Restaurant not found");
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND);
         }
+
         String email =  commonUtils.getEmailAndRoleFromAuthToken().get("email");
         if (!restaurant.getEmail().equals(email)) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Restaurant not allowed to be deleted");
+            throw new RestaurantPlatformException(ErrorCode.FORBIDDEN, ErrorMessage.RESTAURANT_NOT_ALLOWED_TO_BE_DELETED);
         }
+
         restaurantRepository.delete(restaurant);
         return new ResponseEntity<>("Restaurant deleted successfully", HttpStatus.OK);
     }

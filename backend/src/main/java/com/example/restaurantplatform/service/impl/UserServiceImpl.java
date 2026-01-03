@@ -6,6 +6,9 @@ import com.example.restaurantplatform.dto.user.UserResponse;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
 import com.example.restaurantplatform.enums.Role;
+import com.example.restaurantplatform.exception.ErrorCode;
+import com.example.restaurantplatform.exception.ErrorMessage;
+import com.example.restaurantplatform.exception.RestaurantPlatformException;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
@@ -14,10 +17,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Comparator;
 import java.util.List;
@@ -35,14 +36,13 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<String> createUser(CreateUserRequest request) {
 
         Role requestedRole = request.getRole();
-        if (requestedRole != Role.ROLE_USER &&
-                requestedRole != Role.ROLE_RESTAURANT_ADMIN) {
-            throw new AccessDeniedException("Invalid role");
+        if (requestedRole != Role.ROLE_USER && requestedRole != Role.ROLE_RESTAURANT_ADMIN) {
+            throw new RestaurantPlatformException(ErrorCode.INVALID_ROLE, ErrorMessage.INVALID_ROLE);
         }
 
         User user = userRepository.findByEmail(request.getEmail()).orElse(null);
         if (user != null) {
-            throw new AccessDeniedException("User already exists");
+            throw new RestaurantPlatformException(ErrorCode.USER_ALREADY_EXISTS, ErrorMessage.USER_ALREADY_EXISTS);
         }
 
         user = new User();
@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public ResponseEntity<String> deleteUser(Long userId) {
         User user =  userRepository.findById(userId).orElse(null);
         if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+            throw new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
         }
         userRepository.delete(user);
         return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
@@ -76,20 +76,20 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    private UserResponse toResponse(User user) {
-        return new UserResponse(
-                user.getId(),
-                user.getName(),
-                user.getEmail()
-        );
-    }
-
     public ResponseEntity<List<RestaurantResponse>> getAllRestaurantsForUsers() {
         return new ResponseEntity<>(restaurantRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
                 .map(this::toResponse)
                 .toList(), HttpStatus.OK);
+    }
+
+    private UserResponse toResponse(User user) {
+        return new UserResponse(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 
     private RestaurantResponse toResponse(Restaurant restaurant) {
