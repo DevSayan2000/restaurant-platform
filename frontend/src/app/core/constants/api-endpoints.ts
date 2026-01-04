@@ -4,7 +4,7 @@ export const API_ENDPOINTS = {
     logout: '/auth/me',
   },
   users: {
-    list: '/users',
+    list: '/api/users',
     detail: (id: string) => `/users/${id}`,
   },
 };
