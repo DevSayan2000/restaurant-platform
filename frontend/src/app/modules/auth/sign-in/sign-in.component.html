@@ -1,0 +1,53 @@
+<div class="min-h-screen flex items-center justify-center">
+    <p-card [style]="{ width: '25rem', overflow: 'hidden' }" class="pt-2">
+        <ng-template #header>
+            <!-- Logo / Title -->
+            <h2 class="text-2xl font-bold text-center">
+                🍽 Restaurant Login
+            </h2>
+            <p class="text-center">
+                Welcome back! Please login
+            </p>
+        </ng-template>
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+
+            <!-- Name -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Name</label>
+                <input pInputText type="text" formControlName="name" class="w-full" placeholder="Enter your name" />
+                <small *ngIf="submitted && f['name']?.errors" class="text-red-500">
+                    Name must be at least 3 characters
+                </small>
+            </div>
+
+            <!-- Email -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Email</label>
+                <input pInputText type="email" formControlName="email" class="w-full" placeholder="Enter your email" />
+                <small *ngIf="submitted && f['email']?.errors" class="text-red-500">
+                    Enter a valid email address
+                </small>
+            </div>
+
+            <!-- Password -->
+            <div>
+                <label class="block text-sm font-medium mb-1">Password</label>
+                <p-password formControlName="password" toggleMask [feedback]="false" styleClass="w-full"
+                    inputStyleClass="w-full" placeholder="Enter password"></p-password>
+                <small *ngIf="submitted && f['password']?.errors" class="text-red-500">
+                    Password must be at least 6 characters
+                </small>
+            </div>
+
+            <!-- Submit -->
+            <button pButton type="submit" label="Login"
+                class="w-full border-none"></button>
+            <!-- Create Account -->
+            <div class="text-center pt-3">
+                <a routerLink="/sign-up" class="text-sm text-orange-600 hover:underline font-medium">
+                    Don’t have an account? Create one
+                </a>
+            </div>
+        </form>
+    </p-card>
+</div>
