@@ -1,0 +1,125 @@
+<div class="p-6 space-y-6 bg-zinc-50 dark:bg-zinc-950">
+
+    <!-- Welcome -->
+    <div class="rounded-xl p-6
+               bg-white dark:bg-zinc-900
+               border border-zinc-200 dark:border-zinc-800">
+        <h2 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Restaurant Admin Dashboard
+        </h2>
+        <p class="text-zinc-500">
+            Manage your restaurant and monitor customer feedback
+        </p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+
+        <div class="rounded-xl p-4
+                   bg-white dark:bg-zinc-900
+                   border border-zinc-200 dark:border-zinc-800">
+            <p class="text-sm text-zinc-500">Menus</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                24
+            </h3>
+        </div>
+
+        <div class="rounded-xl p-4
+                   bg-white dark:bg-zinc-900
+                   border border-zinc-200 dark:border-zinc-800">
+            <p class="text-sm text-zinc-500">Orders</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                132
+            </h3>
+        </div>
+
+        <div class="rounded-xl p-4
+                   bg-white dark:bg-zinc-900
+                   border border-zinc-200 dark:border-zinc-800">
+            <p class="text-sm text-zinc-500">Reviews</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                18
+            </h3>
+        </div>
+
+        <div class="rounded-xl p-4
+                   bg-white dark:bg-zinc-900
+                   border border-zinc-200 dark:border-zinc-800">
+            <p class="text-sm text-zinc-500">Avg Rating</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
+                4.5 <span class="text-sm">⭐</span>
+            </h3>
+        </div>
+
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="rounded-xl p-6
+               bg-white dark:bg-zinc-900
+               border border-zinc-200 dark:border-zinc-800">
+        <h3 class="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
+            Quick Actions
+        </h3>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+            <!-- Primary -->
+            <button pButton label="Add Menu Item" class="w-full">
+            </button>
+
+            <!-- Secondary -->
+            <button pButton label="Edit Restaurant" class="w-full p-button-secondary">
+            </button>
+
+            <!-- Outline -->
+            <button pButton label="View Reviews" class="w-full p-button-outlined">
+            </button>
+
+        </div>
+    </div>
+
+    <!-- Reviews Preview -->
+    <div class="rounded-xl p-6
+           bg-white dark:bg-zinc-900
+           border border-zinc-200 dark:border-zinc-800">
+
+        <h3 class="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
+            Recent Reviews
+        </h3>
+
+        <!-- Reviews Exist -->
+        <ng-container *ngIf="reviews?.length > 0; else noReviews">
+
+            <div *ngFor="let review of reviews"
+                class="py-4 border-b border-zinc-200 dark:border-zinc-800 last:border-none">
+
+                <div class="flex items-center justify-between">
+                    <p class="font-medium text-zinc-900 dark:text-zinc-100">
+                        {{ review.user }}
+                    </p>
+                    <span class="text-sm text-zinc-600 dark:text-zinc-400">
+                        ⭐ {{ review.rating }}
+                    </span>
+                </div>
+
+                <p class="text-sm text-zinc-500 mt-1">
+                    {{ review.comment }}
+                </p>
+            </div>
+
+        </ng-container>
+
+        <!-- No Reviews -->
+        <ng-template #noReviews>
+            <div class="text-center py-10 text-zinc-500">
+                <i class="pi pi-star text-3xl mb-3 block opacity-40"></i>
+                <p class="text-sm">
+                    No reviews yet. Your customers' feedback will appear here.
+                </p>
+            </div>
+        </ng-template>
+
+    </div>
+
+
+</div>

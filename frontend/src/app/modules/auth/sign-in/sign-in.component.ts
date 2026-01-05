@@ -6,7 +6,8 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { UserApiService, UserLoginPayload } from 'app/core/services/user-api.service';
 
 @Component({
   selector: 'app-sign-in',
@@ -25,9 +26,12 @@ export class SignInComponent {
   loginForm: FormGroup;
   submitted = false;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private userApiService: UserApiService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
@@ -44,6 +48,21 @@ export class SignInComponent {
       return;
     }
 
-    console.log('Login Data:', this.loginForm.value);
+    const data = this.loginForm.value;
+
+    const payload: UserLoginPayload = {
+      email: data.email,
+      password: data.password,
+    };
+
+    this.userApiService.userLogin(payload).subscribe({
+      next: (res) => {
+        const token = res.token;
+        localStorage.setItem('token', token);
+        this.userApiService.getLoggedInUser().subscribe(()=> {
+          this.router.navigate(['/dashboard'])
+        });
+      },
+    });
   }
 }

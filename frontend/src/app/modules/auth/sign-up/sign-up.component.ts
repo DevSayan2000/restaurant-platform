@@ -10,6 +10,7 @@ import { Router, RouterModule } from '@angular/router';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { CreateUserPayload, UserApiService } from 'app/core/services/user-api.service';
 import { Role } from 'app/core/enums/role.enum';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-sign-up',
@@ -34,14 +35,18 @@ export class SignUpComponent {
     { label: 'Restaurant Admin', value: Role.RESTAURANT_ADMIN },
   ];
 
+  Role = Role;
+  selectedRole: Role | null = null;
+
   constructor(
     private fb: FormBuilder,
     private userApiService: UserApiService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {
     this.signUpForm = this.fb.group(
       {
-        role: ['ROLE_USER', Validators.required],
+        role: ['', Validators.required],
         name: ['', [Validators.required, Validators.minLength(3)]],
         email: ['', [Validators.required, Validators.email]],
         password: ['', [Validators.required, Validators.minLength(6)]],
@@ -78,10 +83,23 @@ export class SignUpComponent {
     };
 
     this.userApiService.createUser(payload).subscribe({
-      next: () => {
+      next: (res) => {
+        this.messageService.add({
+          key: 'global',
+          severity: 'success',
+          summary: 'Success',
+          detail: res.message,
+        })
         this.router.navigateByUrl('/sign-in');
       },
-      error: () => {},
+      error: (err) => {
+        console.error('ERROR RESPONSE', err);
+      },
     });
+  }
+
+  selectRole(role: Role | null) {
+    this.selectedRole = role;
+    this.signUpForm.patchValue({ role });
   }
 }

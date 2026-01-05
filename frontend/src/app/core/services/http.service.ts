@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
@@ -6,8 +6,8 @@ import { environment } from '../../../environments/environment';
 export interface HttpOptions {
   headers?: HttpHeaders | { [header: string]: string | string[] };
   params?: HttpParams | { [param: string]: string | number | boolean };
-  responseType?: 'json';
-  observe?: 'body';
+  responseType?: 'json' | 'blob' | 'text';
+  observe?: 'body' | 'response';
 }
 
 @Injectable({
@@ -18,35 +18,66 @@ export class HttpService {
 
   constructor(private http: HttpClient) {}
 
-  /** GET */
-  get<T>(url: string, options?: HttpOptions): Observable<T> {
-    return this.http.get<T>(this.buildUrl(url), options);
+  /* ---------------- GET ---------------- */
+
+  get<T>(url: string, options?: HttpOptions & { observe?: 'body' }): Observable<T>;
+  get<T>(url: string, options: HttpOptions & { observe: 'response' }): Observable<HttpResponse<T>>;
+  get<T>(url: string, options?: HttpOptions): Observable<any> {
+    return this.http.get(this.buildUrl(url), options as any);
   }
 
-  /** POST */
-  post<T>(url: string, body: unknown, options?: HttpOptions): Observable<T> {
-    return this.http.post<T>(this.buildUrl(url), body, options);
+  /* ---------------- POST ---------------- */
+
+  post<T>(url: string, body: unknown, options?: HttpOptions & { observe?: 'body' }): Observable<T>;
+  post<T>(
+    url: string,
+    body: unknown,
+    options: HttpOptions & { observe: 'response' }
+  ): Observable<HttpResponse<T>>;
+  post<T>(url: string, body: unknown, options?: HttpOptions): Observable<any> {
+    return this.http.post(this.buildUrl(url), body, options as any);
   }
 
-  /** PUT */
-  put<T>(url: string, body: unknown, options?: HttpOptions): Observable<T> {
-    return this.http.put<T>(this.buildUrl(url), body, options);
+  /* ---------------- PUT ---------------- */
+
+  put<T>(url: string, body: unknown, options?: HttpOptions & { observe?: 'body' }): Observable<T>;
+  put<T>(
+    url: string,
+    body: unknown,
+    options: HttpOptions & { observe: 'response' }
+  ): Observable<HttpResponse<T>>;
+  put<T>(url: string, body: unknown, options?: HttpOptions): Observable<any> {
+    return this.http.put(this.buildUrl(url), body, options as any);
   }
 
-  /** PATCH */
-  patch<T>(url: string, body: unknown, options?: HttpOptions): Observable<T> {
-    return this.http.patch<T>(this.buildUrl(url), body, options);
+  /* ---------------- PATCH ---------------- */
+
+  patch<T>(url: string, body: unknown, options?: HttpOptions & { observe?: 'body' }): Observable<T>;
+  patch<T>(
+    url: string,
+    body: unknown,
+    options: HttpOptions & { observe: 'response' }
+  ): Observable<HttpResponse<T>>;
+  patch<T>(url: string, body: unknown, options?: HttpOptions): Observable<any> {
+    return this.http.patch(this.buildUrl(url), body, options as any);
   }
 
-  /** DELETE */
-  delete<T>(url: string, options?: HttpOptions): Observable<T> {
-    return this.http.delete<T>(this.buildUrl(url), options);
+  /* ---------------- DELETE ---------------- */
+
+  delete<T>(url: string, options?: HttpOptions & { observe?: 'body' }): Observable<T>;
+  delete<T>(
+    url: string,
+    options: HttpOptions & { observe: 'response' }
+  ): Observable<HttpResponse<T>>;
+  delete<T>(url: string, options?: HttpOptions): Observable<any> {
+    return this.http.delete(this.buildUrl(url), options as any);
   }
 
-  /** Builds full API URL */
+  /* ---------------- UTIL ---------------- */
+
   private buildUrl(endpoint: string): string {
     if (endpoint.startsWith('http')) {
-      return endpoint; // allow absolute URLs
+      return endpoint;
     }
 
     return `${this.baseUrl.replace(/\/$/, '')}/${endpoint.replace(/^\//, '')}`;

@@ -1,8 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { LoadingService } from 'app/core/services/loading.service';
 import { CommonModule } from '@angular/common';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Subject, takeUntil } from 'rxjs';
+import { LoadingService } from 'app/core/services/loading.service';
 
 @Component({
   selector: 'app-loading-bar',
@@ -11,12 +10,6 @@ import { Subject, takeUntil } from 'rxjs';
   templateUrl: './loading-bar.component.html',
 })
 export class LoadingBarComponent {
-  show: boolean = false;
-  private _unsubscribeAll: Subject<any> = new Subject<any>();
-
-  constructor(private loadingService: LoadingService) {
-    this.loadingService.loading$.pipe(takeUntil(this._unsubscribeAll)).subscribe((value) => {
-      this.show = value;
-    });
-  }
+  loadingService = inject(LoadingService);
+  loading$ = this.loadingService.loading$;
 }

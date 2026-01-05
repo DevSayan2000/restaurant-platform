@@ -1,14 +1,23 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners } from '@angular/core';
+import {
+  ApplicationConfig,
+  inject,
+  provideBrowserGlobalErrorListeners,
+  provideEnvironmentInitializer,
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 
 import { routes } from './app.routes';
 import { providePrimeNG } from 'primeng/config';
-import Aura from '@primeuix/themes/aura';
-import Lara from '@primeuix/themes/lara';
 import { definePreset } from '@primeuix/themes';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import Aura from '@primeuix/themes/aura';
 
+import { LoadingInterceptor } from './core/interceptors/loading.interceptor';
+import { MessageService } from 'primeng/api';
+import { LoadingService } from './core/services/loading.service';
+import { authInterceptor } from './core/interceptors/auth.interceptor';
+
+// Define your theme preset
 const Noir = definePreset(Aura, {
   semantic: {
     primary: {
@@ -47,10 +56,10 @@ const Noir = definePreset(Aura, {
           activeColor: '{zinc.200}',
         },
         highlight: {
-          background: 'rgba(250, 250, 250, .16)',
-          focusBackground: 'rgba(250, 250, 250, .24)',
-          color: 'rgba(255,255,255,.87)',
-          focusColor: 'rgba(255,255,255,.87)',
+          background: 'rgba(250, 250, 250, 0.16)',
+          focusBackground: 'rgba(250, 250, 250, 0.24)',
+          color: 'rgba(255,255,255,0.87)',
+          focusColor: 'rgba(255,255,255,0.87)',
         },
       },
     },
@@ -59,8 +68,13 @@ const Noir = definePreset(Aura, {
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    // Global error listeners
     provideBrowserGlobalErrorListeners(),
+
+    // Router
     provideRouter(routes),
+
+    // PrimeNG with custom theme
     providePrimeNG({
       theme: {
         preset: Noir,
@@ -69,10 +83,12 @@ export const appConfig: ApplicationConfig = {
         },
       },
     }),
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: LoadingInterceptor,
-      multi: true,
-    },
+
+    // PrimeNG MessageService (for Toast)
+    MessageService,
+    provideEnvironmentInitializer(() => inject(LoadingService)),
+
+    // HTTP Interceptors
+    provideHttpClient(withInterceptors([LoadingInterceptor, authInterceptor])),
   ],
 };

@@ -1,2 +1,17 @@
-<router-outlet />
-<app-loading-bar />
+<div class="min-h-screen flex flex-col bg-zinc-50 dark:bg-zinc-950 w-full">
+
+    <!-- Navbar -->
+    <app-navbar class="sticky top-0 z-40"></app-navbar>
+
+    <!-- Main Content -->
+    <main class="min-h-[calc(100%-5rem)]! px-4 md:px-6 py-6 bg-zinc-50 dark:bg-zinc-950">
+
+        <router-outlet></router-outlet>
+
+    </main>
+
+    <!-- Global UI -->
+    <app-loading-bar></app-loading-bar>
+    <p-toast position="top-center" key="global"></p-toast>
+
+</div>
