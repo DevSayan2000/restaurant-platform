@@ -1,5 +1,8 @@
 package com.example.restaurantplatform.controller;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
+import com.example.restaurantplatform.dto.rating.AllReviewsResponse;
+import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.service.interfaces.RatingService;
 import com.example.restaurantplatform.exception.ErrorResponse;
@@ -57,7 +60,7 @@ public class RatingController {
     })
     @PreAuthorize("hasRole('USER')")
     @PostMapping
-    public ResponseEntity<String> addOrUpdateRating(
+    public ResponseEntity<GenericResponse> addOrUpdateRating(
             @PathVariable Long restaurantId,
             @Valid @RequestBody CreateRatingRequest request) {
 
@@ -94,7 +97,7 @@ public class RatingController {
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN','USER')")
     @GetMapping("/average")
-    public ResponseEntity<Double> getAverageRating(@PathVariable Long restaurantId) {
+    public ResponseEntity<AverageRatingResponse> getAverageRating(@PathVariable Long restaurantId) {
         return ratingService.getAverageRating(restaurantId);
     }
 
@@ -128,7 +131,7 @@ public class RatingController {
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN','USER')")
     @GetMapping("/reviews")
-    public ResponseEntity<List<String>> getAllReviews(@PathVariable Long restaurantId) {
+    public ResponseEntity<AllReviewsResponse> getAllReviews(@PathVariable Long restaurantId) {
         return ratingService.getAllReviews(restaurantId);
     }
 }

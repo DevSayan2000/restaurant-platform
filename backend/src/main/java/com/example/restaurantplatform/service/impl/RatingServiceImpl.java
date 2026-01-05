@@ -1,5 +1,8 @@
 package com.example.restaurantplatform.service.impl;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
+import com.example.restaurantplatform.dto.rating.AllReviewsResponse;
+import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.entity.Rating;
 import com.example.restaurantplatform.entity.Restaurant;
@@ -31,7 +34,7 @@ public class RatingServiceImpl implements RatingService {
     private final UserRepository userRepository;
     private final CommonUtils commonUtils;
 
-    public ResponseEntity<String> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
+    public ResponseEntity<GenericResponse> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
 
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
@@ -51,7 +54,8 @@ public class RatingServiceImpl implements RatingService {
             rating.setRating(request.getRating());
             rating.setReview(request.getReview());
             ratingRepository.save(rating);
-            return new ResponseEntity<>("Rating/Review added successfully", HttpStatus.OK);
+            GenericResponse response = new GenericResponse("Rating/Review added successfully");
+            return new ResponseEntity<>(response, HttpStatus.OK);
         }
 
         if (request.getRating() != null) {
@@ -61,17 +65,22 @@ public class RatingServiceImpl implements RatingService {
             rating.setReview(request.getReview());
         }
         ratingRepository.save(rating);
-        return new ResponseEntity<>("Rating/Review updated successfully", HttpStatus.OK);
+        GenericResponse response = new GenericResponse("Rating/Review updated successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    public ResponseEntity<Double> getAverageRating(Long restaurantId) {
+    public ResponseEntity<AverageRatingResponse> getAverageRating(Long restaurantId) {
         verifyRestaurantExistsAndEmailIdAccess(restaurantId);
-        return new ResponseEntity<>(ratingRepository.findAverageRating(restaurantId), HttpStatus.OK);
+        double avgRating = ratingRepository.findAverageRating(restaurantId);
+        AverageRatingResponse avgRatingResponse = new AverageRatingResponse(avgRating);
+        return new ResponseEntity<>(avgRatingResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<String>> getAllReviews(Long restaurantId) {
+    public ResponseEntity<AllReviewsResponse> getAllReviews(Long restaurantId) {
         verifyRestaurantExistsAndEmailIdAccess(restaurantId);
-        return new ResponseEntity<>(ratingRepository.findAllReviewsByRestaurantId(restaurantId), HttpStatus.OK);
+        List<String> allReviews = ratingRepository.findAllReviewsByRestaurantId(restaurantId);
+        AllReviewsResponse allReviewsResponse = new AllReviewsResponse(allReviews);
+        return new ResponseEntity<>(allReviewsResponse, HttpStatus.OK);
     }
 
     private void verifyRestaurantExistsAndEmailIdAccess(Long restaurantId) {

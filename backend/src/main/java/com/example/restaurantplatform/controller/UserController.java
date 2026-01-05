@@ -1,5 +1,6 @@
 package com.example.restaurantplatform.controller;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.UserResponse;
@@ -54,7 +55,7 @@ public class UserController {
             )
     })
     @PostMapping
-    public ResponseEntity<String> createUser(
+    public ResponseEntity<GenericResponse> createUser(
             @RequestBody CreateUserRequest request) {
 
         return userService.createUser(request);
@@ -160,7 +161,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @DeleteMapping("/{userId}")
-    public ResponseEntity<String> deleteUser(
+    public ResponseEntity<GenericResponse> deleteUser(
             @PathVariable Long userId) {
 
         return userService.deleteUser(userId);

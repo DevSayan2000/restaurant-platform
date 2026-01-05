@@ -1,5 +1,6 @@
 package com.example.restaurantplatform.controller;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.exception.ErrorResponse;
@@ -56,7 +57,7 @@ public class RestaurantController {
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @PostMapping
-    public ResponseEntity<String> createRestaurant(
+    public ResponseEntity<GenericResponse> createRestaurant(
             @RequestBody CreateRestaurantRequest request) {
 
         return restaurantService.createRestaurant(request);
@@ -163,7 +164,7 @@ public class RestaurantController {
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @DeleteMapping("/{restaurantId}")
-    public ResponseEntity<String> deleteRestaurant(
+    public ResponseEntity<GenericResponse> deleteRestaurant(
             @PathVariable Long restaurantId) {
 
         return restaurantService.deleteRestaurant(restaurantId);

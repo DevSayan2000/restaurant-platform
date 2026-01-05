@@ -1,5 +1,6 @@
 package com.example.restaurantplatform.service.impl;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.UserResponse;
@@ -33,7 +34,7 @@ public class UserServiceImpl implements UserService {
     private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public ResponseEntity<String> createUser(CreateUserRequest request) {
+    public ResponseEntity<GenericResponse> createUser(CreateUserRequest request) {
 
         Role requestedRole = request.getRole();
         if (requestedRole != Role.ROLE_USER && requestedRole != Role.ROLE_RESTAURANT_ADMIN) {
@@ -53,16 +54,18 @@ public class UserServiceImpl implements UserService {
 
 
         userRepository.save(user);
-        return new ResponseEntity<>("User created successfully", HttpStatus.CREATED);
+        GenericResponse genericResponse = new GenericResponse("User created successfully");
+        return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<String> deleteUser(Long userId) {
+    public ResponseEntity<GenericResponse> deleteUser(Long userId) {
         User user =  userRepository.findById(userId).orElse(null);
         if (user == null) {
             throw new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND);
         }
         userRepository.delete(user);
-        return new ResponseEntity<>("User deleted successfully", HttpStatus.OK);
+        GenericResponse genericResponse = new GenericResponse("User deleted successfully");
+        return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
     public ResponseEntity<List<UserResponse>> getUsers() {

@@ -1,5 +1,6 @@
 package com.example.restaurantplatform.service.impl;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.entity.Restaurant;
@@ -30,7 +31,7 @@ public class RestaurantServiceImpl implements RestaurantService {
     private final RatingRepository ratingRepository;
     private final CommonUtils commonUtils;
 
-    public ResponseEntity<String> createRestaurant(CreateRestaurantRequest request) {
+    public ResponseEntity<GenericResponse> createRestaurant(CreateRestaurantRequest request) {
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
         Restaurant restaurant = restaurantRepository.findByEmailAndName(email, request.getName()).orElse(null);
@@ -46,10 +47,11 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setCuisine(request.getCuisine());
 
         restaurantRepository.save(restaurant);
-        return new ResponseEntity<>("Restaurant created successfully", HttpStatus.CREATED);
+        GenericResponse genericResponse = new GenericResponse("Restaurant created successfully");
+        return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
     }
 
-    public ResponseEntity<String> deleteRestaurant(Long restaurantId) {
+    public ResponseEntity<GenericResponse> deleteRestaurant(Long restaurantId) {
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         if (restaurant == null) {
             throw new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND);
@@ -61,7 +63,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         }
 
         restaurantRepository.delete(restaurant);
-        return new ResponseEntity<>("Restaurant deleted successfully", HttpStatus.OK);
+        GenericResponse genericResponse = new GenericResponse("Restaurant deleted successfully");
+        return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
     public ResponseEntity<List<RestaurantResponse>> getRestaurants() {

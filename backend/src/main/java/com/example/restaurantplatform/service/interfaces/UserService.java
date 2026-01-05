@@ -1,5 +1,6 @@
 package com.example.restaurantplatform.service.interfaces;
 
+import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.UserResponse;
@@ -9,11 +10,11 @@ import java.util.List;
 
 public interface UserService {
 
-    ResponseEntity<String> createUser(CreateUserRequest request);
+    ResponseEntity<GenericResponse> createUser(CreateUserRequest request);
 
     ResponseEntity<List<UserResponse>> getUsers();
 
     ResponseEntity<List<RestaurantResponse>> getAllRestaurantsForUsers();
 
-    ResponseEntity<String> deleteUser(Long userId);
+    ResponseEntity<GenericResponse> deleteUser(Long userId);
 }
