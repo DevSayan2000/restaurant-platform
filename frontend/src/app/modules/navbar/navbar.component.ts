@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { ButtonModule } from 'primeng/button';
+import { ThemeService } from 'app/core/services/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -10,13 +11,16 @@ import { ButtonModule } from 'primeng/button';
   imports: [CommonModule, ButtonModule, RouterModule]
 })
 export class NavbarComponent {
-  constructor(public auth: AuthService) {
-    this.auth.user$.subscribe((value)=> {
-      console.log(value);
-    })
-  }
+  constructor(
+    public auth: AuthService,
+    public theme: ThemeService
+  ) {}
 
   logout() {
     this.auth.logout();
+  }
+
+  toggleTheme() {
+    this.theme.toggleTheme();
   }
 }

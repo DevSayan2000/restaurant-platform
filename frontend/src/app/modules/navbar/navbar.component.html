@@ -1,4 +1,5 @@
-<nav class="border-b border-zinc-200 dark:border-zinc-800 px-6 py-3 flex items-center justify-between bg-white dark:bg-zinc-950 h-20">
+<nav
+    class="border-b border-zinc-200 dark:border-zinc-800 px-6 py-3 flex items-center justify-between bg-white dark:bg-zinc-950 h-20">
 
     <!-- Logo -->
     <div class="flex items-center gap-2">
@@ -13,25 +14,16 @@
 
         <!-- Not Logged In -->
         <ng-container *ngIf="!auth.isLoggedIn; else loggedIn">
-            <button
-                pButton
-                label="Login"
-                class="p-button-text text-zinc-700 dark:text-zinc-300"
-                routerLink="/sign-in">
+            <button pButton label="Login" class="p-button-text text-zinc-700 dark:text-zinc-300" routerLink="/sign-in">
             </button>
 
-            <button
-                pButton
-                label="Sign Up"
-                class="p-button p-button-primary"
-                routerLink="/sign-up">
+            <button pButton label="Sign Up" class="p-button p-button-primary" routerLink="/sign-up">
             </button>
         </ng-container>
 
         <!-- Logged In -->
         <ng-template #loggedIn>
-            <div
-                class="flex items-center gap-2 px-3 py-1.5 rounded-lg
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg
                        bg-zinc-100 dark:bg-zinc-900
                        border border-zinc-200 dark:border-zinc-800">
 
@@ -47,13 +39,15 @@
                 </div>
             </div>
 
-            <button
-                pButton
-                icon="pi pi-sign-out"
-                class="p-button-text text-zinc-500 hover:text-red-500"
+            <button pButton icon="pi pi-sign-out" class="p-button-text text-zinc-500 hover:text-red-500"
                 (click)="logout()">
             </button>
         </ng-template>
+
+        <!-- Theme Toggle -->
+        <button pButton type="button" class="p-button-text" (click)="toggleTheme()"
+            [icon]="theme.isDarkMode() ? 'pi pi-sun' : 'pi pi-moon'" aria-label="Toggle theme">
+        </button>
 
     </div>
 </nav>
