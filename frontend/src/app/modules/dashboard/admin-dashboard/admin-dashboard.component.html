@@ -1,87 +1,166 @@
 <div class="p-6 space-y-6 bg-zinc-50 dark:bg-zinc-950">
 
-    <!-- Welcome -->
-    <div class="rounded-xl p-6
-               bg-white dark:bg-zinc-900
-               border border-zinc-200 dark:border-zinc-800">
+    <!-- Header Card -->
+    <p-card class="rounded-xl border border-zinc-200 dark:border-zinc-800" styleClass="bg-white dark:bg-zinc-900">
         <h2 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
             Restaurant Admin Dashboard
         </h2>
-        <p class="text-zinc-500">
+        <p class="text-zinc-500 dark:text-zinc-400 mt-1">
             Manage your restaurant and monitor customer feedback
         </p>
-    </div>
+    </p-card>
 
-    <!-- Stats -->
+
+    <!-- Stats Section -->
     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
 
-        <div class="rounded-xl p-4
-                   bg-white dark:bg-zinc-900
-                   border border-zinc-200 dark:border-zinc-800">
-            <p class="text-sm text-zinc-500">Menus</p>
-            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                24
-            </h3>
-        </div>
+        <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Menus</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">24</h3>
+        </p-card>
 
-        <div class="rounded-xl p-4
-                   bg-white dark:bg-zinc-900
-                   border border-zinc-200 dark:border-zinc-800">
-            <p class="text-sm text-zinc-500">Orders</p>
-            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                132
-            </h3>
-        </div>
+        <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Orders</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">132</h3>
+        </p-card>
 
-        <div class="rounded-xl p-4
-                   bg-white dark:bg-zinc-900
-                   border border-zinc-200 dark:border-zinc-800">
-            <p class="text-sm text-zinc-500">Reviews</p>
-            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                18
-            </h3>
-        </div>
+        <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Reviews</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">18</h3>
+        </p-card>
 
-        <div class="rounded-xl p-4
-                   bg-white dark:bg-zinc-900
-                   border border-zinc-200 dark:border-zinc-800">
-            <p class="text-sm text-zinc-500">Avg Rating</p>
+        <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Avg Rating</p>
             <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">
-                4.5 <span class="text-sm">⭐</span>
+                4.5 <i class="pi pi-star-fill text-yellow-500"></i>
             </h3>
-        </div>
+        </p-card>
 
     </div>
 
-    <!-- Quick Actions -->
-    <div class="rounded-xl p-6
-               bg-white dark:bg-zinc-900
-               border border-zinc-200 dark:border-zinc-800">
-        <h3 class="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
-            Quick Actions
-        </h3>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
-            <!-- Primary -->
-            <button pButton label="Add Menu Item" class="w-full">
-            </button>
+    <!-- Restaurant Management -->
+    <p-card class="rounded-xl border border-zinc-200 dark:border-zinc-800 shadow-sm overflow-hidden"
+        styleClass="bg-white dark:bg-zinc-900">
 
-            <!-- Secondary -->
-            <button pButton label="Edit Restaurant" class="w-full p-button-secondary">
-            </button>
+        <!-- Card Header -->
+        <div class="flex items-center justify-between p-4 border-b border-zinc-200 dark:border-zinc-800">
+            <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                Manage Restaurants
+            </h3>
 
-            <!-- Outline -->
-            <button pButton label="View Reviews" class="w-full p-button-outlined">
-            </button>
-
+            <p-button icon="pi pi-plus" label="Add Restaurant"
+                styleClass="p-button-sm p-button-outlined p-button-primary">
+            </p-button>
         </div>
-    </div>
 
-    <!-- Reviews Preview -->
-    <div class="rounded-xl p-6
-           bg-white dark:bg-zinc-900
-           border border-zinc-200 dark:border-zinc-800">
+
+        <!-- Restaurants Exist -->
+        <ng-container *ngIf="restaurants && restaurants.length > 0; else noRestaurants">
+
+            <p-table [value]="restaurants" [paginator]="true" [rows]="10" [responsiveLayout]="'scroll'"
+                styleClass="min-w-full">
+
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th>Name</th>
+                        <th>City</th>
+                        <th>Cuisine</th>
+                        <th>Type</th>
+                        <th>Rating</th>
+                        <th>Created</th>
+                        <th class="text-center">Actions</th>
+                    </tr>
+                </ng-template>
+
+                <ng-template pTemplate="body" let-r>
+                    <tr>
+                        <td class="font-medium text-zinc-900 dark:text-zinc-100">{{ r.name }}</td>
+                        <td class="text-zinc-600 dark:text-zinc-400">{{ r.city }}</td>
+                        <td class="text-zinc-600 dark:text-zinc-400">{{ r.cuisine }}</td>
+
+                        <td>
+                            @switch (r.foodType) {
+
+                            @case ('VEG') {
+                            <p-tag value="VEG" severity="success"></p-tag>
+                            }
+
+                            @case ('JAIN') {
+                            <p-tag value="JAIN" severity="warn"></p-tag>
+                            }
+
+                            @case ('VEGAN') {
+                            <p-tag value="VEGAN" severity="info"></p-tag>
+                            }
+
+                            @case ('NON_VEG') {
+                            <p-tag value="NON-VEG" severity="danger"></p-tag>
+                            }
+
+                            @default {
+                            <p-tag value="UNKNOWN" severity="secondary"></p-tag>
+                            }
+                            }
+                        </td>
+
+                        <td>
+                            <div class="flex items-center gap-1">
+                                <i class="pi pi-star-fill text-yellow-500 text-xs"></i>
+                                <span class="text-zinc-700 dark:text-zinc-300">{{ r.avgRating }}</span>
+                            </div>
+                        </td>
+
+                        <td class="text-zinc-500 dark:text-zinc-400">
+                            {{ r.createdDate | date:'medium' }}
+                        </td>
+
+                        <td class="text-center">
+                            <button pButton class="p-button-text p-button-sm text-blue-500" icon="pi pi-pencil"
+                                (click)="editRestaurant(r)">
+                            </button>
+
+                            <button pButton class="p-button-text p-button-sm text-red-500" icon="pi pi-trash"
+                                (click)="deleteRestaurant(r)">
+                            </button>
+                        </td>
+                    </tr>
+                </ng-template>
+
+            </p-table>
+
+        </ng-container>
+
+
+        <!-- Empty State -->
+        <ng-template #noRestaurants>
+            <div class="py-16 text-center text-zinc-500 dark:text-zinc-400">
+
+                <div class="flex justify-center mb-4">
+                    <div class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                        <i class="pi pi-shop text-3xl opacity-60"></i>
+                    </div>
+                </div>
+
+                <p class="text-lg font-semibold mb-1">No restaurants added yet</p>
+
+                <p class="text-sm mb-4">
+                    Click the button above to create your first restaurant.
+                </p>
+
+                <p-button icon="pi pi-plus" label="Add Restaurant" styleClass="p-button-primary p-button-sm">
+                </p-button>
+
+            </div>
+        </ng-template>
+
+    </p-card>
+
+
+
+    <!-- Recent Reviews -->
+    <p-card class="rounded-xl border border-zinc-200 dark:border-zinc-800 p-6" styleClass="bg-white dark:bg-zinc-900">
 
         <h3 class="text-xl font-semibold mb-4 text-zinc-900 dark:text-zinc-100">
             Recent Reviews
@@ -94,32 +173,23 @@
                 class="py-4 border-b border-zinc-200 dark:border-zinc-800 last:border-none">
 
                 <div class="flex items-center justify-between">
-                    <p class="font-medium text-zinc-900 dark:text-zinc-100">
-                        {{ review.user }}
-                    </p>
-                    <span class="text-sm text-zinc-600 dark:text-zinc-400">
-                        ⭐ {{ review.rating }}
-                    </span>
+                    <p class="font-medium text-zinc-900 dark:text-zinc-100">{{ review.user }}</p>
+                    <span class="text-sm text-zinc-600 dark:text-zinc-400">⭐ {{ review.rating }}</span>
                 </div>
 
-                <p class="text-sm text-zinc-500 mt-1">
-                    {{ review.comment }}
-                </p>
+                <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">{{ review.comment }}</p>
             </div>
 
         </ng-container>
 
         <!-- No Reviews -->
         <ng-template #noReviews>
-            <div class="text-center py-10 text-zinc-500">
-                <i class="pi pi-star text-3xl mb-3 block opacity-40"></i>
-                <p class="text-sm">
-                    No reviews yet. Your customers' feedback will appear here.
-                </p>
+            <div class="text-center py-10 text-zinc-500 dark:text-zinc-400">
+                <i class="pi pi-star text-3xl mb-3 opacity-40"></i>
+                <p class="text-sm">No reviews yet. Customer feedback will appear here.</p>
             </div>
         </ng-template>
 
-    </div>
-
+    </p-card>
 
 </div>

@@ -2,3 +2,22 @@
 @config "../tailwind.config.cjs";
 @import "tailwindcss";
 @import "primeicons/primeicons.css";
+
+.dark .p-card {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+}
+
+.dark .p-datatable {
+  color: #e4e4e7 !important;
+}
+
+.dark .p-datatable-thead > tr > th {
+  background: #1f1f23 !important;
+  color: #d4d4d8 !important;
+}
+
+.dark .p-card-body,
+.dark .p-card-content {
+  background-color: transparent !important;
+}

@@ -7,4 +7,8 @@ export const API_ENDPOINTS = {
     list: '/users',
     detail: (id: string) => `/users/${id}`,
   },
+  restaurants: {
+    list: '/restaurants',
+    userList: '/users/restaurants'
+  }
 };
