@@ -109,7 +109,7 @@
                                 <i class="pi pi-star-fill text-yellow-500 text-xs"></i>
                                 <span class="text-zinc-700 dark:text-zinc-300">{{ r.avgRating }}</span>
                                 } @else {
-                                    {{'-'}}
+                                {{'-'}}
                                 }
 
                             </div>
@@ -154,7 +154,8 @@
 
                 <app-create-restaurant>
                     <!-- Passing custom trigger button -->
-                    <p-button icon="pi pi-plus" label="Add Restaurant" styleClass="p-button-primary p-button-sm">
+                    <p-button icon="pi pi-plus" label="Add Restaurant" styleClass="p-button-primary p-button-sm"
+                        dialogTrigger (click)="restaurantDialog.openDialog()">
                     </p-button>
                 </app-create-restaurant>
 
