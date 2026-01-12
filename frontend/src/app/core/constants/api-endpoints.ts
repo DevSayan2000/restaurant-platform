@@ -9,6 +9,7 @@ export const API_ENDPOINTS = {
   },
   restaurants: {
     list: '/restaurants',
-    userList: '/users/restaurants'
+    userList: '/users/restaurants',
+    delete: (id: number)=> `/restaurants/${id}`
   }
 };

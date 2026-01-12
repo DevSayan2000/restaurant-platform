@@ -1,4 +1,4 @@
-<div class="p-6 space-y-6 bg-zinc-50 dark:bg-zinc-950">
+<div class="space-y-6 bg-zinc-50 dark:bg-zinc-950">
 
     <!-- Header Card -->
     <p-card class="rounded-xl border border-zinc-200 dark:border-zinc-800" styleClass="bg-white dark:bg-zinc-900">
@@ -12,16 +12,11 @@
 
 
     <!-- Stats Section -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
 
         <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-            <p class="text-sm text-zinc-500 dark:text-zinc-400">Menus</p>
-            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">24</h3>
-        </p-card>
-
-        <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
-            <p class="text-sm text-zinc-500 dark:text-zinc-400">Orders</p>
-            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">132</h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">Your Restaurants</p>
+            <h3 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100">{{ restaurants.length }}</h3>
         </p-card>
 
         <p-card styleClass="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl">
@@ -49,10 +44,13 @@
             <h3 class="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 Manage Restaurants
             </h3>
-
-            <p-button icon="pi pi-plus" label="Add Restaurant"
-                styleClass="p-button-sm p-button-outlined p-button-primary">
-            </p-button>
+            <app-create-restaurant>
+                <!-- Passing custom trigger button -->
+                <p-button icon="pi pi-plus" label="Add Restaurant"
+                    styleClass="p-button-sm p-button-outlined p-button-primary" dialogTrigger
+                    (click)="restaurantDialog.openDialog()">
+                </p-button>
+            </app-create-restaurant>
         </div>
 
 
@@ -69,7 +67,7 @@
                         <th>Cuisine</th>
                         <th>Type</th>
                         <th>Rating</th>
-                        <th>Created</th>
+                        <th>Date</th>
                         <th class="text-center">Actions</th>
                     </tr>
                 </ng-template>
@@ -107,13 +105,18 @@
 
                         <td>
                             <div class="flex items-center gap-1">
+                                @if (r.avgRating !== null && r.avgRating !== undefined) {
                                 <i class="pi pi-star-fill text-yellow-500 text-xs"></i>
                                 <span class="text-zinc-700 dark:text-zinc-300">{{ r.avgRating }}</span>
+                                } @else {
+                                    {{'-'}}
+                                }
+
                             </div>
                         </td>
 
                         <td class="text-zinc-500 dark:text-zinc-400">
-                            {{ r.createdDate | date:'medium' }}
+                            {{ r.createdDate | date:'short' }}
                         </td>
 
                         <td class="text-center">
@@ -149,8 +152,11 @@
                     Click the button above to create your first restaurant.
                 </p>
 
-                <p-button icon="pi pi-plus" label="Add Restaurant" styleClass="p-button-primary p-button-sm">
-                </p-button>
+                <app-create-restaurant>
+                    <!-- Passing custom trigger button -->
+                    <p-button icon="pi pi-plus" label="Add Restaurant" styleClass="p-button-primary p-button-sm">
+                    </p-button>
+                </app-create-restaurant>
 
             </div>
         </ng-template>

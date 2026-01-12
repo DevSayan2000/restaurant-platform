@@ -44,7 +44,6 @@ export const authInterceptor = (
       if (error.error instanceof ErrorEvent) {
         // Client-side / network error
         messageService.add({
-          key: 'global',
           severity: 'error',
           summary: 'Network Error',
           detail: error.error.message,
@@ -53,45 +52,41 @@ export const authInterceptor = (
         // Backend error
         const status = error.status;
         const detail =
-          error.error?.errorMessage || error.error?.message || error.message || 'Unknown error';
+          error.error?.errorMessage || error.error?.message || error.message;
 
         switch (status) {
           case 400:
             messageService.add({
-              key: 'global',
               severity: 'error',
               summary: 'Bad Request',
-              detail,
+              detail: detail || 'Unknown error',
             });
             break;
           case 401:
             messageService.add({
-              key: 'global',
               severity: 'error',
               summary: 'Unauthorized',
-              detail: 'Redirecting to login...',
+              detail: detail || 'Redirecting to login...',
             });
             authService.logout();
             break;
           case 403:
             messageService.add({
-              key: 'global',
               severity: 'error',
               summary: 'Forbidden',
-              detail: 'Access denied',
+              detail: detail || 'Access denied',
             });
+            authService.logout();
             break;
           case 404:
             messageService.add({
-              key: 'global',
               severity: 'warn',
               summary: 'Not Found',
-              detail: 'Resource not found',
+              detail: detail || 'Resource not found',
             });
             break;
           case 500:
             messageService.add({
-              key: 'global',
               severity: 'error',
               summary: 'Server Error',
               detail: 'Internal server error',
@@ -99,10 +94,9 @@ export const authInterceptor = (
             break;
           default:
             messageService.add({
-              key: 'global',
               severity: 'error',
               summary: `Error ${status}`,
-              detail,
+              detail: detail || 'Unknown error',
             });
         }
       }

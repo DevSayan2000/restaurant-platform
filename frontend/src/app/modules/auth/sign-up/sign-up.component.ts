@@ -85,7 +85,6 @@ export class SignUpComponent {
     this.userApiService.createUser(payload).subscribe({
       next: (res) => {
         this.messageService.add({
-          key: 'global',
           severity: 'success',
           summary: 'Success',
           detail: res.message,

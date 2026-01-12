@@ -21,3 +21,12 @@
 .dark .p-card-content {
   background-color: transparent !important;
 }
+
+.p-dialog .p-dialog-content {
+  overflow: visible !important;
+}
+
+.p-select-panel {
+  z-index: 9999 !important;
+  position: absolute !important;
+}

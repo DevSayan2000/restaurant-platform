@@ -1,0 +1,66 @@
+<!-- OPEN DIALOG BUTTON -->
+<!-- <button pButton icon="pi pi-plus" label="Add Restaurant" class="p-button-dark" (click)="openDialog()">
+</button> -->
+<!-- TRIGGER BUTTON FROM PARENT -->
+<ng-content select="[dialogTrigger]"></ng-content>
+
+<!-- DIALOG -->
+<p-dialog [(visible)]="showDialog" header="Create Restaurant" [modal]="true" [style]="{ width: '450px' }"
+    (onHide)="closeDialog()" class="rounded-xl" [contentStyle]="{ 'overflow': 'visible' }">
+
+    <form [formGroup]="restaurantForm" (ngSubmit)="submitRestaurant()" class="space-y-4">
+
+        <!-- NAME -->
+        <div>
+            <label class="block text-sm font-medium mb-1">Restaurant Name</label>
+            <input pInputText type="text" formControlName="name" class="w-full" />
+
+            <p *ngIf="submitted && f['name']?.errors" class="text-red-500 text-xs mt-1">
+                Name is required (min 3 characters)
+            </p>
+        </div>
+
+        <!-- CITY -->
+        <div>
+            <label class="block text-sm font-medium mb-1">City</label>
+            <input pInputText type="text" formControlName="city" class="w-full" />
+
+            <p *ngIf="submitted && f['city']?.errors" class="text-red-500 text-xs mt-1">
+                City is required
+            </p>
+        </div>
+
+        <!-- CUISINE -->
+        <div>
+            <label class="block text-sm font-medium mb-1">Cuisine</label>
+            <input pInputText type="text" formControlName="cuisine" class="w-full" />
+
+            <p *ngIf="submitted && f['cuisine']?.errors" class="text-red-500 text-xs mt-1">
+                Cuisine is required
+            </p>
+        </div>
+
+        <!-- FOOD TYPE SELECT -->
+        <div>
+            <label class="block text-sm font-medium mb-1">Food Type</label>
+
+            <p-select formControlName="foodType" [options]="foodTypes" optionLabel="label" optionValue="value"
+                placeholder="Select type" class="w-full">
+            </p-select>
+
+            <p *ngIf="submitted && f['foodType']?.errors" class="text-red-500 text-xs mt-1">
+                Food type is required
+            </p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="flex justify-end gap-2 pt-4">
+            <button pButton label="Cancel" class="p-button-text" type="button" (click)="closeDialog()">
+            </button>
+
+            <button pButton label="Create" icon="pi pi-check" class="p-button-dark" type="submit">
+            </button>
+        </div>
+
+    </form>
+</p-dialog>

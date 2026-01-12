@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Restaurant, RestaurantApiService } from 'app/core/services/restaurant-api.service';
@@ -8,6 +8,10 @@ import { CardModule } from 'primeng/card';
 import { RippleModule } from 'primeng/ripple';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { CreateRestaurantComponent } from './create-restaurant/create-restaurant.component';
+import { RestaurantService } from 'app/core/services/restaurant.service';
+import { ConfirmationService } from 'app/core/services/confirmation.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -20,19 +24,29 @@ import { TagModule } from 'primeng/tag';
     ButtonModule,
     TagModule,
     RippleModule,
-    CardModule
+    CardModule,
+    CreateRestaurantComponent,
   ],
 })
 export class AdminDashboardComponent {
   reviews: any = [];
   restaurants: Restaurant[] = [];
+  @ViewChild(CreateRestaurantComponent) restaurantDialog!: CreateRestaurantComponent;
+  private destroy$ = new Subject<void>();
 
-  constructor(private restaurantApiService: RestaurantApiService) {
-    this.restaurantApiService.getRestaurants().subscribe({
-      next: (response) => {
-        this.restaurants = response;
-      },
+  constructor(private restaurantService: RestaurantService, private confirm: ConfirmationService) {
+    this.restaurantService.restaurants$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
+      this.restaurants = value;
     });
+  }
+
+  ngOnInit() {
+    this.restaurantService.refresh();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   editRestaurant(r: Restaurant) {
@@ -41,7 +55,12 @@ export class AdminDashboardComponent {
   }
 
   deleteRestaurant(r: Restaurant) {
-    console.log('Delete clicked', r);
-    // open confirmation modal
+    this.confirm
+      .confirmDelete('Delete Restaurant?', 'This action cannot be undone.')
+      .subscribe((yes) => {
+        if (yes) {
+          this.restaurantService.deleteRestaurant(r.id);
+        }
+      });
   }
 }
