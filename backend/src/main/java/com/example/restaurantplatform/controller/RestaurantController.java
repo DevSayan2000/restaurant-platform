@@ -134,6 +134,42 @@ public class RestaurantController {
         return restaurantService.getRestaurantsByCity(city);
     }
 
+    // GET /api/restaurants/{restaurantId}
+    @Operation(
+            summary = "Get restaurant by Id",
+            description = "Accessible by User, Super_Admin, Restaurant_Admin"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully gets a restaurant",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = RestaurantResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
+    @PreAuthorize("hasAnyRole('USER','SUPER_ADMIN','RESTAURANT_ADMIN')")
+    @GetMapping("/{restaurantId}")
+    public ResponseEntity<RestaurantResponse> getRestaurantById(
+            @PathVariable Long restaurantId) {
+
+        return restaurantService.getRestaurantById(restaurantId);
+    }
+
     // DELETE /api/restaurants/{restaurantId}
     @Operation(
             summary = "Delete restaurant",

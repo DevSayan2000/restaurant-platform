@@ -36,7 +36,12 @@ public class RestaurantServiceImpl implements RestaurantService {
 
         Restaurant restaurant = restaurantRepository.findByEmailAndName(email, request.getName()).orElse(null);
         if (restaurant != null){
-            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_ALREADY_EXISTS, ErrorMessage.RESTAURANT_ALREADY_EXISTS);
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_ALREADY_EXISTS, ErrorMessage.RESTAURANT_ALREADY_EXISTS_EMAIL, email);
+        }
+
+        Restaurant res = restaurantRepository.findByNameAndCity(request.getName(), request.getCity()).orElse(null);
+        if (res != null){
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_ALREADY_EXISTS, ErrorMessage.RESTAURANT_ALREADY_EXISTS_CITY, request.getCity());
         }
 
         restaurant = new Restaurant();
@@ -52,6 +57,9 @@ public class RestaurantServiceImpl implements RestaurantService {
     }
 
     public ResponseEntity<GenericResponse> deleteRestaurant(Long restaurantId) {
+        if (restaurantId == null){
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");
+        }
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
         if (restaurant == null) {
             throw new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND);
@@ -103,6 +111,30 @@ public class RestaurantServiceImpl implements RestaurantService {
                 .toList(), HttpStatus.OK);
     }
 
+    public ResponseEntity<RestaurantResponse> getRestaurantById(Long restaurantId) {
+        if (restaurantId == null){
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");
+        }
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+        if (restaurant == null) {
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND);
+        }
+
+        Map<String, String> emailAndRole = commonUtils.getEmailAndRoleFromAuthToken();
+        String role = emailAndRole.get("role");
+        String email = emailAndRole.get("email");
+        
+        if (role.equals(Role.ROLE_RESTAURANT_ADMIN.name()) && !restaurant.getEmail().equals(email)) {
+            throw new RestaurantPlatformException(ErrorCode.FORBIDDEN, ErrorMessage.UNAUTHORIZED);
+        }
+
+        RestaurantResponse response = role.equals(Role.ROLE_RESTAURANT_ADMIN.name()) 
+            ? toResponse(restaurant) 
+            : toResponseForSA(restaurant);
+            
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     private RestaurantResponse toResponse(Restaurant restaurant) {
         Double avgRating = ratingRepository.findAverageRating(restaurant.getId());
 
@@ -114,7 +146,7 @@ public class RestaurantServiceImpl implements RestaurantService {
                 restaurant.getCuisine(),
                 avgRating,
                 null,
-                null
+                restaurant.getCreatedAt()
         );
     }
 

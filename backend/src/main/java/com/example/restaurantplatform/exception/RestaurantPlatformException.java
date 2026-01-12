@@ -13,4 +13,10 @@ public class RestaurantPlatformException extends RuntimeException {
         this.errorCode = errorCode;
         this.errorMessage = errorMessage;
     }
+
+    public RestaurantPlatformException(ErrorCode errorCode, ErrorMessage errorMessage, Object... args) {
+        super(String.format(errorMessage.getMessage(), args));
+        this.errorCode = errorCode;
+        this.errorMessage = errorMessage;
+    }
 }

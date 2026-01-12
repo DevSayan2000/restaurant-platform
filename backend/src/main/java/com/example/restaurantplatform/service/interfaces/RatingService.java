@@ -6,8 +6,6 @@ import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import org.springframework.http.ResponseEntity;
 
-import java.util.List;
-
 public interface RatingService {
 
     ResponseEntity<GenericResponse> addOrUpdateRating(Long restaurantId, CreateRatingRequest request);

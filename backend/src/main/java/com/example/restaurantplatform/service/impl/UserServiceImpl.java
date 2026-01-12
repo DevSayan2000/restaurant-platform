@@ -59,6 +59,9 @@ public class UserServiceImpl implements UserService {
     }
 
     public ResponseEntity<GenericResponse> deleteUser(Long userId) {
+        if (userId == null){
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "userId");
+        }
         User user =  userRepository.findById(userId).orElse(null);
         if (user == null) {
             throw new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND);

@@ -3,7 +3,6 @@ package com.example.restaurantplatform.security.user;
 import com.example.restaurantplatform.entity.User;
 import com.example.restaurantplatform.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.lang.NonNull;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +18,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(@NonNull String email)
+    public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new UsernameNotFoundException(email));

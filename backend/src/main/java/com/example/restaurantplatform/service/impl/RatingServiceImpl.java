@@ -36,6 +36,10 @@ public class RatingServiceImpl implements RatingService {
 
     public ResponseEntity<GenericResponse> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
 
+        if (restaurantId == null){
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");
+        }
+
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
         User user = userRepository.findByEmail(email)
@@ -84,6 +88,9 @@ public class RatingServiceImpl implements RatingService {
     }
 
     private void verifyRestaurantExistsAndEmailIdAccess(Long restaurantId) {
+        if (restaurantId == null){
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");
+        }
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
         String role = commonUtils.getEmailAndRoleFromAuthToken().get("role");
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);

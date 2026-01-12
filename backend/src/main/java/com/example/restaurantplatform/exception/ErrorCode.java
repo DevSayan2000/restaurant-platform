@@ -15,7 +15,8 @@ public enum ErrorCode {
     RESTAURANT_ALREADY_EXISTS("RP-0008"),
     FORBIDDEN("RP-0009"),
     USER_ALREADY_EXISTS("RP-0010"),
-    INVALID_ROLE("RP-0011");
+    INVALID_ROLE("RP-0011"),
+    PARAMETER_NOT_NULL("RP-0012");
 
 
     private final String code;
