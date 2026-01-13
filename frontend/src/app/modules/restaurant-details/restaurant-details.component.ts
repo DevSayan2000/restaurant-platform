@@ -82,6 +82,7 @@ export class RestaurantDetailsComponent {
           detail: `Review deleted successfully`,
         });
         this.reviews = this.reviews.filter((r) => r.id !== id);
+        this.getRestaurantDetails();
       },
     });
   }
