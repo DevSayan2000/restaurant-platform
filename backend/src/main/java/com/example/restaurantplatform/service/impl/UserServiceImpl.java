@@ -94,7 +94,8 @@ public class UserServiceImpl implements UserService {
         return new UserResponse(
                 user.getId(),
                 user.getName(),
-                user.getEmail()
+                user.getEmail(),
+                user.getRole().name()
         );
     }
 
