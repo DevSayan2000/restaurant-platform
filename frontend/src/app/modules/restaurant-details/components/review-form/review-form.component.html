@@ -1,0 +1,26 @@
+<form class="space-y-4" (ngSubmit)="submit()">
+
+    <!-- RATING -->
+    <div>
+        <label class="block mb-1 text-sm text-zinc-700 dark:text-zinc-300">Rating</label>
+        <p-rating [(ngModel)]="rating" name="rating"></p-rating>
+    </div>
+
+    <!-- REVIEW TEXT -->
+    <div>
+        <label class="block mb-1 text-sm text-zinc-700 dark:text-zinc-300">Review</label>
+        <textarea [(ngModel)]="reviewText" name="reviewText" rows="4"
+            class="w-full p-3 rounded-md border border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-800 text-zinc-800 dark:text-zinc-200">
+        </textarea>
+    </div>
+
+    <!-- ACTION BUTTONS -->
+    <div class="flex justify-end gap-2">
+        <button pButton type="button" label="Cancel" class="p-button-text" (click)="cancel.emit()">
+        </button>
+
+        <button pButton type="submit" label="Submit" class="p-button-primary">
+        </button>
+    </div>
+
+</form>

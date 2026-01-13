@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Restaurant, RestaurantApiService } from 'app/core/services/restaurant-api.service';
+import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate-text.component';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
@@ -19,6 +20,7 @@ import { TagModule } from 'primeng/tag';
     TagModule,
     ButtonModule,
     DividerModule,
+    TruncateTextComponent
   ],
 })
 export class UserDashboardComponent {

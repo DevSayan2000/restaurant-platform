@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { TruncateTooltipDirective } from 'app/core/directives/truncate-tooltip.directive';
 import { Restaurant } from 'app/core/services/restaurant-api.service';
 import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate-text.component';
@@ -18,7 +19,8 @@ import { TagModule } from 'primeng/tag';
     TagModule,
     CommonModule,
     ButtonModule,
-    TruncateTextComponent
+    TruncateTextComponent,
+    RouterModule
   ]
 })
 export class RestaurantsTableComponent {

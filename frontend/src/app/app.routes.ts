@@ -26,6 +26,10 @@ export const routes: Routes = [
         path: 'dashboard',
         loadChildren: () => import('app/modules/dashboard/dashboard.routes').then((m) => m.default),
       },
+      {
+        path: 'restaurants',
+        loadChildren: () => import('app/modules/restaurant-details/restaurant-details.routes').then((m) => m.default),
+      },
     ],
   },
 ];

@@ -1,0 +1,56 @@
+<div class="p-6 space-y-6 bg-zinc-50 dark:bg-zinc-900 h-full rounded-xl" *ngIf="user">
+
+    <!-- Restaurant Info Card -->
+    <app-restaurant-info-card
+        [restaurant]="restaurant">
+    </app-restaurant-info-card>
+
+
+    <!-- Reviews Header -->
+    <div class="flex items-center justify-between mt-6">
+        <h3 class="text-xl font-semibold text-zinc-800 dark:text-zinc-200">
+            Reviews ({{ reviews.length }})
+        </h3>
+
+        <!-- Only user can add review -->
+        <button *ngIf="user.role === role.USER"
+                pButton 
+                label="Add Review"
+                icon="pi pi-plus"
+                class="p-button-primary"
+                (click)="showAddReviewDialog = true">
+        </button>
+    </div>
+
+    <!-- Review List -->
+    <div class="flex flex-col gap-6">
+        <app-review-item
+            *ngFor="let r of reviews"
+            [review]="r"
+            [canDelete]="user.role === role.USER && r.userId === user.id"
+            (onDelete)="deleteReview(r.id)">
+        </app-review-item>
+    </div>
+
+
+    <!-- EMPTY MESSAGE -->
+    <div *ngIf="(!reviews || reviews.length === 0)"
+        class="text-center py-16 text-zinc-500 dark:text-zinc-400">
+
+        <div class="flex justify-center mb-4">
+            <div class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                <i class="pi pi-comments text-3xl opacity-60"></i>
+            </div>
+        </div>
+
+        <p class="text-lg font-semibold">No reviews yet</p>
+    </div>
+
+
+    <!-- ADD REVIEW DIALOG -->
+    <p-dialog [(visible)]="showAddReviewDialog" header="Add Review" [modal]="true" [style]="{width: '450px'}">
+        <app-review-form (submitReview)="addReview($event)" (cancel)="showAddReviewDialog = false">
+        </app-review-form>
+    </p-dialog>
+
+</div>

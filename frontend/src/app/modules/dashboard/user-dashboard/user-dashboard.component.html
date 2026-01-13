@@ -54,14 +54,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
 
                 <p-card *ngFor="let r of restaurants" class="cursor-pointer transition-all"
-                    styleClass="rounded-lg dark:bg-zinc-800 border dark:border-zinc-700 hover:shadow-md">
+                    styleClass="rounded-lg dark:bg-zinc-800 border dark:border-zinc-700 hover:shadow-md" [routerLink]="'/restaurants/'+r.id">
 
                     <!-- Header -->
                     <div class="flex items-center justify-between mb-2">
 
-                        <h4 class="font-semibold text-lg text-zinc-900 dark:text-zinc-100">
+                        <!-- <h4 class="font-semibold text-lg text-zinc-900 dark:text-zinc-100">
                             {{ r.name }}
-                        </h4>
+                        </h4> -->
+
+                        <div class="max-w-48">
+                            <app-truncate-text [text]="r.name" class="font-semibold text-lg text-zinc-900 dark:text-zinc-100"></app-truncate-text>
+                        </div>
 
                         <!-- FOOD TYPE TAG -->
                         @switch (r.foodType) {
@@ -89,7 +93,7 @@
                     </div>
 
                     <!-- Cuisine + City -->
-                    <p class="text-sm text-zinc-500 dark:text-zinc-400">
+                    <p class="text-sm text-zinc-500 dark:text-zinc-400 wrap-break-word">
                         {{ r.cuisine }} • {{ r.city }}
                     </p>
 

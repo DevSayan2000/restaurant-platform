@@ -75,7 +75,7 @@
                 <ng-template pTemplate="body" let-r>
                     <tr>
                         <td class="font-medium text-zinc-900 dark:text-zinc-100">
-                            <div class="w-36">
+                            <div class="w-36" [routerLink]="'/restaurants/'+r.id">
                                 <app-truncate-text [text]="r.name" class="hover:underline cursor-pointer"></app-truncate-text>
                             </div>
                         </td>

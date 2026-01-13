@@ -18,11 +18,25 @@ export interface Restaurant {
   createdDate: string; // ISO string
 }
 
+export interface RestaurantReview {
+  id: number;
+  rating: number;
+  review: string;
+  createdDate: string;
+  userName: string;
+  userId: number;
+}
+
 export interface RestaurantPayload {
   name: string;
   city: string;
   foodType: FoodType;
   cuisine: string;
+}
+
+export interface RestaurantReviewPayload {
+  rating: number;
+  review: string;
 }
 
 @Injectable({
@@ -45,5 +59,17 @@ export class RestaurantApiService {
 
   deleteRestaurant(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(API_ENDPOINTS.restaurants.delete(id));
+  }
+
+  getRestaurantDetails(id: string): Observable<Restaurant> {
+    return this.http.get<Restaurant>(API_ENDPOINTS.restaurants.details(id));
+  }
+
+  getRestaurantReviews(id: string): Observable<{ reviews: RestaurantReview[] }> {
+    return this.http.get<{ reviews: RestaurantReview[] }>(API_ENDPOINTS.restaurants.reviews(id));
+  }
+
+  addRestaurantReview(id: string, body: RestaurantReviewPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(API_ENDPOINTS.restaurants.addReview(id), body);
   }
 }

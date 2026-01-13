@@ -27,6 +27,7 @@ import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate
     CardModule,
     CreateRestaurantComponent,
     TruncateTextComponent,
+    RouterModule
   ],
 })
 export class AdminDashboardComponent {
