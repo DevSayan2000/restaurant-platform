@@ -1,6 +1,7 @@
 package com.example.restaurantplatform.service.impl;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
+import com.example.restaurantplatform.dto.rating.AllReviewsResponse;
 import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.dto.rating.ReviewResponse;
@@ -81,15 +82,18 @@ public class RatingServiceImpl implements RatingService {
         return new ResponseEntity<>(avgRatingResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<ReviewResponse>> getAllReviews(Long restaurantId) {
+    public ResponseEntity<AllReviewsResponse> getAllReviews(Long restaurantId) {
         verifyRestaurantExistsAndEmailIdAccess(restaurantId);
         List<Rating> allReviews = ratingRepository.findAllReviewsByRestaurantId(restaurantId);
         
-        return new ResponseEntity<>(allReviews
-                    .stream()
-                    .sorted(Comparator.comparingLong(Rating::getId))
-                    .map(this::toResponse)
-                    .toList(), HttpStatus.OK);
+        List<ReviewResponse> reviewResponses = allReviews
+                .stream()
+                .sorted(Comparator.comparingLong(Rating::getId))
+                .map(this::toResponse)
+                .toList();
+
+        AllReviewsResponse allReviewsResponse = new AllReviewsResponse(allReviews.size(), reviewResponses);
+        return new ResponseEntity<>(allReviewsResponse,  HttpStatus.OK);
     }
 
     private void verifyRestaurantExistsAndEmailIdAccess(Long restaurantId) {

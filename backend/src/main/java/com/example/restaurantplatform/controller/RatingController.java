@@ -1,7 +1,7 @@
 package com.example.restaurantplatform.controller;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
-import com.example.restaurantplatform.dto.rating.ReviewResponse;
+import com.example.restaurantplatform.dto.rating.AllReviewsResponse;
 import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
 import com.example.restaurantplatform.service.interfaces.RatingService;
@@ -20,7 +20,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
-import java.util.List;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
@@ -131,7 +130,7 @@ public class RatingController {
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN','USER')")
     @GetMapping("/reviews")
-    public ResponseEntity<List<ReviewResponse>> getAllReviews(@PathVariable Long restaurantId) {
+    public ResponseEntity<AllReviewsResponse> getAllReviews(@PathVariable Long restaurantId) {
         return ratingService.getAllReviews(restaurantId);
     }
 }

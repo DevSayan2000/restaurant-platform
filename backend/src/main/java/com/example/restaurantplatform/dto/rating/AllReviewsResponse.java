@@ -8,5 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class AllReviewsResponse {
-    private List<String> reviews;
+    private Integer total;
+    private List<ReviewResponse> reviews;
 }

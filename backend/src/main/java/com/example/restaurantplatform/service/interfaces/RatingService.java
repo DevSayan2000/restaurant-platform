@@ -3,11 +3,9 @@ package com.example.restaurantplatform.service.interfaces;
 import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
-import com.example.restaurantplatform.dto.rating.ReviewResponse;
+import com.example.restaurantplatform.dto.rating.AllReviewsResponse;
 
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 public interface RatingService {
 
@@ -15,5 +13,5 @@ public interface RatingService {
 
     ResponseEntity<AverageRatingResponse> getAverageRating(Long restaurantId);
 
-    ResponseEntity<List<ReviewResponse>> getAllReviews(Long restaurantId);
+    ResponseEntity<AllReviewsResponse> getAllReviews(Long restaurantId);
 }
