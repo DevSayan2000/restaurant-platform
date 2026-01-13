@@ -1,9 +1,9 @@
 package com.example.restaurantplatform.service.impl;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
-import com.example.restaurantplatform.dto.rating.AllReviewsResponse;
 import com.example.restaurantplatform.dto.rating.AverageRatingResponse;
 import com.example.restaurantplatform.dto.rating.CreateRatingRequest;
+import com.example.restaurantplatform.dto.rating.ReviewResponse;
 import com.example.restaurantplatform.entity.Rating;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
@@ -80,11 +81,15 @@ public class RatingServiceImpl implements RatingService {
         return new ResponseEntity<>(avgRatingResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<AllReviewsResponse> getAllReviews(Long restaurantId) {
+    public ResponseEntity<List<ReviewResponse>> getAllReviews(Long restaurantId) {
         verifyRestaurantExistsAndEmailIdAccess(restaurantId);
-        List<String> allReviews = ratingRepository.findAllReviewsByRestaurantId(restaurantId);
-        AllReviewsResponse allReviewsResponse = new AllReviewsResponse(allReviews);
-        return new ResponseEntity<>(allReviewsResponse, HttpStatus.OK);
+        List<Rating> allReviews = ratingRepository.findAllReviewsByRestaurantId(restaurantId);
+        
+        return new ResponseEntity<>(allReviews
+                    .stream()
+                    .sorted(Comparator.comparingLong(Rating::getId))
+                    .map(this::toResponse)
+                    .toList(), HttpStatus.OK);
     }
 
     private void verifyRestaurantExistsAndEmailIdAccess(Long restaurantId) {
@@ -100,5 +105,16 @@ public class RatingServiceImpl implements RatingService {
         if (role.equals(Role.ROLE_RESTAURANT_ADMIN.name()) && !restaurant.getEmail().equals(email)) {
             throw new RestaurantPlatformException(ErrorCode.UNAUTHORIZED, ErrorMessage.UNAUTHORIZED);
         }
+    }
+
+    private ReviewResponse toResponse(Rating rating) {
+        return new ReviewResponse(
+                rating.getId(),
+                rating.getRating(),
+                rating.getReview(),
+                rating.getCreatedAt(),
+                rating.getUser().getName(),
+                rating.getUser().getId()
+        );
     }
 }
