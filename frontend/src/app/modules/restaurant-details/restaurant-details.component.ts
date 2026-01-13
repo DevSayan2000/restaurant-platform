@@ -62,6 +62,7 @@ export class RestaurantDetailsComponent {
     this.restaurantApiService.addRestaurantReview(this.restaurantId, payload).subscribe({
       next: () => {
         this.getRestaurantReviews();
+        this.getRestaurantDetails();
         this.messageService.add({
           severity: 'success',
           summary: 'Review added',
@@ -73,7 +74,16 @@ export class RestaurantDetailsComponent {
   }
 
   deleteReview(id: number) {
-    this.reviews = this.reviews.filter((r) => r.id !== id);
+    this.restaurantApiService.deleteRestaurantReview(this.restaurantId).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Review deleted',
+          detail: `Review deleted successfully`,
+        });
+        this.reviews = this.reviews.filter((r) => r.id !== id);
+      },
+    });
   }
 
   getRestaurantDetails() {

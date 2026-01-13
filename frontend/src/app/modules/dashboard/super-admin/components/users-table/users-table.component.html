@@ -11,6 +11,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
+                <th>Actions</th>
             </tr>
         </ng-template>
 
@@ -40,6 +41,11 @@
                             <p-tag value="Unknown" severity="secondary"></p-tag>
                         }
                     }
+                </td>
+
+                <td class="text-center">
+                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger" (click)="onDeleteClick(u.id)">
+                    </button>
                 </td>
 
             </tr>

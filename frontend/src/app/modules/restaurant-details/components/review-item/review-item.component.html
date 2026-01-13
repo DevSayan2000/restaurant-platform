@@ -18,7 +18,7 @@
 
             <!-- User & date -->
             <p class="text-xs text-zinc-500 dark:text-zinc-400">
-                by {{ review.createdBy }} • {{ review.createdDate | date:'short' }}
+                by {{ review.createdBy }} • {{ review.createdDate | date:'mediumDate' }}
             </p>
         </div>
 
@@ -27,7 +27,7 @@
                 pButton 
                 icon="pi pi-trash"
                 class="p-button-text p-button-danger"
-                (click)="onDelete.emit(review.id)">
+                (click)="onDeleteClick()">
         </button>
 
     </div>

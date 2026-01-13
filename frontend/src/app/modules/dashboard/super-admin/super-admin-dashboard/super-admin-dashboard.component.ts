@@ -7,6 +7,7 @@ import { CardModule } from 'primeng/card';
 import { UserApiService } from 'app/core/services/user-api.service';
 import { User } from 'app/core/auth/auth.service';
 import { Restaurant, RestaurantApiService } from 'app/core/services/restaurant-api.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-super-admin-dashboard',
@@ -27,7 +28,8 @@ export class SuperAdminDashboardComponent implements OnInit {
 
   constructor(
     private userApiService: UserApiService,
-    private restaurantAPiService: RestaurantApiService
+    private restaurantAPiService: RestaurantApiService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -42,9 +44,29 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   deleteRestaurant(id: number) {
-    // this.service.deleteRestaurant(id).subscribe(() => {
-    //   this.restaurants = this.restaurants.filter(x => x.id !== id);
-    // });
+    this.restaurantAPiService.deleteRestaurant(id).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Restaurant Deleted',
+          detail: response.message,
+        });
+        this.restaurants = this.restaurants.filter((x) => x.id !== id);
+      },
+    });
+  }
+
+  deleteUser(id: number) {
+    this.userApiService.deleteUser(id).subscribe({
+      next: (response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'User Deleted',
+          detail: response.message,
+        });
+        this.users = this.users.filter((x) => x.id !== id);
+      },
+    });
   }
 
   onTabChange(event: any) {
