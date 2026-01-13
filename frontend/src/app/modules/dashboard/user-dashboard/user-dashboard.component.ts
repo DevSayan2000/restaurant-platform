@@ -8,6 +8,8 @@ import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DividerModule } from 'primeng/divider';
 import { TagModule } from 'primeng/tag';
+import { StatsCardsComponent } from './components/stats-cards/stats-cards.component';
+import { RestaurantGridComponent } from './components/restaurant-grid/restaurant-grid.component';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -20,7 +22,8 @@ import { TagModule } from 'primeng/tag';
     TagModule,
     ButtonModule,
     DividerModule,
-    TruncateTextComponent
+    StatsCardsComponent,
+    RestaurantGridComponent
   ],
 })
 export class UserDashboardComponent {

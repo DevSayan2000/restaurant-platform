@@ -47,4 +47,8 @@ export class UserApiService {
       })
     );
   }
+
+  deleteUser(id: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(API_ENDPOINTS.users.delete(id));
+  }
 }

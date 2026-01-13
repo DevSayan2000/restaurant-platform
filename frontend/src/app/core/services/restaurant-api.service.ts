@@ -72,4 +72,8 @@ export class RestaurantApiService {
   addRestaurantReview(id: string, body: RestaurantReviewPayload): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(API_ENDPOINTS.restaurants.addReview(id), body);
   }
+
+  deleteRestaurantReview(id: string): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(API_ENDPOINTS.restaurants.deleteReview(id));
+  }
 }

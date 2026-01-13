@@ -26,7 +26,7 @@
                 <!-- USERS TAB -->
                 <p-tabpanel [value]="0">
                     @if (activeTab === 0) {
-                    <app-users-table [users]="users"></app-users-table>
+                    <app-users-table [users]="users" (delete)="deleteUser($event)"></app-users-table>
                     }
                 </p-tabpanel>
 

@@ -75,11 +75,11 @@
 
                 <td>{{ r.createdBy }}</td>
 
-                <td>{{ r.createdDate | date:'short' }}</td>
+                <td>{{ r.createdDate | date:'mediumDate' }}</td>
 
                 <td class="text-center">
                     <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
-                        (click)="delete.emit(r.id)">
+                        (click)="onDeleteClick(r.id)">
                     </button>
                 </td>
 

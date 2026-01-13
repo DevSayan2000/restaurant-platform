@@ -58,7 +58,7 @@ export class AdminDashboardComponent {
 
   deleteRestaurant(r: Restaurant) {
     this.confirm
-      .confirmDelete('Delete Restaurant?', 'This action cannot be undone.')
+      .confirmDelete('Delete Restaurant?', 'Are you sure you want to delete this restaurant?')
       .subscribe((yes) => {
         if (yes) {
           this.restaurantService.deleteRestaurant(r.id);
