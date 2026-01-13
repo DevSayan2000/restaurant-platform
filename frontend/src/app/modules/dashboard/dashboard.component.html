@@ -5,3 +5,7 @@
 @if (user && user.role === Role.RESTAURANT_ADMIN) {
 <app-admin-dashboard></app-admin-dashboard>
 }
+
+@if (user && user.role === Role.SUPER_ADMIN) {
+<app-super-admin-dashboard></app-super-admin-dashboard>
+}

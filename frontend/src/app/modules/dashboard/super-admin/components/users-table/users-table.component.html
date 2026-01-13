@@ -1,0 +1,72 @@
+<div>
+
+    <h3 class="text-lg font-semibold mb-4">Users</h3>
+
+    <p-table [value]="users" [paginator]="true" [rows]="10">
+
+        <!-- TABLE HEADER -->
+        <ng-template pTemplate="header">
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+            </tr>
+        </ng-template>
+
+        <!-- TABLE ROWS -->
+        <ng-template pTemplate="body" let-u>
+            <tr>
+                <td>{{ u.id }}</td>
+                <td>{{ u.name }}</td>
+                <td>{{ u.email }}</td>
+
+                <td>
+                    @switch (u.role) {
+
+                        @case (role.USER) {
+                            <p-tag value="User" severity="info"></p-tag>
+                        }
+
+                        @case (role.RESTAURANT_ADMIN) {
+                            <p-tag value="Restaurant Admin" severity="success"></p-tag>
+                        }
+
+                        @case (role.SUPER_ADMIN) {
+                            <p-tag value="Super Admin" severity="warn"></p-tag>
+                        }
+
+                        @default {
+                            <p-tag value="Unknown" severity="secondary"></p-tag>
+                        }
+                    }
+                </td>
+
+            </tr>
+        </ng-template>
+
+        <!-- EMPTY MESSAGE -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="4" class="text-center py-6 text-zinc-500">
+
+                    <div class="py-16 text-center text-zinc-500 dark:text-zinc-400">
+
+                        <div class="flex justify-center mb-4">
+                            <div
+                                class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                <i class="pi pi-users text-3xl opacity-60"></i>
+                            </div>
+                        </div>
+
+                        <p class="text-lg font-semibold mb-1">No users found</p>
+
+                    </div>
+
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+
+</div>

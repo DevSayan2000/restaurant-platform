@@ -74,9 +74,21 @@
 
                 <ng-template pTemplate="body" let-r>
                     <tr>
-                        <td class="font-medium text-zinc-900 dark:text-zinc-100">{{ r.name }}</td>
-                        <td class="text-zinc-600 dark:text-zinc-400">{{ r.city }}</td>
-                        <td class="text-zinc-600 dark:text-zinc-400">{{ r.cuisine }}</td>
+                        <td class="font-medium text-zinc-900 dark:text-zinc-100">
+                            <div class="w-36">
+                                <app-truncate-text [text]="r.name" class="hover:underline cursor-pointer"></app-truncate-text>
+                            </div>
+                        </td>
+                        <td class="text-zinc-600 dark:text-zinc-400">
+                            <div class="w-36">
+                                <app-truncate-text [text]="r.city"></app-truncate-text>
+                            </div>
+                        </td>
+                        <td class="text-zinc-600 dark:text-zinc-400">
+                            <div class="w-36">
+                                <app-truncate-text [text]="r.cuisine"></app-truncate-text>
+                            </div>
+                        </td>
 
                         <td>
                             @switch (r.foodType) {
@@ -120,11 +132,11 @@
                         </td>
 
                         <td class="text-center">
-                            <button pButton class="p-button-text p-button-sm text-blue-500" icon="pi pi-pencil"
+                            <button pButton class="p-button-text p-button-info" icon="pi pi-pencil"
                                 (click)="editRestaurant(r)">
                             </button>
 
-                            <button pButton class="p-button-text p-button-sm text-red-500" icon="pi pi-trash"
+                            <button pButton class="p-button-text p-button-danger" icon="pi pi-trash"
                                 (click)="deleteRestaurant(r)">
                             </button>
                         </td>

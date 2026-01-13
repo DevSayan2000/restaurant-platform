@@ -1,0 +1,46 @@
+<div class="space-y-6">
+
+    <!-- Page Header -->
+    <p-card>
+        <h2 class="text-2xl font-semibold">Super Admin Dashboard</h2>
+        <p class="text-zinc-500 mt-1">Monitor all users and restaurants across the platform.</p>
+    </p-card>
+
+    <!-- Analytics Section -->
+    <app-analytics-cards [users]="users" [restaurants]="restaurants">
+    </app-analytics-cards>
+
+    <!-- Correct Tab View -->
+    <p-card class="mt-6 rounded-xl overflow-hidden">
+        <p-tabs [value]="0" class="overflow-hidden" (valueChange)="onTabChange($event)">
+
+            <!-- Tab Headers -->
+            <p-tablist>
+                <p-tab [value]="0">Users</p-tab>
+                <p-tab [value]="1">Restaurants</p-tab>
+            </p-tablist>
+
+            <!-- Tab Content -->
+            <p-tabpanels>
+
+                <!-- USERS TAB -->
+                <p-tabpanel [value]="0">
+                    @if (activeTab === 0) {
+                    <app-users-table [users]="users"></app-users-table>
+                    }
+                </p-tabpanel>
+
+                <!-- RESTAURANTS TAB -->
+                <p-tabpanel [value]="1">
+                    @if (activeTab === 1) {
+                    <app-restaurants-table [restaurants]="restaurants" (delete)="deleteRestaurant($event)">
+                    </app-restaurants-table>
+                    }
+                </p-tabpanel>
+
+            </p-tabpanels>
+
+        </p-tabs>
+    </p-card>
+
+</div>

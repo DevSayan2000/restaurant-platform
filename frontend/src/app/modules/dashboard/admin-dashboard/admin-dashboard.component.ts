@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthService } from 'app/core/auth/auth.service';
-import { Restaurant, RestaurantApiService } from 'app/core/services/restaurant-api.service';
+import { Restaurant } from 'app/core/services/restaurant-api.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RippleModule } from 'primeng/ripple';
@@ -12,6 +11,7 @@ import { CreateRestaurantComponent } from './create-restaurant/create-restaurant
 import { RestaurantService } from 'app/core/services/restaurant.service';
 import { ConfirmationService } from 'app/core/services/confirmation.service';
 import { Subject, takeUntil } from 'rxjs';
+import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate-text.component';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -26,6 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
     RippleModule,
     CardModule,
     CreateRestaurantComponent,
+    TruncateTextComponent,
   ],
 })
 export class AdminDashboardComponent {

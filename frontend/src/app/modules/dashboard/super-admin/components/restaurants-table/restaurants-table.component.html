@@ -1,0 +1,111 @@
+<div>
+
+    <h3 class="text-lg font-semibold mb-4">Restaurants</h3>
+
+    <p-table [value]="restaurants" [paginator]="true" [rows]="10">
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th>Name</th>
+                <th>City</th>
+                <th>Cuisine</th>
+                <th>Food Type</th>
+                <th>Rating</th>
+                <th>Created By</th>
+                <th>Date</th>
+                <th class="text-center">Actions</th>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-r>
+            <tr>
+
+                <td>
+                    <div class="w-36">
+                        <app-truncate-text [text]="r.name" class="hover:underline cursor-pointer"></app-truncate-text>
+                    </div>
+                </td>
+                <td>
+                    <div class="w-36">
+                        <app-truncate-text [text]="r.city"></app-truncate-text>
+                    </div>
+                </td>
+                <td>
+                    <div class="w-36">
+                        <app-truncate-text [text]="r.cuisine"></app-truncate-text>
+                    </div>
+                </td>
+
+                <td>
+                    @switch (r.foodType) {
+
+                    @case ('VEG') {
+                    <p-tag value="VEG" severity="success"></p-tag>
+                    }
+
+                    @case ('JAIN') {
+                    <p-tag value="JAIN" severity="warn"></p-tag>
+                    }
+
+                    @case ('VEGAN') {
+                    <p-tag value="VEGAN" severity="info"></p-tag>
+                    }
+
+                    @case ('NON_VEG') {
+                    <p-tag value="NON-VEG" severity="danger"></p-tag>
+                    }
+
+                    @default {
+                    <p-tag value="UNKNOWN" severity="secondary"></p-tag>
+                    }
+                    }
+                </td>
+
+                <td>
+                    <div class="flex items-center gap-1">
+                        @if (r.avgRating !== null && r.avgRating !== undefined) {
+                        <i class="pi pi-star-fill text-yellow-500 text-xs"></i>
+                        <span class="text-zinc-700 dark:text-zinc-300">{{ r.avgRating }}</span>
+                        } @else {
+                        {{'-'}}
+                        }
+
+                    </div>
+                </td>
+
+                <td>{{ r.createdBy }}</td>
+
+                <td>{{ r.createdDate | date:'short' }}</td>
+
+                <td class="text-center">
+                    <button pButton icon="pi pi-trash" class="p-button-text p-button-danger"
+                        (click)="delete.emit(r.id)">
+                    </button>
+                </td>
+
+            </tr>
+        </ng-template>
+
+        <!-- EMPTY MESSAGE -->
+        <ng-template pTemplate="emptymessage">
+            <tr>
+                <td colspan="8" class="text-center py-6 text-zinc-500">
+                    <div class="py-16 text-center text-zinc-500 dark:text-zinc-400">
+
+                        <div class="flex justify-center mb-4">
+                            <div
+                                class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                <i class="pi pi-shop text-3xl opacity-60"></i>
+                            </div>
+                        </div>
+
+                        <p class="text-lg font-semibold mb-1">No restaurants added yet</p>
+
+                    </div>
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+
+</div>
