@@ -65,8 +65,8 @@ export class RestaurantApiService {
     return this.http.get<Restaurant>(API_ENDPOINTS.restaurants.details(id));
   }
 
-  getRestaurantReviews(id: string): Observable<{ reviews: RestaurantReview[] }> {
-    return this.http.get<{ reviews: RestaurantReview[] }>(API_ENDPOINTS.restaurants.reviews(id));
+  getRestaurantReviews(id: string): Observable<RestaurantReview[]> {
+    return this.http.get<RestaurantReview[]>(API_ENDPOINTS.restaurants.reviews(id));
   }
 
   addRestaurantReview(id: string, body: RestaurantReviewPayload): Observable<{ message: string }> {
