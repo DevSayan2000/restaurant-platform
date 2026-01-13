@@ -23,7 +23,7 @@ export interface RestaurantReview {
   rating: number;
   review: string;
   createdDate: string;
-  userName: string;
+  createdBy: string;
   userId: number;
 }
 
