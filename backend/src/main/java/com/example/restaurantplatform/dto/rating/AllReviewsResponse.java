@@ -8,6 +8,6 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public class AllReviewsResponse {
-    private Integer total;
+    private Integer maxResults;
     private List<ReviewResponse> reviews;
 }

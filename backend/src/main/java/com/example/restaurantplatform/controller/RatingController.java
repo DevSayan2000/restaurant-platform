@@ -19,8 +19,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-
 @SecurityRequirement(name = "bearerAuth")
 @RestController
 @RequestMapping("/api/restaurants/{restaurantId}/ratings")
@@ -110,8 +108,8 @@ public class RatingController {
                     responseCode = "200",
                     description = "Successfully fetched all reviews for a restaurant",
                     content = @Content(
-                            mediaType = MediaType.TEXT_PLAIN_VALUE,
-                            schema = @Schema(implementation = Arrays.class)
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = AllReviewsResponse.class)
                     )
             ),
             @ApiResponse(
