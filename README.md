@@ -5,8 +5,8 @@ user-provided ratings and footfall data.
 
 ## Tech Stack
 - Backend: Java 21, Spring Boot, Maven
-- Frontend: (React / Angular / Vue)
-- Database: MySQL
+- Frontend: Angular
+- Database: PostgreSQL
 - API Docs: Swagger / OpenAPI
 
 ## Project Structure
