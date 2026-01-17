@@ -5,6 +5,7 @@ import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.ListUserResponse;
+import com.example.restaurantplatform.dto.user.Reviews;
 import com.example.restaurantplatform.dto.user.UserResponse;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
@@ -12,10 +13,12 @@ import com.example.restaurantplatform.enums.Role;
 import com.example.restaurantplatform.exception.ErrorCode;
 import com.example.restaurantplatform.exception.ErrorMessage;
 import com.example.restaurantplatform.exception.RestaurantPlatformException;
+import com.example.restaurantplatform.mapper.ReviewMapper;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
 import com.example.restaurantplatform.service.interfaces.UserService;
+import com.example.restaurantplatform.util.CommonUtils;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,6 +27,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final RatingRepository ratingRepository;
     private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CommonUtils commonUtils;
 
     public ResponseEntity<GenericResponse> createUser(CreateUserRequest request) {
 
@@ -85,6 +90,22 @@ public class UserServiceImpl implements UserService {
 
     public ResponseEntity<ListRestaurantResponse> getAllRestaurantsForUsers() {
         return new ResponseEntity<>(new ListRestaurantResponse(restaurantRepository.findAll()
+                .stream()
+                .sorted(Comparator.comparingLong(Restaurant::getId))
+                .map(this::toResponse)
+                .toList()), HttpStatus.OK);
+    }
+
+    public  ResponseEntity<Reviews> getAllReviewsGivenByUser() {
+        String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
+        List<ReviewMapper> reviews = userRepository.findAllReviewsGivenByUser(email);
+
+        return new ResponseEntity<>(new Reviews(reviews), HttpStatus.OK);
+    }
+
+    public  ResponseEntity<ListRestaurantResponse> getRestaurantsReviewedByUser() {
+        String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
+        return new ResponseEntity<>(new ListRestaurantResponse(userRepository.findRestaurantsReviewedByUser(email)
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
                 .map(this::toResponse)

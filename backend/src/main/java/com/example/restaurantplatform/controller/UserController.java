@@ -4,6 +4,7 @@ import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.ListUserResponse;
+import com.example.restaurantplatform.dto.user.Reviews;
 import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -127,6 +128,76 @@ public class UserController {
     public ResponseEntity<ListRestaurantResponse> getAllRestaurantsForUsers() {
 
         return userService.getAllRestaurantsForUsers();
+    }
+
+    // GET /api/users/reviews
+    @Operation(
+            summary = "Get all reviews given by user",
+            description = "Accessible only by User"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched all reviews given by user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = Reviews.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("reviews")
+    public ResponseEntity<Reviews> getAllReviewsGivenByUser() {
+
+        return userService.getAllReviewsGivenByUser();
+    }
+
+    // GET /api/users/reviewedRestaurants
+    @Operation(
+            summary = "Get all restaurant reviewed by user",
+            description = "Accessible only by User"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully fetched all restaurants reviewed by user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ListRestaurantResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("reviewedRestaurants")
+    public ResponseEntity<ListRestaurantResponse> getRestaurantsReviewedByUser() {
+
+        return userService.getRestaurantsReviewedByUser();
     }
 
     // DELETE /api/users

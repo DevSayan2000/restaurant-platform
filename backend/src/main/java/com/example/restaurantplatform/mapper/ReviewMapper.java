@@ -2,10 +2,9 @@ package com.example.restaurantplatform.mapper;
 
 import java.time.LocalDateTime;
 
-public record RecentReviewMapper(
+public record ReviewMapper(
         String restaurant,
         String review,
         Integer rating,
-        String createdBy,
         LocalDateTime createdDate
 ) {}

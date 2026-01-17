@@ -56,7 +56,9 @@ public interface AnalyticsRepository extends JpaRepository<Rating, Long> {
 
     @Query("""
         SELECT new com.example.restaurantplatform.mapper.RecentReviewMapper(
+            r.restaurant.name,
             r.review,
+            r.rating,
             r.user.name,
             r.createdAt
         )
