@@ -1,8 +1,10 @@
 package com.example.restaurantplatform.service.impl;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
+import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
+import com.example.restaurantplatform.dto.user.ListUserResponse;
 import com.example.restaurantplatform.dto.user.UserResponse;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
@@ -22,7 +24,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -71,23 +72,23 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<UserResponse>> getUsers() {
-        return new ResponseEntity<>(
+    public ResponseEntity<ListUserResponse> getUsers() {
+        return new ResponseEntity<>(new ListUserResponse(
                 userRepository.findAll()
                         .stream()
                         .sorted(Comparator.comparingLong(User::getId))
                         .map(this::toResponse)
-                        .toList(),
+                        .toList()),
                 HttpStatus.OK
         );
     }
 
-    public ResponseEntity<List<RestaurantResponse>> getAllRestaurantsForUsers() {
-        return new ResponseEntity<>(restaurantRepository.findAll()
+    public ResponseEntity<ListRestaurantResponse> getAllRestaurantsForUsers() {
+        return new ResponseEntity<>(new ListRestaurantResponse(restaurantRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
                 .map(this::toResponse)
-                .toList(), HttpStatus.OK);
+                .toList()), HttpStatus.OK);
     }
 
     private UserResponse toResponse(User user) {

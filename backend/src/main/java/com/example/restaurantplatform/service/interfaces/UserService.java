@@ -1,20 +1,18 @@
 package com.example.restaurantplatform.service.interfaces;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
-import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
+import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
-import com.example.restaurantplatform.dto.user.UserResponse;
+import com.example.restaurantplatform.dto.user.ListUserResponse;
 import org.springframework.http.ResponseEntity;
-
-import java.util.List;
 
 public interface UserService {
 
     ResponseEntity<GenericResponse> createUser(CreateUserRequest request);
 
-    ResponseEntity<List<UserResponse>> getUsers();
+    ResponseEntity<ListUserResponse> getUsers();
 
-    ResponseEntity<List<RestaurantResponse>> getAllRestaurantsForUsers();
+    ResponseEntity<ListRestaurantResponse> getAllRestaurantsForUsers();
 
     ResponseEntity<GenericResponse> deleteUser(Long userId);
 }

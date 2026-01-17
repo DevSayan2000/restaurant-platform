@@ -2,6 +2,7 @@ package com.example.restaurantplatform.controller;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
+import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.RestaurantService;
@@ -16,8 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
@@ -74,7 +73,7 @@ public class RestaurantController {
                     description = "Successfully fetched all restaurant details",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = RestaurantResponse.class)
+                            schema = @Schema(implementation = ListRestaurantResponse.class)
                     )
             ),
             @ApiResponse(
@@ -93,7 +92,7 @@ public class RestaurantController {
     })
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @GetMapping
-    public ResponseEntity<List<RestaurantResponse>> getRestaurants() {
+    public ResponseEntity<ListRestaurantResponse> getRestaurants() {
 
         return restaurantService.getRestaurants();
     }
@@ -109,7 +108,7 @@ public class RestaurantController {
                     description = "Successfully fetched all restaurant details for a city",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = RestaurantResponse.class)
+                            schema = @Schema(implementation = ListRestaurantResponse.class)
                     )
             ),
             @ApiResponse(
@@ -128,7 +127,7 @@ public class RestaurantController {
     })
     @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_RESTAURANT_ADMIN')")
     @GetMapping(params = "city")
-    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity(
+    public ResponseEntity<ListRestaurantResponse> getRestaurantsByCity(
             @RequestParam String city) {
 
         return restaurantService.getRestaurantsByCity(city);

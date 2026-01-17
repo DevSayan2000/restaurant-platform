@@ -1,9 +1,9 @@
 package com.example.restaurantplatform.controller;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
-import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
+import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
-import com.example.restaurantplatform.dto.user.UserResponse;
+import com.example.restaurantplatform.dto.user.ListUserResponse;
 import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,8 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -72,7 +70,7 @@ public class UserController {
                     description = "Successfully fetch all user details",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = UserResponse.class)
+                            schema = @Schema(implementation = ListUserResponse.class)
                     )
             ),
             @ApiResponse(
@@ -91,7 +89,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('SUPER_ADMIN')")
     @GetMapping
-    public ResponseEntity<List<UserResponse>> getUsers() {
+    public ResponseEntity<ListUserResponse> getUsers() {
 
         return userService.getUsers();
     }
@@ -107,7 +105,7 @@ public class UserController {
                     description = "Successfully fetched all restaurants details for user",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = RestaurantResponse.class)
+                            schema = @Schema(implementation = ListRestaurantResponse.class)
                     )
             ),
             @ApiResponse(
@@ -126,7 +124,7 @@ public class UserController {
     })
     @PreAuthorize("hasRole('USER')")
     @GetMapping("restaurants")
-    public ResponseEntity<List<RestaurantResponse>> getAllRestaurantsForUsers() {
+    public ResponseEntity<ListRestaurantResponse> getAllRestaurantsForUsers() {
 
         return userService.getAllRestaurantsForUsers();
     }

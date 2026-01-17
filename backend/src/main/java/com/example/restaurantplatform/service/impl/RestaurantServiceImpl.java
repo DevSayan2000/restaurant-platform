@@ -2,6 +2,7 @@ package com.example.restaurantplatform.service.impl;
 
 import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
+import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.enums.Role;
@@ -19,7 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
-import java.util.List;
 import java.util.Map;
 
 @Service
@@ -75,40 +75,40 @@ public class RestaurantServiceImpl implements RestaurantService {
         return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<List<RestaurantResponse>> getRestaurants() {
+    public ResponseEntity<ListRestaurantResponse> getRestaurants() {
         Map<String, String> emailAndRole = commonUtils.getEmailAndRoleFromAuthToken();
         String role = emailAndRole.get("role");
         if (role.equals(Role.ROLE_RESTAURANT_ADMIN.name())) {
             String email = emailAndRole.get("email");
-            return new ResponseEntity<>(restaurantRepository.findByEmail(email)
+            return new ResponseEntity<>(new ListRestaurantResponse(restaurantRepository.findByEmail(email)
                     .stream()
                     .sorted(Comparator.comparingLong(Restaurant::getId))
                     .map(this::toResponse)
-                    .toList(), HttpStatus.OK);
+                    .toList()), HttpStatus.OK);
         }
-        return new ResponseEntity<>(restaurantRepository.findAll()
+        return new ResponseEntity<>(new ListRestaurantResponse(restaurantRepository.findAll()
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
                 .map(this::toResponseForSA)
-                .toList(), HttpStatus.OK);
+                .toList()), HttpStatus.OK);
     }
 
-    public ResponseEntity<List<RestaurantResponse>> getRestaurantsByCity(String city) {
+    public ResponseEntity<ListRestaurantResponse> getRestaurantsByCity(String city) {
         Map<String, String> emailAndRole = commonUtils.getEmailAndRoleFromAuthToken();
         String role = emailAndRole.get("role");
         if (role.equals(Role.ROLE_RESTAURANT_ADMIN.name())) {
             String email = emailAndRole.get("email");
-            return new ResponseEntity<>(restaurantRepository.findByEmailAndCity(email, city)
+            return new ResponseEntity<>(new ListRestaurantResponse(restaurantRepository.findByEmailAndCity(email, city)
                     .stream()
                     .sorted(Comparator.comparingLong(Restaurant::getId))
                     .map(this::toResponse)
-                    .toList(), HttpStatus.OK);
+                    .toList()), HttpStatus.OK);
         }
-        return new ResponseEntity<>(restaurantRepository.findByCity(city)
+        return new ResponseEntity<>(new ListRestaurantResponse(restaurantRepository.findByCity(city)
                 .stream()
                 .sorted(Comparator.comparingLong(Restaurant::getId))
                 .map(this::toResponseForSA)
-                .toList(), HttpStatus.OK);
+                .toList()), HttpStatus.OK);
     }
 
     public ResponseEntity<RestaurantResponse> getRestaurantById(Long restaurantId) {
