@@ -2,7 +2,7 @@ package com.example.restaurantplatform.controller;
 
 import com.example.restaurantplatform.dto.analytics.AnalyticsResponse;
 import com.example.restaurantplatform.dto.analytics.PopularRestaurants;
-import com.example.restaurantplatform.dto.analytics.PopularReviews;
+import com.example.restaurantplatform.dto.analytics.RecentReviews;
 import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.AnalyticsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -95,18 +95,18 @@ public class AnalyticsController {
         return analyticsService.getPopularRestaurants();
     }
 
-    // GET /api/analytics/popularReviews
+    // GET /api/analytics/recentReviews
     @Operation(
-            summary = "Get top 3 popular reviews details",
+            summary = "Get top 3 recent reviews details",
             description = "Accessible only by Restaurant_Admin"
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "Successfully fetched top 3 popular reviews",
+                    description = "Successfully fetched top 3 recent reviews",
                     content = @Content(
                             mediaType = MediaType.APPLICATION_JSON_VALUE,
-                            schema = @Schema(implementation = PopularReviews.class)
+                            schema = @Schema(implementation = RecentReviews.class)
                     )
             ),
             @ApiResponse(
@@ -124,8 +124,8 @@ public class AnalyticsController {
             )
     })
     @PreAuthorize("hasRole('RESTAURANT_ADMIN')")
-    @GetMapping("/popularReviews")
-    public ResponseEntity<PopularReviews> getPopularReviews() {
-        return analyticsService.getPopularReviews();
+    @GetMapping("/recentReviews")
+    public ResponseEntity<RecentReviews> getRecentReviews() {
+        return analyticsService.getRecentReviews();
     }
 }

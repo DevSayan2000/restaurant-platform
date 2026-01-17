@@ -2,7 +2,7 @@ package com.example.restaurantplatform.service.interfaces;
 
 import com.example.restaurantplatform.dto.analytics.AnalyticsResponse;
 import com.example.restaurantplatform.dto.analytics.PopularRestaurants;
-import com.example.restaurantplatform.dto.analytics.PopularReviews;
+import com.example.restaurantplatform.dto.analytics.RecentReviews;
 import org.springframework.http.ResponseEntity;
 
 public interface AnalyticsService {
@@ -11,5 +11,5 @@ public interface AnalyticsService {
 
     ResponseEntity<PopularRestaurants> getPopularRestaurants();
 
-    ResponseEntity<PopularReviews> getPopularReviews();
+    ResponseEntity<RecentReviews> getRecentReviews();
 }

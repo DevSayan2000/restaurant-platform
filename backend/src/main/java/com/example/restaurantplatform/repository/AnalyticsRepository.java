@@ -2,7 +2,7 @@ package com.example.restaurantplatform.repository;
 
 import com.example.restaurantplatform.entity.Rating;
 import com.example.restaurantplatform.mapper.PopularRestaurantMapper;
-import com.example.restaurantplatform.mapper.PopularReviewMapper;
+import com.example.restaurantplatform.mapper.RecentReviewMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -55,7 +55,7 @@ public interface AnalyticsRepository extends JpaRepository<Rating, Long> {
     List<PopularRestaurantMapper> findTop3PopularRestaurantsForUser(Pageable pageable);
 
     @Query("""
-        SELECT new com.example.restaurantplatform.mapper.PopularReviewMapper(
+        SELECT new com.example.restaurantplatform.mapper.RecentReviewMapper(
             r.review,
             r.user.name,
             r.createdAt
@@ -65,7 +65,7 @@ public interface AnalyticsRepository extends JpaRepository<Rating, Long> {
         AND r.review IS NOT NULL
         ORDER BY r.createdAt DESC
     """)
-    List<PopularReviewMapper> findTop3RecentReviewsForRestaurantAdmin(
+    List<RecentReviewMapper> findTop3RecentReviewsForRestaurantAdmin(
             @Param("adminEmail") String adminEmail,
             Pageable pageable
     );

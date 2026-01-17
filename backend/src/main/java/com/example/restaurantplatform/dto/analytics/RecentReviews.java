@@ -1,6 +1,6 @@
 package com.example.restaurantplatform.dto.analytics;
 
-import com.example.restaurantplatform.mapper.PopularReviewMapper;
+import com.example.restaurantplatform.mapper.RecentReviewMapper;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Getter
-public class PopularReviews {
+public class RecentReviews {
 
-    List<PopularReviewMapper> reviews;
+    List<RecentReviewMapper> reviews;
 }

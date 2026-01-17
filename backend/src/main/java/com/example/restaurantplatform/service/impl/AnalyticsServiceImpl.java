@@ -2,12 +2,12 @@ package com.example.restaurantplatform.service.impl;
 
 import com.example.restaurantplatform.dto.analytics.AnalyticsResponse;
 import com.example.restaurantplatform.dto.analytics.PopularRestaurants;
-import com.example.restaurantplatform.dto.analytics.PopularReviews;
+import com.example.restaurantplatform.dto.analytics.RecentReviews;
 import com.example.restaurantplatform.exception.ErrorCode;
 import com.example.restaurantplatform.exception.ErrorMessage;
 import com.example.restaurantplatform.exception.RestaurantPlatformException;
 import com.example.restaurantplatform.mapper.PopularRestaurantMapper;
-import com.example.restaurantplatform.mapper.PopularReviewMapper;
+import com.example.restaurantplatform.mapper.RecentReviewMapper;
 import com.example.restaurantplatform.repository.AnalyticsRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
@@ -64,13 +64,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         return new ResponseEntity<>(new PopularRestaurants(restaurants), HttpStatus.OK);
     }
 
-    public ResponseEntity<PopularReviews> getPopularReviews() {
+    public ResponseEntity<RecentReviews> getRecentReviews() {
 
         Map<String, String> auth = commonUtils.getEmailAndRoleFromAuthToken();
         Pageable pageable = PageRequest.of(0, 3);
-        List<PopularReviewMapper> reviews = analyticsRepository.findTop3RecentReviewsForRestaurantAdmin(auth.get("email"), pageable);
+        List<RecentReviewMapper> reviews = analyticsRepository.findTop3RecentReviewsForRestaurantAdmin(auth.get("email"), pageable);
 
-        return new ResponseEntity<>(new PopularReviews(reviews), HttpStatus.OK);
+        return new ResponseEntity<>(new RecentReviews(reviews), HttpStatus.OK);
     }
 
     private ResponseEntity<AnalyticsResponse> getSuperAdminAnalytics(){

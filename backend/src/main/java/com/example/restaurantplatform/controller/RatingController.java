@@ -37,8 +37,8 @@ public class RatingController {
                     responseCode = "200",
                     description = "Successfully added or updated ratings",
                     content = @Content(
-                            mediaType = MediaType.TEXT_PLAIN_VALUE,
-                            schema = @Schema(implementation = String.class)
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
                     )
             ),
             @ApiResponse(
@@ -74,8 +74,8 @@ public class RatingController {
                     responseCode = "200",
                     description = "Successfully fetched average ratings for a restaurant",
                     content = @Content(
-                            mediaType = MediaType.TEXT_PLAIN_VALUE,
-                            schema = @Schema(implementation = Double.class)
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = AverageRatingResponse.class)
                     )
             ),
             @ApiResponse(

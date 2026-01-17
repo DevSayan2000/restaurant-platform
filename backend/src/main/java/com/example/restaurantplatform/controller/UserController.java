@@ -34,8 +34,8 @@ public class UserController {
                     responseCode = "201",
                     description = "Successfully created an user",
                     content = @Content(
-                            mediaType = MediaType.TEXT_PLAIN_VALUE,
-                            schema = @Schema(implementation = String.class)
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
                     )
             ),
             @ApiResponse(
@@ -139,8 +139,8 @@ public class UserController {
                     responseCode = "200",
                     description = "Successfully deleted an user",
                     content = @Content(
-                            mediaType = MediaType.TEXT_PLAIN_VALUE,
-                            schema = @Schema(implementation = String.class)
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
                     )
             ),
             @ApiResponse(
