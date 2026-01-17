@@ -95,7 +95,7 @@ export class RestaurantDetailsComponent {
 
   getRestaurantReviews() {
     this.restaurantApiService.getRestaurantReviews(this.restaurantId).subscribe({
-      next: (response) => (this.reviews = response),
+      next: (response) => (this.reviews = response.reviews),
     });
   }
 }

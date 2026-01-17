@@ -11,11 +11,12 @@
     </p-card>
 
     <!-- Stats Section -->
-    <app-stats-cards [totalRestaurants]="restaurants.length" [userReviews]="8" [avgRating]="4.2">
+    <app-stats-cards *ngIf="analytics" [totalRestaurants]="analytics.restaurants" [userReviews]="analytics.reviews"
+        [avgRating]="analytics.rating">
     </app-stats-cards>
 
     <!-- Popular Restaurants -->
-    <app-restaurant-grid [title]="'Popular Restaurants'" [restaurants]="restaurants.slice(0, 3)">
+    <app-restaurant-grid [title]="'Popular Restaurants'" [restaurants]="popularRestaurants">
     </app-restaurant-grid>
 
     <!-- All Restaurants -->

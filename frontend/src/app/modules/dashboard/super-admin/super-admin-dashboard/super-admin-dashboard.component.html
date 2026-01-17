@@ -7,7 +7,7 @@
     </p-card>
 
     <!-- Analytics Section -->
-    <app-analytics-cards [users]="users" [restaurants]="restaurants">
+    <app-analytics-cards *ngIf="analytics" [totalUsers]="analytics.users" [totalRestaurants]="analytics.restaurants" [avgRating]="analytics.rating">
     </app-analytics-cards>
 
     <!-- Correct Tab View -->

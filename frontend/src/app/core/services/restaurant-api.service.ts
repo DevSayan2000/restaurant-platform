@@ -45,12 +45,12 @@ export interface RestaurantReviewPayload {
 export class RestaurantApiService {
   constructor(private http: HttpService) {}
 
-  getRestaurants(): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(API_ENDPOINTS.restaurants.list);
+  getRestaurants() {
+    return this.http.get<{ restaurantResponses: Restaurant[] }>(API_ENDPOINTS.restaurants.list);
   }
 
-  getUserRestaurants(): Observable<Restaurant[]> {
-    return this.http.get<Restaurant[]>(API_ENDPOINTS.restaurants.userList);
+  getUserRestaurants() {
+    return this.http.get<{ restaurantResponses: Restaurant[] }>(API_ENDPOINTS.restaurants.userList);
   }
 
   createRestaurant(body: RestaurantPayload): Observable<{ message: string }> {
@@ -65,8 +65,8 @@ export class RestaurantApiService {
     return this.http.get<Restaurant>(API_ENDPOINTS.restaurants.details(id));
   }
 
-  getRestaurantReviews(id: string): Observable<RestaurantReview[]> {
-    return this.http.get<RestaurantReview[]>(API_ENDPOINTS.restaurants.reviews(id));
+  getRestaurantReviews(id: string) {
+    return this.http.get<{ reviews: RestaurantReview[] }>(API_ENDPOINTS.restaurants.reviews(id));
   }
 
   addRestaurantReview(id: string, body: RestaurantReviewPayload): Observable<{ message: string }> {

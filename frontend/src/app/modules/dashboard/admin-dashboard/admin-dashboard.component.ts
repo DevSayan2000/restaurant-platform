@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Restaurant } from 'app/core/services/restaurant-api.service';
+import { Restaurant, RestaurantReview } from 'app/core/services/restaurant-api.service';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { RippleModule } from 'primeng/ripple';
@@ -12,6 +12,7 @@ import { RestaurantService } from 'app/core/services/restaurant.service';
 import { ConfirmationService } from 'app/core/services/confirmation.service';
 import { Subject, takeUntil } from 'rxjs';
 import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate-text.component';
+import { Analytics } from 'app/core/services/analytic-api.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -27,23 +28,37 @@ import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate
     CardModule,
     CreateRestaurantComponent,
     TruncateTextComponent,
-    RouterModule
+    RouterModule,
   ],
 })
 export class AdminDashboardComponent {
-  reviews: any = [];
   restaurants: Restaurant[] = [];
+  recentReviews: RestaurantReview[] = [];
+  analytics: Analytics | null = null;
+
   @ViewChild(CreateRestaurantComponent) restaurantDialog!: CreateRestaurantComponent;
   private destroy$ = new Subject<void>();
 
-  constructor(private restaurantService: RestaurantService, private confirm: ConfirmationService) {
+  constructor(
+    private restaurantService: RestaurantService,
+    private confirm: ConfirmationService,
+  ) {
     this.restaurantService.restaurants$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       this.restaurants = value;
+    });
+
+    this.restaurantService.analytics$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
+      this.analytics = value;
+    });
+
+    this.restaurantService.recentReviews$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
+      this.recentReviews = value;
     });
   }
 
   ngOnInit() {
     this.restaurantService.refresh();
+    this.restaurantService.getRecentReviews();
   }
 
   ngOnDestroy() {

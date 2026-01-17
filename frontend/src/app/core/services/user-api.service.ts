@@ -24,8 +24,8 @@ export interface UserLoginPayload {
 export class UserApiService {
   constructor(private http: HttpService, private authService: AuthService) {}
 
-  getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(API_ENDPOINTS.users.list);
+  getUsers() {
+    return this.http.get<{ userResponses: User[] }>(API_ENDPOINTS.users.list);
   }
 
   getUserById(id: string): Observable<User> {
