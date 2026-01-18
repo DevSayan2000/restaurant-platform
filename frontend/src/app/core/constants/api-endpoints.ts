@@ -7,6 +7,8 @@ export const API_ENDPOINTS = {
     list: '/users',
     detail: (id: string) => `/users/${id}`,
     delete: (id: number) => `/users/${id}`,
+    reviewedRestaurants: '/users/reviewedRestaurants',
+    userReviews: '/users/reviews'
   },
   restaurants: {
     list: '/restaurants',

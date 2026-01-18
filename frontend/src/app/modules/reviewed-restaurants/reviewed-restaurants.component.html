@@ -1,0 +1,104 @@
+<div class="space-y-6 bg-zinc-50 dark:bg-zinc-950">
+
+    <!-- Header -->
+    <p-card class="rounded-xl border border-zinc-200 dark:border-zinc-800" styleClass="bg-white dark:bg-zinc-900">
+        <h2 class="text-2xl font-semibold text-zinc-900 dark:text-zinc-100">
+            Reviewed Restaurants
+        </h2>
+        <p class="text-zinc-500 dark:text-zinc-400 mt-1">
+            All restaurants you have reviewed
+        </p>
+    </p-card>
+
+    <h3 class="text-lg font-semibold mb-4">Restaurants</h3>
+
+    <div class="rounded-xl overflow-hidden">
+        <p-table [value]="reviewedRestaurants" [paginator]="true" [rows]="10" tableStyleClass="table-fixed">
+
+            <ng-template pTemplate="header">
+                <tr>
+                    <th class="w-1/5">Name</th>
+                    <th class="w-1/5">City</th>
+                    <th class="w-1/5">Cuisine</th>
+                    <th>Food Type</th>
+                    <th>Rating</th>
+                </tr>
+            </ng-template>
+
+            <ng-template pTemplate="body" let-r>
+                <tr>
+
+                    <td class="w-1/5">
+                        <app-truncate-text [text]="r.name" class="hover:underline cursor-pointer"
+                            [routerLink]="'/restaurants/'+r.id"></app-truncate-text>
+                    </td>
+                    <td class="w-1/5">
+                        <app-truncate-text [text]="r.city"></app-truncate-text>
+                    </td>
+                    <td class="w-1/5">
+                        <app-truncate-text [text]="r.cuisine"></app-truncate-text>
+                    </td>
+
+                    <td>
+                        @switch (r.foodType) {
+
+                        @case ('VEG') {
+                        <p-tag value="VEG" severity="success"></p-tag>
+                        }
+
+                        @case ('JAIN') {
+                        <p-tag value="JAIN" severity="warn"></p-tag>
+                        }
+
+                        @case ('VEGAN') {
+                        <p-tag value="VEGAN" severity="info"></p-tag>
+                        }
+
+                        @case ('NON_VEG') {
+                        <p-tag value="NON-VEG" severity="danger"></p-tag>
+                        }
+
+                        @default {
+                        <p-tag value="UNKNOWN" severity="secondary"></p-tag>
+                        }
+                        }
+                    </td>
+
+                    <td>
+                        <div class="flex items-center gap-1">
+                            @if (r.avgRating !== null && r.avgRating !== undefined) {
+                            <i class="pi pi-star-fill text-yellow-500 text-xs"></i>
+                            <span class="text-zinc-700 dark:text-zinc-300">{{ r.avgRating }}</span>
+                            } @else {
+                            {{'-'}}
+                            }
+
+                        </div>
+                    </td>
+
+                </tr>
+            </ng-template>
+
+            <!-- EMPTY MESSAGE -->
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8" class="text-center py-6 text-zinc-500">
+                        <div class="py-16 text-center text-zinc-500 dark:text-zinc-400">
+
+                            <div class="flex justify-center mb-4">
+                                <div
+                                    class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+                                    <i class="pi pi-shop text-3xl opacity-60"></i>
+                                </div>
+                            </div>
+
+                            <p class="text-lg font-semibold mb-1">No restaurants you reviewed</p>
+
+                        </div>
+                    </td>
+                </tr>
+            </ng-template>
+
+        </p-table>
+    </div>
+</div>

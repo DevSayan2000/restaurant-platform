@@ -5,6 +5,7 @@ import { HttpService } from './http.service';
 import { Role } from '../enums/role.enum';
 import { body } from '@primeuix/themes/aura/card';
 import { AuthService, User } from '../auth/auth.service';
+import { Restaurant, RestaurantReview } from './restaurant-api.service';
 
 export interface CreateUserPayload {
   name: string;
@@ -16,6 +17,14 @@ export interface CreateUserPayload {
 export interface UserLoginPayload {
   email: string;
   password: string;
+}
+
+export interface UserReview {
+  id: number;
+  rating: number;
+  review: string;
+  restaurant: string;
+  createdDate: string;
 }
 
 @Injectable({
@@ -50,5 +59,13 @@ export class UserApiService {
 
   deleteUser(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(API_ENDPOINTS.users.delete(id));
+  }
+
+  reviewedRestaurants() {
+    return this.http.get<{ restaurantResponses: Restaurant[] }>(API_ENDPOINTS.users.reviewedRestaurants);
+  }
+
+  userReviews() {
+    return this.http.get<{ reviews: UserReview[] }>(API_ENDPOINTS.users.userReviews);
   }
 }

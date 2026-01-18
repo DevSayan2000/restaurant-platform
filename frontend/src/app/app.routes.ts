@@ -30,6 +30,14 @@ export const routes: Routes = [
         path: 'restaurants',
         loadChildren: () => import('app/modules/restaurant-details/restaurant-details.routes').then((m) => m.default),
       },
+      {
+        path: 'reviewed-restaurants',
+        loadComponent: () => import('app/modules/reviewed-restaurants/reviewed-restaurants.component').then(m => m.ReviewedRestaurantsComponent)
+      },
+      {
+        path: 'user-reviews',
+        loadComponent: () => import('app/modules/user-reviews/user-reviews.component').then(m => m.UserReviewsComponent)
+      }
     ],
   },
 ];
