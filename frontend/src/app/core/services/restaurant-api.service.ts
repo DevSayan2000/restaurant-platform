@@ -25,6 +25,7 @@ export interface RestaurantReview {
   createdDate: string;
   createdBy: string;
   userId: number;
+  restaurant?: string;
 }
 
 export interface RestaurantPayload {
@@ -66,7 +67,7 @@ export class RestaurantApiService {
   }
 
   getRestaurantReviews(id: string) {
-    return this.http.get<{ reviews: RestaurantReview[] }>(API_ENDPOINTS.restaurants.reviews(id));
+    return this.http.get<{ reviews: RestaurantReview[], maxResults: number }>(API_ENDPOINTS.restaurants.reviews(id));
   }
 
   addRestaurantReview(id: string, body: RestaurantReviewPayload): Observable<{ message: string }> {

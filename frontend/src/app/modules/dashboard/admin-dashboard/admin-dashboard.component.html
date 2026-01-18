@@ -66,7 +66,7 @@
                         <th>City</th>
                         <th>Cuisine</th>
                         <th>Type</th>
-                        <th>Rating</th>
+                        <th>Avg. Rating</th>
                         <th>Date</th>
                         <th class="text-center">Actions</th>
                     </tr>
@@ -76,7 +76,8 @@
                     <tr>
                         <td class="font-medium text-zinc-900 dark:text-zinc-100">
                             <div class="w-36" [routerLink]="'/restaurants/'+r.id">
-                                <app-truncate-text [text]="r.name" class="hover:underline cursor-pointer"></app-truncate-text>
+                                <app-truncate-text [text]="r.name"
+                                    class="hover:underline cursor-pointer"></app-truncate-text>
                             </div>
                         </td>
                         <td class="text-zinc-600 dark:text-zinc-400">
@@ -185,18 +186,34 @@
             Recent Reviews
         </h3>
 
-        <!-- Reviews Exist -->
         <ng-container *ngIf="recentReviews.length > 0; else noReviews">
-
-            <div *ngFor="let review of recentReviews"
+            <div *ngFor="let r of recentReviews"
                 class="py-4 border-b border-zinc-200 dark:border-zinc-800 last:border-none">
 
-                <div class="flex items-center justify-between">
-                    <p class="font-medium text-zinc-900 dark:text-zinc-100">{{ review.createdBy }}</p>
-                    <span class="text-sm text-zinc-600 dark:text-zinc-400">⭐ {{ review.rating }}</span>
+                <div class="flex items-center justify-between gap-4">
+                    <div class="flex flex-col">
+                        <p class="font-medium text-zinc-900 dark:text-zinc-100">
+                            {{ r.createdBy }}
+                        </p>
+                        <p class="text-zinc-600 dark:text-zinc-400 break-all">
+                            {{ r.restaurant }}
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col">
+                        <span class="text-sm text-zinc-600 dark:text-zinc-400 text-right">
+                            ⭐ {{ r.rating }}
+                        </span>
+                        <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                            {{ r.review }}
+                        </p>
+                    </div>
                 </div>
 
-                <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">{{ review.review }}</p>
+                <p class="text-xs text-zinc-400 dark:text-zinc-500 mt-1">
+                    {{ r.createdDate | date:'mediumDate' }}
+                </p>
+
             </div>
 
         </ng-container>
@@ -210,5 +227,6 @@
         </ng-template>
 
     </p-card>
+
 
 </div>

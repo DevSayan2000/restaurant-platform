@@ -37,6 +37,7 @@ export class RestaurantDetailsComponent {
 
   showAddReviewDialog = false;
   restaurantId: string = '';
+  maxResults: number = 0;
 
   constructor(
     private restaurantApiService: RestaurantApiService,
@@ -95,7 +96,10 @@ export class RestaurantDetailsComponent {
 
   getRestaurantReviews() {
     this.restaurantApiService.getRestaurantReviews(this.restaurantId).subscribe({
-      next: (response) => (this.reviews = response.reviews),
+      next: (response) => {
+        this.reviews = response.reviews;
+        this.maxResults = response.maxResults;
+      },
     });
   }
 }
