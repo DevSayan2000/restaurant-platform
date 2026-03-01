@@ -1,0 +1,22 @@
+services:
+  - type: web
+    name: restaurant-backend
+    env: docker
+    plan: free
+    rootDir: backend
+    branch: main
+    healthCheckPath: /api/actuator/health
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/*.jar
+    envVars:
+      - key: SPRING_DATASOURCE_URL
+        sync: false
+      - key: SPRING_DATASOURCE_USERNAME
+        sync: false
+      - key: SPRING_DATASOURCE_PASSWORD
+        sync: false
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
+      - key: PORT
+        value: 8080
+

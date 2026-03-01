@@ -1,8 +1,9 @@
 CREATE TABLE restaurant (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
+    email VARCHAR(150) NOT NULL,
     name VARCHAR(200) NOT NULL,
     city VARCHAR(100) NOT NULL,
-    area VARCHAR(100),
-    cuisine VARCHAR(100),
+    food_type VARCHAR(50) NOT NULL,
+    cuisine VARCHAR(100) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

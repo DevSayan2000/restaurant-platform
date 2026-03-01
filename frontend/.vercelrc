@@ -1,0 +1,9 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/frontend",
+  "framework": "angular",
+  "env": {
+    "NG_BUILD_CONFIGURATION": "production"
+  }
+}
+

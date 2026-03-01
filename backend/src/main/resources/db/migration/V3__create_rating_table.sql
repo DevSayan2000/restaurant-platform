@@ -1,8 +1,8 @@
 CREATE TABLE rating (
-    id BIGINT PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     restaurant_id BIGINT NOT NULL,
     user_id BIGINT NOT NULL,
-    rating INT CHECK (rating BETWEEN 1 AND 5),
+    rating INTEGER NOT NULL CHECK (rating BETWEEN 1 AND 5),
     review TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
