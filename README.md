@@ -6,6 +6,16 @@ A full-stack web application that lists restaurants in a city along with **user-
 **Cost:** $0 (runs locally)  
 **Tech Stack:** Java 21, Spring Boot, Angular, PostgreSQL  
 
+### 🌐 Live Demo
+
+| Service | URL |
+|---------|-----|
+| Frontend | [https://restaurant-platform-chi.vercel.app](https://restaurant-platform-chi.vercel.app) |
+| Backend API | [https://restaurant-backend-qw6k.onrender.com/api](https://restaurant-backend-qw6k.onrender.com/api) |
+| Health Check | [https://restaurant-backend-qw6k.onrender.com/api/actuator/health](https://restaurant-backend-qw6k.onrender.com/api/actuator/health) |
+
+> **Note:** Backend is hosted on Render free tier — first request may take 30-60 seconds (cold start).
+
 ---
 
 ## Architecture Overview (Simplified)

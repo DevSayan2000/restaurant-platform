@@ -130,7 +130,7 @@ ERROR: Validate failed
    curl http://localhost:8080/api/actuator/health
    
    # Render
-   curl https://[your-service].onrender.com/api/actuator/health
+   curl https://restaurant-backend-qw6k.onrender.com/api/actuator/health
    ```
 
 ---
@@ -220,7 +220,7 @@ Build exceeded maximum duration
 
 **Error Message:**
 ```
-Access to XMLHttpRequest from origin 'https://restaurant-platform.com'
+Access to XMLHttpRequest from origin 'https://restaurant-platform-chi.vercel.app'
 has been blocked by CORS policy
 ```
 
@@ -239,7 +239,7 @@ CORS policy: Response to preflight request doesn't pass access control check
 1. **Update CORS Origins**:
    ```bash
    # In Render Dashboard → Environment
-   CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
+   CORS_ALLOWED_ORIGINS=https://restaurant-platform-chi.vercel.app
    ```
 
 2. **Restart Backend**:
@@ -252,15 +252,15 @@ CORS policy: Response to preflight request doesn't pass access control check
    ```java
    // CorsConfig.java
    configuration.setAllowedOrigins(Arrays.asList(
-       "https://restaurant-platform.com"
+       "https://restaurant-platform-chi.vercel.app"
    ));
    ```
 
 4. **Test CORS**:
    ```bash
-   curl -H "Origin: https://restaurant-platform.com" \
+   curl -H "Origin: https://restaurant-platform-chi.vercel.app" \
         -H "Access-Control-Request-Method: GET" \
-        -X OPTIONS https://[backend-url]/api/restaurants \
+        -X OPTIONS https://restaurant-backend-qw6k.onrender.com/api/restaurants \
         -v
    ```
 
@@ -291,7 +291,7 @@ CORS policy: Response to preflight request doesn't pass access control check
    // environment.prod.ts
    export const environment = {
      production: true,
-     apiBaseUrl: 'https://[your-render-service].onrender.com/api'
+     apiBaseUrl: 'https://restaurant-backend-qw6k.onrender.com/api'
    };
    ```
 
@@ -304,7 +304,7 @@ CORS policy: Response to preflight request doesn't pass access control check
 
 3. **Test Endpoint**:
    ```bash
-   curl https://[backend-url]/api/users
+   curl https://restaurant-backend-qw6k.onrender.com/api/users
    ```
 
 4. **Check Network Tab**:

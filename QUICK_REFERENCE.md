@@ -8,10 +8,10 @@
 
 | Service | URL Pattern |
 |---------|------------|
-| Frontend | `https://restaurant-platform.com` |
-| Backend | `https://[render-service].onrender.com/api` |
-| Health | `https://[render-service].onrender.com/api/actuator/health` |
-| Database | `postgresql://[host]:5432/postgres` |
+| Frontend | `https://restaurant-platform-chi.vercel.app` |
+| Backend | `https://restaurant-backend-qw6k.onrender.com/api` |
+| Health | `https://restaurant-backend-qw6k.onrender.com/api/actuator/health` |
+| Database | `postgresql://[host]:6543/postgres` |
 
 ---
 
@@ -49,7 +49,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4200
 SPRING_PROFILES_ACTIVE=prod
 
 # Step 5: Wait for deployment ✅
-# Check: [your-backend-url].onrender.com/api/actuator/health
+# Check: https://restaurant-backend-qw6k.onrender.com/api/actuator/health
 ```
 
 ---
@@ -60,7 +60,7 @@ SPRING_PROFILES_ACTIVE=prod
 // Step 1: Update environment.prod.ts
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://[your-render-service].onrender.com/api',
+  apiBaseUrl: 'https://restaurant-backend-qw6k.onrender.com/api',
 };
 
 // Step 2: Push to GitHub
@@ -80,8 +80,8 @@ git push origin main
 
 ## 4️⃣ Testing Checklist
 
-- [ ] Frontend loads: `https://restaurant-platform.com`
-- [ ] Backend health: `curl [render-url]/api/actuator/health`
+- [ ] Frontend loads: `https://restaurant-platform-chi.vercel.app`
+- [ ] Backend health: `curl https://restaurant-backend-qw6k.onrender.com/api/actuator/health`
 - [ ] API call works: Open DevTools → Network → Make API call
 - [ ] Database works: Check data in Supabase dashboard
 - [ ] No CORS errors: Check browser console
@@ -95,7 +95,7 @@ After frontend URL is known:
 ```bash
 # In Render Dashboard → Environment Variables
 
-CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
+CORS_ALLOWED_ORIGINS=https://restaurant-platform-chi.vercel.app
 
 # Service auto-restarts
 ```
@@ -126,10 +126,10 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4200
 
 **Production** (in Render Dashboard):
 ```
-SPRING_DATASOURCE_URL=jdbc:postgresql://[SUPABASE-HOST]:5432/postgres
-SPRING_DATASOURCE_USERNAME=postgres
+SPRING_DATASOURCE_URL=jdbc:postgresql://aws-1-ap-southeast-2.pooler.supabase.com:6543/postgres
+SPRING_DATASOURCE_USERNAME=postgres.cyqhavdqcdzejeeawzov
 SPRING_DATASOURCE_PASSWORD=[YOUR-PASSWORD]
-CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
+CORS_ALLOWED_ORIGINS=https://restaurant-platform-chi.vercel.app
 SPRING_PROFILES_ACTIVE=prod
 ```
 
