@@ -10,7 +10,6 @@ spring:
       connection-timeout: ${HIKARI_CONNECTION_TIMEOUT:60000}
       idle-timeout: ${HIKARI_IDLE_TIMEOUT:600000}
       max-lifetime: ${HIKARI_MAX_LIFETIME:1800000}
-      auto-commit: true
       data-source-properties:
         sslmode: require
         sslfactory: org.postgresql.ssl.NonValidatingFactory
