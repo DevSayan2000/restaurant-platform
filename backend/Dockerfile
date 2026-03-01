@@ -1,30 +1,23 @@
 # Build stage
-FROM eclipse-temurin:21-jdk-jammy AS builder
+FROM maven:3.9-eclipse-temurin-21 AS builder
 
 WORKDIR /app
 
-# Install Maven
-RUN apt-get update && \
-    apt-get install -y maven && \
-    rm -rf /var/lib/apt/lists/*
-
+# Copy only pom.xml first to cache dependency downloads
 COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+# Now copy source and build (dependencies are cached)
 COPY src src
+RUN mvn clean package -DskipTests -o
 
-# Build the application
-RUN mvn clean package -DskipTests
-
-# Runtime stage
-FROM eclipse-temurin:21-jdk-jammy
+# Runtime stage - use JRE (smaller image)
+FROM eclipse-temurin:21-jre-jammy
 
 WORKDIR /app
 
-# Copy the JAR from builder stage
 COPY --from=builder /app/target/*.jar app.jar
 
-# Health check
-HEALTHCHECK --interval=10s --timeout=5s --start-period=20s --retries=3 \
-  CMD curl -f http://localhost:8080/api/actuator/health || exit 1
 
 EXPOSE 8080
 
