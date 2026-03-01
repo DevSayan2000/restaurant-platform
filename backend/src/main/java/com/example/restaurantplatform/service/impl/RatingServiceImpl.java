@@ -75,6 +75,29 @@ public class RatingServiceImpl implements RatingService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    public ResponseEntity<GenericResponse> deleteRating(Long restaurantId) {
+
+        if (restaurantId == null){
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");
+        }
+
+        String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND,
+                        ErrorMessage.USER_NOT_FOUND));
+
+        Rating rating = ratingRepository
+                .findByRestaurantIdAndUserId(restaurantId, user.getId())
+                .orElseThrow(() -> new RestaurantPlatformException(
+                        ErrorCode.RATING_DOES_NOT_EXIST, ErrorMessage.RATING_DOES_NOT_EXIST
+                ));
+
+        ratingRepository.delete(rating);
+        GenericResponse response = new GenericResponse("Rating/Review deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     public ResponseEntity<AverageRatingResponse> getAverageRating(Long restaurantId) {
         verifyRestaurantExistsAndEmailIdAccess(restaurantId);
         double avgRating = ratingRepository.findAverageRating(restaurantId);

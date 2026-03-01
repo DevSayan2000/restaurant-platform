@@ -11,6 +11,8 @@ public interface RatingService {
 
     ResponseEntity<GenericResponse> addOrUpdateRating(Long restaurantId, CreateRatingRequest request);
 
+    ResponseEntity<GenericResponse> deleteRating(Long restaurantId);
+
     ResponseEntity<AverageRatingResponse> getAverageRating(Long restaurantId);
 
     ResponseEntity<AllReviewsResponse> getAllReviews(Long restaurantId);

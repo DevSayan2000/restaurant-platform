@@ -64,6 +64,42 @@ public class RatingController {
         return ratingService.addOrUpdateRating(restaurantId, request);
     }
 
+    // DELETE /api/restaurants/{restaurantId}/ratings
+    @Operation(
+            summary = "Delete rating",
+            description = "Accessible only by User"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully deleted ratings",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
+    @PreAuthorize("hasRole('USER')")
+    @DeleteMapping
+    public ResponseEntity<GenericResponse> deleteRating(
+            @PathVariable Long restaurantId) {
+
+        return ratingService.deleteRating(restaurantId);
+    }
+
     // GET /api/restaurants/{restaurantId}/ratings/average
     @Operation(
             summary = "Get average rating",

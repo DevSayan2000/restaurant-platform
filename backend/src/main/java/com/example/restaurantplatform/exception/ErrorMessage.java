@@ -21,7 +21,8 @@ public enum ErrorMessage {
     CURRENT_PASSWORD_INCORRECT("Current Password is not correct."),
     NOTHING_TO_UPDATE("Parameter values are null/empty for update request"),
     CURRENT_PASSWORD_REQUIRED("Current Password required for update request."),
-    RESTAURANT_NOT_ALLOWED_TO_BE_UPDATED("Restaurant is not allowed to be updated.");
+    RESTAURANT_NOT_ALLOWED_TO_BE_UPDATED("Restaurant is not allowed to be updated."),
+    RATING_DOES_NOT_EXIST("User hasn't provided ratings for this restaurant.");
 
     private final String message;
 
