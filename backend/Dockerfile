@@ -3,14 +3,16 @@ FROM eclipse-temurin:21-jdk-jammy AS builder
 
 WORKDIR /app
 
-COPY mvnw .
-COPY mvnw.cmd .
-COPY .mvn .mvn
+# Install Maven
+RUN apt-get update && \
+    apt-get install -y maven && \
+    rm -rf /var/lib/apt/lists/*
+
 COPY pom.xml .
 COPY src src
 
 # Build the application
-RUN chmod +x ./mvnw && ./mvnw clean package -DskipTests
+RUN mvn clean package -DskipTests
 
 # Runtime stage
 FROM eclipse-temurin:21-jdk-jammy
