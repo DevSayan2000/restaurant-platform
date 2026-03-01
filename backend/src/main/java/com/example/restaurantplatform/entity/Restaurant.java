@@ -30,6 +30,7 @@ public class Restaurant
     @Column(nullable = false)
     private String city;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private FoodType foodType;
 
