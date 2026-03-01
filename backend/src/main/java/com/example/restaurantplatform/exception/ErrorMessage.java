@@ -17,7 +17,11 @@ public enum ErrorMessage {
     USER_ALREADY_EXISTS("User already exists."),
     INVALID_ROLE("Invalid Role Provided."),
     PARAMETER_NOT_NULL("%s parameter cannot be null."),
-    RESTAURANT_ALREADY_EXISTS_CITY("Restaurant already exists for city %s.");
+    RESTAURANT_ALREADY_EXISTS_CITY("Restaurant already exists for city %s."),
+    CURRENT_PASSWORD_INCORRECT("Current Password is not correct."),
+    NOTHING_TO_UPDATE("Parameter values are null/empty for update request"),
+    CURRENT_PASSWORD_REQUIRED("Current Password required for update request."),
+    RESTAURANT_NOT_ALLOWED_TO_BE_UPDATED("Restaurant is not allowed to be updated.");
 
     private final String message;
 

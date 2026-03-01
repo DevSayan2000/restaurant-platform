@@ -5,6 +5,7 @@ import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.ListUserResponse;
 import com.example.restaurantplatform.dto.user.Reviews;
+import com.example.restaurantplatform.dto.user.UpdateUserRequest;
 import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -55,9 +57,44 @@ public class UserController {
     })
     @PostMapping
     public ResponseEntity<GenericResponse> createUser(
-            @RequestBody CreateUserRequest request) {
+            @Valid @RequestBody CreateUserRequest request) {
 
         return userService.createUser(request);
+    }
+
+    // PUT /api/users
+    @Operation(
+            summary = "Update user details",
+            description = "Updates Restaurant_Admin/User Name and Password"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully updated an user",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
+    @PutMapping
+    public ResponseEntity<GenericResponse> updateUser(
+            @Valid @RequestBody UpdateUserRequest request) {
+
+        return userService.updateUser(request);
     }
 
     // GET /api/users

@@ -1,25 +1,14 @@
 package com.example.restaurantplatform.dto.restaurant;
 
 import com.example.restaurantplatform.enums.FoodType;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateRestaurantRequest {
-    @NotBlank
-    @Size(min = 3, max = 20)
+public class UpdateRestaurantRequest {
     private String name;
-
-    @NotBlank
     private String city;
-
-    @NotNull
     private FoodType foodType;
-
-    @NotBlank
     private String cuisine;
 }

@@ -4,6 +4,7 @@ import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
+import com.example.restaurantplatform.dto.restaurant.UpdateRestaurantRequest;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.enums.Role;
 import com.example.restaurantplatform.exception.ErrorCode;
@@ -35,12 +36,12 @@ public class RestaurantServiceImpl implements RestaurantService {
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
         Restaurant restaurant = restaurantRepository.findByEmailAndName(email, request.getName()).orElse(null);
-        if (restaurant != null){
+        if (restaurant != null) {
             throw new RestaurantPlatformException(ErrorCode.RESTAURANT_ALREADY_EXISTS, ErrorMessage.RESTAURANT_ALREADY_EXISTS_EMAIL, email);
         }
 
         Restaurant res = restaurantRepository.findByNameAndCity(request.getName(), request.getCity()).orElse(null);
-        if (res != null){
+        if (res != null) {
             throw new RestaurantPlatformException(ErrorCode.RESTAURANT_ALREADY_EXISTS, ErrorMessage.RESTAURANT_ALREADY_EXISTS_CITY, request.getCity());
         }
 
@@ -54,6 +55,53 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurantRepository.save(restaurant);
         GenericResponse genericResponse = new GenericResponse("Restaurant created successfully");
         return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<GenericResponse> updateRestaurant(Long restaurantId, UpdateRestaurantRequest request) {
+
+        if (restaurantId == null) {
+            throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");
+        }
+
+        if ((request.getName() == null || request.getName().isBlank()) && (request.getCity() == null || request.getCity().isBlank())
+                && (request.getFoodType() == null || request.getFoodType().name().isBlank()) && (request.getCuisine() == null || request.getCuisine().isBlank()))
+        {
+            throw new RestaurantPlatformException(ErrorCode.NOTHING_TO_UPDATE, ErrorMessage.NOTHING_TO_UPDATE);
+        }
+
+        Restaurant restaurant = restaurantRepository.findById(restaurantId).orElse(null);
+        if (restaurant == null) {
+            throw new RestaurantPlatformException(ErrorCode.RESTAURANT_NOT_FOUND, ErrorMessage.RESTAURANT_NOT_FOUND);
+        }
+
+        String email =  commonUtils.getEmailAndRoleFromAuthToken().get("email");
+        if (!restaurant.getEmail().equals(email)) {
+            throw new RestaurantPlatformException(ErrorCode.FORBIDDEN, ErrorMessage.RESTAURANT_NOT_ALLOWED_TO_BE_UPDATED);
+        }
+
+        if (request.getName() != null && !request.getName().isBlank())
+        {
+            restaurant.setName(request.getName());
+        }
+
+        if (request.getCity() != null && !request.getCity().isBlank())
+        {
+            restaurant.setCity(request.getCity());
+        }
+
+        if (request.getFoodType() != null && !request.getFoodType().name().isBlank())
+        {
+            restaurant.setFoodType(request.getFoodType());
+        }
+
+        if (request.getCuisine() != null && !request.getCuisine().isBlank())
+        {
+            restaurant.setCuisine(request.getCuisine());
+        }
+
+        restaurantRepository.save(restaurant);
+        GenericResponse genericResponse = new GenericResponse("Restaurant updated successfully");
+        return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
     public ResponseEntity<GenericResponse> deleteRestaurant(Long restaurantId) {

@@ -4,6 +4,7 @@ import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.CreateRestaurantRequest;
 import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
+import com.example.restaurantplatform.dto.restaurant.UpdateRestaurantRequest;
 import com.example.restaurantplatform.exception.ErrorResponse;
 import com.example.restaurantplatform.service.interfaces.RestaurantService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +59,46 @@ public class RestaurantController {
     @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @PostMapping
     public ResponseEntity<GenericResponse> createRestaurant(
-            @RequestBody CreateRestaurantRequest request) {
+            @Valid @RequestBody CreateRestaurantRequest request) {
 
         return restaurantService.createRestaurant(request);
+    }
+
+    // PUT /api/restaurants
+    @Operation(
+            summary = "Update restaurant",
+            description = "Accessible only by Restaurant_Admin"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Successfully updated a restaurant",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = @Content()
+            )
+    })
+    @PreAuthorize("hasRole('RESTAURANT_ADMIN')")
+    @PutMapping("/{restaurantId}")
+    public ResponseEntity<GenericResponse> updateRestaurant(
+            @PathVariable Long restaurantId,
+            @RequestBody UpdateRestaurantRequest request) {
+
+        return restaurantService.updateRestaurant(restaurantId, request);
     }
 
     // GET /api/restaurants

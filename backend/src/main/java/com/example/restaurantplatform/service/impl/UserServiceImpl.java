@@ -3,10 +3,7 @@ package com.example.restaurantplatform.service.impl;
 import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.restaurant.RestaurantResponse;
-import com.example.restaurantplatform.dto.user.CreateUserRequest;
-import com.example.restaurantplatform.dto.user.ListUserResponse;
-import com.example.restaurantplatform.dto.user.Reviews;
-import com.example.restaurantplatform.dto.user.UserResponse;
+import com.example.restaurantplatform.dto.user.*;
 import com.example.restaurantplatform.entity.Restaurant;
 import com.example.restaurantplatform.entity.User;
 import com.example.restaurantplatform.enums.Role;
@@ -28,6 +25,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -47,12 +45,15 @@ public class UserServiceImpl implements UserService {
             throw new RestaurantPlatformException(ErrorCode.INVALID_ROLE, ErrorMessage.INVALID_ROLE);
         }
 
-        User user = userRepository.findByEmail(request.getEmail()).orElse(null);
-        if (user != null) {
-            throw new RestaurantPlatformException(ErrorCode.USER_ALREADY_EXISTS, ErrorMessage.USER_ALREADY_EXISTS);
-        }
+        userRepository.findByEmail(request.getEmail())
+                .ifPresent(u -> {
+                    throw new RestaurantPlatformException(
+                            ErrorCode.USER_ALREADY_EXISTS,
+                            ErrorMessage.USER_ALREADY_EXISTS
+                    );
+                });
 
-        user = new User();
+        User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setRole(request.getRole());
@@ -62,6 +63,45 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         GenericResponse genericResponse = new GenericResponse("User created successfully");
         return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
+    }
+
+    public ResponseEntity<GenericResponse> updateUser(UpdateUserRequest request) {
+
+        if ((request.getName() == null || request.getName().isBlank()) &&
+                (request.getNewPassword() == null ||  request.getNewPassword().isBlank())) {
+            throw new RestaurantPlatformException(ErrorCode.NOTHING_TO_UPDATE, ErrorMessage.NOTHING_TO_UPDATE);
+        }
+
+        Map<String, String> emailAndRole = commonUtils.getEmailAndRoleFromAuthToken();
+        String email = emailAndRole.get("email");
+        User user = userRepository
+                .findByEmail(email).orElseThrow(() ->
+                        new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND));
+
+        if (request.getName() != null &&  !request.getName().isBlank()) {
+            user.setName(request.getName());
+        }
+        if (request.getNewPassword() != null && !request.getNewPassword().isBlank()) {
+            if (request.getCurrentPassword() == null || request.getCurrentPassword().isBlank()) {
+                throw new RestaurantPlatformException(
+                        ErrorCode.CURRENT_PASSWORD_REQUIRED,
+                        ErrorMessage.CURRENT_PASSWORD_REQUIRED
+                );
+            }
+
+            if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+                throw new RestaurantPlatformException(
+                        ErrorCode.CURRENT_PASSWORD_INCORRECT,
+                        ErrorMessage.CURRENT_PASSWORD_INCORRECT
+                );
+            }
+
+            user.setPassword(passwordEncoder.encode(request.getNewPassword()));
+        }
+
+        userRepository.save(user);
+        GenericResponse genericResponse = new GenericResponse("User updated successfully");
+        return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
     public ResponseEntity<GenericResponse> deleteUser(Long userId) {

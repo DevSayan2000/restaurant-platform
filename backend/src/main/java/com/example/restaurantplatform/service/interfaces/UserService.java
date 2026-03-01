@@ -5,6 +5,7 @@ import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
 import com.example.restaurantplatform.dto.user.ListUserResponse;
 import com.example.restaurantplatform.dto.user.Reviews;
+import com.example.restaurantplatform.dto.user.UpdateUserRequest;
 import org.springframework.http.ResponseEntity;
 
 public interface UserService {
@@ -20,4 +21,6 @@ public interface UserService {
     ResponseEntity<ListRestaurantResponse> getRestaurantsReviewedByUser();
 
     ResponseEntity<GenericResponse> deleteUser(Long userId);
+
+    ResponseEntity<GenericResponse> updateUser(UpdateUserRequest request);
 }
