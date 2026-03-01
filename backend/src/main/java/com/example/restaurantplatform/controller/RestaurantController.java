@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/api/restaurants")
+@RequestMapping("/restaurants")
 @RequiredArgsConstructor
 public class RestaurantController {
 

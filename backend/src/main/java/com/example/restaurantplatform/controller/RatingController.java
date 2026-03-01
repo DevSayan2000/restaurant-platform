@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/api/restaurants/{restaurantId}/ratings")
+@RequestMapping("/restaurants/{restaurantId}/ratings")
 @RequiredArgsConstructor
 public class RatingController {
 

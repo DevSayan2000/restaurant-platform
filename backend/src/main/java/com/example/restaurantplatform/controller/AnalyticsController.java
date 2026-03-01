@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SecurityRequirement(name = "bearerAuth")
 @RestController
-@RequestMapping("/api/analytics")
+@RequestMapping("/analytics")
 @RequiredArgsConstructor
 public class AnalyticsController {
 
