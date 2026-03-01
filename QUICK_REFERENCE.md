@@ -8,7 +8,7 @@
 
 | Service | URL Pattern |
 |---------|------------|
-| Frontend | `https://[vercel-project].vercel.app` |
+| Frontend | `https://restaurant-platform.com` |
 | Backend | `https://[render-service].onrender.com/api` |
 | Health | `https://[render-service].onrender.com/api/actuator/health` |
 | Database | `postgresql://[host]:5432/postgres` |
@@ -80,7 +80,7 @@ git push origin main
 
 ## 4️⃣ Testing Checklist
 
-- [ ] Frontend loads: `https://[vercel-url].vercel.app`
+- [ ] Frontend loads: `https://restaurant-platform.com`
 - [ ] Backend health: `curl [render-url]/api/actuator/health`
 - [ ] API call works: Open DevTools → Network → Make API call
 - [ ] Database works: Check data in Supabase dashboard
@@ -95,7 +95,7 @@ After frontend URL is known:
 ```bash
 # In Render Dashboard → Environment Variables
 
-CORS_ALLOWED_ORIGINS=https://[your-vercel].vercel.app
+CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
 
 # Service auto-restarts
 ```
@@ -129,7 +129,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4200
 SPRING_DATASOURCE_URL=jdbc:postgresql://[SUPABASE-HOST]:5432/postgres
 SPRING_DATASOURCE_USERNAME=postgres
 SPRING_DATASOURCE_PASSWORD=[YOUR-PASSWORD]
-CORS_ALLOWED_ORIGINS=https://[YOUR-VERCEL].vercel.app
+CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
 SPRING_PROFILES_ACTIVE=prod
 ```
 
@@ -140,9 +140,7 @@ SPRING_PROFILES_ACTIVE=prod
 | File | Purpose |
 |------|---------|
 | [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) | Complete step-by-step guide |
-| [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) | Detailed checklist |
 | [TROUBLESHOOTING.md](./TROUBLESHOOTING.md) | Issue resolution |
-| [DEPLOYMENT_SUMMARY.md](./DEPLOYMENT_SUMMARY.md) | All changes made |
 | [.env.example](./.env.example) | Environment variables template |
 
 ---
@@ -233,4 +231,3 @@ psql -h [host] -U postgres -d postgres -c "SELECT 1"
 **Ready to Deploy?** Start with the [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 
 Last Updated: March 1, 2026
-

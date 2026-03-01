@@ -126,7 +126,7 @@ In the Render dashboard, go to **Settings** and add under **Environment**:
 SPRING_DATASOURCE_URL=jdbc:postgresql://<SUPABASE-HOST>:5432/postgres
 SPRING_DATASOURCE_USERNAME=postgres
 SPRING_DATASOURCE_PASSWORD=<YOUR-PASSWORD>
-CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4200,https://<YOUR-VERCEL-URL>.vercel.app
+CORS_ALLOWED_ORIGINS=http://localhost:3000,http://localhost:4200,https://restaurant-platform.com
 SPRING_PROFILES_ACTIVE=prod
 ```
 
@@ -135,11 +135,11 @@ SPRING_PROFILES_ACTIVE=prod
 - Render will build and deploy automatically
 - Check the **Logs** tab for any errors
 - Once healthy, you'll see a green "Running" status
-- Your backend URL will be: `https://<YOUR-SERVICE-NAME>.onrender.com/api`
+- Your backend URL will be: `https://api.restaurant-platform.com/api`
 
 ### 2.5 Verify Health Check
 
-Visit: `https://<YOUR-SERVICE-NAME>.onrender.com/api/actuator/health`
+Visit: `https://api.restaurant-platform.com/api/actuator/health`
 
 You should see:
 ```json
@@ -164,7 +164,7 @@ Update `frontend/src/environments/environment.prod.ts`:
 ```typescript
 export const environment = {
   production: true,
-  apiBaseUrl: 'https://<YOUR-RENDER-SERVICE>.onrender.com/api',
+  apiBaseUrl: 'https://api.restaurant-platform.com/api',
 };
 ```
 
@@ -197,7 +197,7 @@ git push origin main
 ### 3.4 Wait for Deployment
 
 - Vercel will build and deploy
-- Visit your frontend URL: `https://<YOUR-VERCEL-PROJECT>.vercel.app`
+- Visit your frontend URL: `https://restaurant-platform.com`
 
 ---
 
@@ -205,7 +205,7 @@ git push origin main
 
 ### 4.1 Frontend Loads
 
-- Visit your Vercel URL
+- Visit your frontend URL
 - Page should load without 404 errors
 - Check browser console (F12) for errors
 
@@ -227,7 +227,7 @@ git push origin main
 ### 4.4 Health Check
 
 ```bash
-curl https://<YOUR-RENDER-SERVICE>.onrender.com/api/actuator/health
+curl https://api.restaurant-platform.com/api/actuator/health
 ```
 
 Should return:
@@ -252,13 +252,13 @@ For **maximum security**, update CORS to only allow your frontend:
 
 ```properties
 # In Render environment variables
-CORS_ALLOWED_ORIGINS=https://your-frontend.vercel.app
+CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
 ```
 
 Or update `application.properties`:
 
 ```properties
-app.cors.allowed-origins=https://your-frontend.vercel.app
+app.cors.allowed-origins=https://restaurant-platform.com
 ```
 
 ### Restrict to Specific Origins
@@ -266,7 +266,7 @@ app.cors.allowed-origins=https://your-frontend.vercel.app
 ```java
 // In CorsConfig.java for stricter control
 configuration.setAllowedOrigins(Arrays.asList(
-    "https://your-frontend.vercel.app"
+    "https://restaurant-platform.com"
 ));
 ```
 
@@ -457,4 +457,3 @@ Supabase provides automatic daily backups. Access in **Settings → Backups**.
 **Happy Deploying! 🎉**
 
 For issues or questions, refer to the respective platform documentation or GitHub issues.
-

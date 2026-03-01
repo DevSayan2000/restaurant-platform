@@ -220,7 +220,7 @@ Build exceeded maximum duration
 
 **Error Message:**
 ```
-Access to XMLHttpRequest from origin 'https://xyz.vercel.app'
+Access to XMLHttpRequest from origin 'https://restaurant-platform.com'
 has been blocked by CORS policy
 ```
 
@@ -239,7 +239,7 @@ CORS policy: Response to preflight request doesn't pass access control check
 1. **Update CORS Origins**:
    ```bash
    # In Render Dashboard → Environment
-   CORS_ALLOWED_ORIGINS=https://[your-vercel-app].vercel.app
+   CORS_ALLOWED_ORIGINS=https://restaurant-platform.com
    ```
 
 2. **Restart Backend**:
@@ -252,13 +252,13 @@ CORS policy: Response to preflight request doesn't pass access control check
    ```java
    // CorsConfig.java
    configuration.setAllowedOrigins(Arrays.asList(
-       "https://your-vercel-app.vercel.app"
+       "https://restaurant-platform.com"
    ));
    ```
 
 4. **Test CORS**:
    ```bash
-   curl -H "Origin: https://your-vercel-app.vercel.app" \
+   curl -H "Origin: https://restaurant-platform.com" \
         -H "Access-Control-Request-Method: GET" \
         -X OPTIONS https://[backend-url]/api/restaurants \
         -v
@@ -550,5 +550,4 @@ docker logs [container-id]
 
 ---
 
-**Still stuck?** Review the [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) or [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)!
-
+**Still stuck?** Review the [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) or [QUICK_REFERENCE.md](./QUICK_REFERENCE.md)!
