@@ -16,7 +16,7 @@ import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
 import com.example.restaurantplatform.service.interfaces.UserService;
 import com.example.restaurantplatform.util.CommonUtils;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -38,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final CommonUtils commonUtils;
 
+    @Transactional
     public ResponseEntity<GenericResponse> createUser(CreateUserRequest request) {
 
         Role requestedRole = request.getRole();
@@ -65,6 +66,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
     }
 
+    @Transactional
     public ResponseEntity<GenericResponse> updateUser(UpdateUserRequest request) {
 
         if ((request.getName() == null || request.getName().isBlank()) &&
@@ -104,6 +106,7 @@ public class UserServiceImpl implements UserService {
         return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<GenericResponse> deleteUser(Long userId) {
         if (userId == null){
             throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "userId");

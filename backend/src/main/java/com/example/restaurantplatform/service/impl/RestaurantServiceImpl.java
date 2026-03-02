@@ -14,7 +14,7 @@ import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.service.interfaces.RestaurantService;
 import com.example.restaurantplatform.util.CommonUtils;
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,13 +25,14 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class RestaurantServiceImpl implements RestaurantService {
 
     private final RestaurantRepository restaurantRepository;
     private final RatingRepository ratingRepository;
     private final CommonUtils commonUtils;
 
+    @Transactional
     public ResponseEntity<GenericResponse> createRestaurant(CreateRestaurantRequest request) {
         String email = commonUtils.getEmailAndRoleFromAuthToken().get("email");
 
@@ -57,6 +58,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
     }
 
+    @Transactional
     public ResponseEntity<GenericResponse> updateRestaurant(Long restaurantId, UpdateRestaurantRequest request) {
 
         if (restaurantId == null) {
@@ -104,6 +106,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         return new ResponseEntity<>(genericResponse, HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<GenericResponse> deleteRestaurant(Long restaurantId) {
         if (restaurantId == null){
             throw new RestaurantPlatformException(ErrorCode.PARAMETER_NOT_NULL, ErrorMessage.PARAMETER_NOT_NULL, "restaurantId");

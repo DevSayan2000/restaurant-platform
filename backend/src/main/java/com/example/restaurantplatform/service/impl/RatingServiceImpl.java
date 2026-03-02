@@ -28,7 +28,7 @@ import java.util.Comparator;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional(readOnly = true)
 public class RatingServiceImpl implements RatingService {
 
     private final RatingRepository ratingRepository;
@@ -36,6 +36,7 @@ public class RatingServiceImpl implements RatingService {
     private final UserRepository userRepository;
     private final CommonUtils commonUtils;
 
+    @Transactional
     public ResponseEntity<GenericResponse> addOrUpdateRating(Long restaurantId, CreateRatingRequest request) {
 
         if (restaurantId == null){
@@ -75,6 +76,7 @@ public class RatingServiceImpl implements RatingService {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @Transactional
     public ResponseEntity<GenericResponse> deleteRating(Long restaurantId) {
 
         if (restaurantId == null){
