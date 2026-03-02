@@ -13,10 +13,7 @@ spring:
       idle-timeout: 300000
       max-lifetime: 900000
       initialization-fail-timeout: -1
-      data-source-properties:
-        socketTimeout: 60
-        connectTimeout: 60
-        loginTimeout: 60
+      connection-init-sql: SELECT 1
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
