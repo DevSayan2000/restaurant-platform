@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subject, retry, takeUntil, timer } from 'rxjs';
 import { Restaurant, RestaurantApiService, RestaurantReview } from './restaurant-api.service';
 import { MessageService } from 'primeng/api';
 import { Analytics, AnalyticsApiService } from './analytic-api.service';
@@ -17,6 +17,8 @@ export class RestaurantService {
   private recentReviewsSubject = new BehaviorSubject<RestaurantReview[]>([]);
   recentReviews$ = this.recentReviewsSubject.asObservable();
 
+  private cancel$ = new Subject<void>();
+
   constructor(
     private restaurantApiService: RestaurantApiService,
     private messageService: MessageService,
@@ -30,7 +32,7 @@ export class RestaurantService {
 
   /** Delete restaurant */
   deleteRestaurant(id: number) {
-    this.restaurantApiService.deleteRestaurant(id).subscribe({
+    this.restaurantApiService.deleteRestaurant(id).pipe(takeUntil(this.cancel$)).subscribe({
       next: (response) => {
         const filtered = this.restaurantsSubject.value.filter((r) => r.id !== id);
         this.restaurantsSubject.next(filtered);
@@ -45,13 +47,21 @@ export class RestaurantService {
     });
   }
 
-  /** Clear all restaurants */
+  /** Clear all restaurants and cancel pending requests */
   clearAll() {
+    this.cancel$.next();
     this.restaurantsSubject.next([]);
+    this.analyticsSubject.next(null);
+    this.recentReviewsSubject.next([]);
   }
 
   refresh() {
-    this.restaurantApiService.getRestaurants().subscribe({
+    this.cancel$.next();
+
+    this.restaurantApiService.getRestaurants().pipe(
+      retry({ count: 1, delay: () => timer(1000) }),
+      takeUntil(this.cancel$),
+    ).subscribe({
       next: (response) => {
         this.restaurantsSubject.next(response.restaurantResponses);
       },
@@ -61,7 +71,10 @@ export class RestaurantService {
   }
 
   getAnalytics() {
-    this.analyticApiService.getAnalytics().subscribe({
+    this.analyticApiService.getAnalytics().pipe(
+      retry({ count: 1, delay: () => timer(1000) }),
+      takeUntil(this.cancel$),
+    ).subscribe({
       next: (response) => {
         this.analyticsSubject.next(response);
       },
@@ -69,7 +82,10 @@ export class RestaurantService {
   }
 
   getRecentReviews() {
-    this.analyticApiService.getRecentReviews().subscribe({
+    this.analyticApiService.getRecentReviews().pipe(
+      retry({ count: 1, delay: () => timer(1000) }),
+      takeUntil(this.cancel$),
+    ).subscribe({
       next: (response) => {
         this.recentReviewsSubject.next(response.reviews);
       },

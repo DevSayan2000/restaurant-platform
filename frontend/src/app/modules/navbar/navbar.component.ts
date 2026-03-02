@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Role } from 'app/core/enums/role.enum';
+import { AnalyticsService } from 'app/core/services/analytics.service';
+import { RestaurantService } from 'app/core/services/restaurant.service';
 import { ThemeService } from 'app/core/services/theme.service';
 import { ButtonModule } from 'primeng/button';
 
@@ -12,9 +14,16 @@ import { ButtonModule } from 'primeng/button';
   imports: [CommonModule, ButtonModule, RouterModule],
 })
 export class NavbarComponent {
-  constructor(public auth: AuthService, public theme: ThemeService) {}
+  constructor(
+    public auth: AuthService,
+    public theme: ThemeService,
+    private restaurantService: RestaurantService,
+    private analyticsService: AnalyticsService,
+  ) {}
 
   logout() {
+    this.restaurantService.clearAll();
+    this.analyticsService.clearAll();
     this.auth.logout();
   }
 

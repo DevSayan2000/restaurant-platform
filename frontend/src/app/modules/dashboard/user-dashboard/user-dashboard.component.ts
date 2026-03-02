@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { Restaurant, RestaurantApiService } from 'app/core/services/restaurant-api.service';
 import { ButtonModule } from 'primeng/button';
@@ -9,6 +9,7 @@ import { TagModule } from 'primeng/tag';
 import { StatsCardsComponent } from './components/stats-cards/stats-cards.component';
 import { RestaurantGridComponent } from './components/restaurant-grid/restaurant-grid.component';
 import { Analytics, AnalyticsApiService } from 'app/core/services/analytic-api.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -25,31 +26,40 @@ import { Analytics, AnalyticsApiService } from 'app/core/services/analytic-api.s
     RestaurantGridComponent,
   ],
 })
-export class UserDashboardComponent {
+export class UserDashboardComponent implements OnInit, OnDestroy {
   restaurants: Restaurant[] = [];
   analytics: Analytics | null = null;
   popularRestaurants: Restaurant[] = [];
 
+  private destroy$ = new Subject<void>();
+
   constructor(
     private restaurantApiService: RestaurantApiService,
     private analyticApiService: AnalyticsApiService,
-  ) {
-    this.restaurantApiService.getUserRestaurants().subscribe({
+  ) {}
+
+  ngOnInit() {
+    this.restaurantApiService.getUserRestaurants().pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
         this.restaurants = response.restaurantResponses;
       },
     });
 
-    this.analyticApiService.getAnalytics().subscribe({
+    this.analyticApiService.getAnalytics().pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
         this.analytics = response;
       },
     });
 
-    this.analyticApiService.getPopularRestaurants().subscribe({
+    this.analyticApiService.getPopularRestaurants().pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
         this.popularRestaurants = response.restaurants;
       },
     });
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

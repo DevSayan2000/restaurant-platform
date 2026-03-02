@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, tap } from 'rxjs';
+import { Observable, retry, tap, timer } from 'rxjs';
 import { API_ENDPOINTS } from '../constants/api-endpoints';
 import { HttpService } from './http.service';
 import { Role } from '../enums/role.enum';
@@ -46,11 +46,12 @@ export class UserApiService {
   }
 
   userLogin(payload: UserLoginPayload): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(API_ENDPOINTS.auth.login, payload);
+    return this.http.post<{ token: string }>(API_ENDPOINTS.auth.login, payload).pipe(retry({ count: 1, delay: () => timer(1000) }));
   }
 
   getLoggedInUser(): Observable<User> {
     return this.http.get<User>(API_ENDPOINTS.auth.profile).pipe(
+      retry({ count: 1, delay: () => timer(1000) }),
       tap((user) => {
         this.authService.login(user);
       })

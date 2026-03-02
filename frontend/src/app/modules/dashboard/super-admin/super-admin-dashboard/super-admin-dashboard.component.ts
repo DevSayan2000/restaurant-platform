@@ -52,9 +52,10 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   fetchData() {
-    this.userApiService.getUsers().subscribe((response) => (this.users = response.userResponses));
+    this.userApiService.getUsers().pipe(takeUntil(this.destroy$)).subscribe((response) => (this.users = response.userResponses));
     this.restaurantAPiService
       .getRestaurants()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((response) => (this.restaurants = response.restaurantResponses));
 
     this.analyticService.analytics$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
@@ -63,7 +64,7 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   deleteRestaurant(id: number) {
-    this.restaurantAPiService.deleteRestaurant(id).subscribe({
+    this.restaurantAPiService.deleteRestaurant(id).pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
         this.messageService.add({
           severity: 'success',
@@ -77,7 +78,7 @@ export class SuperAdminDashboardComponent implements OnInit {
   }
 
   deleteUser(id: number) {
-    this.userApiService.deleteUser(id).subscribe({
+    this.userApiService.deleteUser(id).pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
         this.messageService.add({
           severity: 'success',
