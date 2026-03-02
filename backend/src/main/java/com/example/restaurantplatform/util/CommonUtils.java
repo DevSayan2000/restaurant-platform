@@ -15,7 +15,8 @@ public class CommonUtils {
 
     public Map<String,String> getEmailAndRoleFromAuthToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication == null) {
+        if (authentication == null || !authentication.isAuthenticated()
+                || "anonymousUser".equals(authentication.getPrincipal())) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 

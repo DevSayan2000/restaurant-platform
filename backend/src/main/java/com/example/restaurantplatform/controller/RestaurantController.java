@@ -164,7 +164,7 @@ public class RestaurantController {
                     content = @Content()
             )
     })
-    @PreAuthorize("hasAnyRole('ROLE_SUPER_ADMIN','ROLE_RESTAURANT_ADMIN')")
+    @PreAuthorize("hasAnyRole('SUPER_ADMIN','RESTAURANT_ADMIN')")
     @GetMapping(params = "city")
     public ResponseEntity<ListRestaurantResponse> getRestaurantsByCity(
             @RequestParam String city) {
