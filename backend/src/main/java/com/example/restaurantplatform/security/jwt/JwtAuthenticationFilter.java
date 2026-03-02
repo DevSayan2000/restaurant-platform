@@ -1,6 +1,5 @@
 package com.example.restaurantplatform.security.jwt;
 
-import com.example.restaurantplatform.security.user.CustomUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,12 +8,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -22,7 +22,6 @@ import java.io.IOException;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final CustomUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -45,22 +44,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (email != null &&
                     SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                UserDetails userDetails =
-                        userDetailsService.loadUserByUsername(email);
+                // Validate the token (checks signature + expiry) without hitting the DB
+                if (jwtService.isTokenNotExpired(jwt)) {
 
-                if (jwtService.isTokenValid(jwt, userDetails)) {
+                    String role = jwtService.extractRole(jwt);
 
                     UsernamePasswordAuthenticationToken authToken =
                             new UsernamePasswordAuthenticationToken(
-                                    userDetails,
-                                    null,
-                                    userDetails.getAuthorities()
+                                    email,          // principal = email string
+                                    null,           // credentials
+                                    List.of(new SimpleGrantedAuthority(role))
                             );
 
                     SecurityContextHolder.getContext()
                             .setAuthentication(authToken);
                 } else {
-                    log.warn("JWT token validation failed for user: {}", email);
+                    log.warn("JWT token expired for user: {}", email);
                 }
             }
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
@@ -68,9 +67,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         } catch (io.jsonwebtoken.JwtException e) {
             log.warn("JWT token invalid: {}", e.getMessage());
         } catch (Exception e) {
-            // Catch DB timeouts, connection pool exhaustion, etc.
-            // Without this, a transient DB failure causes a silent 403
-            log.error("Error during JWT authentication — likely a transient DB issue: {}", e.getMessage());
+            log.error("Error during JWT authentication: {}", e.getMessage());
         }
 
         filterChain.doFilter(request, response);

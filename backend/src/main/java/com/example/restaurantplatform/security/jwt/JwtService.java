@@ -49,6 +49,14 @@ public class JwtService {
                 && !isTokenExpired(token);
     }
 
+    /**
+     * Validates the token signature and checks it has not expired.
+     * Does NOT require a DB lookup.
+     */
+    public boolean isTokenNotExpired(String token) {
+        return !isTokenExpired(token);
+    }
+
     private boolean isTokenExpired(String token) {
         return extractAllClaims(token)
                 .getExpiration()
