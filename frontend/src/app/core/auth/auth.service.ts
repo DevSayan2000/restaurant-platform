@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { Role } from '../enums/role.enum';
 
@@ -14,6 +15,7 @@ export class AuthService {
   private userSubject = new BehaviorSubject<User | null>(null);
   user$ = this.userSubject.asObservable();
 
+  constructor(private router: Router) {}
 
   login(user: User) {
     this.userSubject.next(user);
@@ -22,7 +24,7 @@ export class AuthService {
   logout() {
     this.userSubject.next(null);
     localStorage.clear();
-    location.reload();
+    this.router.navigate(['/sign-in']);
   }
 
   get isLoggedIn(): boolean {

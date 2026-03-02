@@ -68,7 +68,10 @@ export const authInterceptor = (
               summary: 'Unauthorized',
               detail: detail || 'Redirecting to login...',
             });
-            authService.logout();
+            // Only logout if not on auth endpoints (prevent redirect loop during login)
+            if (!req.url.includes('/auth/')) {
+              authService.logout();
+            }
             break;
           case 403:
             messageService.add({
@@ -76,7 +79,6 @@ export const authInterceptor = (
               summary: 'Forbidden',
               detail: detail || 'Access denied',
             });
-            authService.logout();
             break;
           case 404:
             messageService.add({

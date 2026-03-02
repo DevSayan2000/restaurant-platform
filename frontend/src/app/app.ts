@@ -18,7 +18,12 @@ export class App {
   ngOnInit() {
     const token = localStorage.getItem('token');
     if (token) {
-      this.userApiService.getLoggedInUser().subscribe();
+      this.userApiService.getLoggedInUser().subscribe({
+        error: () => {
+          // Silently ignore — user stays on current page with token intact.
+          // If the token is truly invalid, individual API calls will handle it.
+        }
+      });
     }
   }
 }

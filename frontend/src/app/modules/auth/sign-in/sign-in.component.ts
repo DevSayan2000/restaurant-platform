@@ -6,7 +6,7 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
-import { Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UserApiService, UserLoginPayload } from 'app/core/services/user-api.service';
 
 @Component({
@@ -30,7 +30,8 @@ export class SignInComponent {
   constructor(
     private fb: FormBuilder,
     private userApiService: UserApiService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -62,9 +63,16 @@ export class SignInComponent {
       next: (res) => {
         const token = res.token;
         localStorage.setItem('token', token);
-        this.userApiService.getLoggedInUser().subscribe(()=> {
-          this.isLoading = false;
-          this.router.navigate(['/dashboard'])
+        const redirectURL = this.route.snapshot.queryParamMap.get('redirectURL') || '/dashboard';
+        this.userApiService.getLoggedInUser().subscribe({
+          next: () => {
+            this.isLoading = false;
+            this.router.navigateByUrl(redirectURL);
+          },
+          error: () => {
+            this.isLoading = false;
+            this.router.navigateByUrl(redirectURL);
+          }
         });
       },
       error: () => {
