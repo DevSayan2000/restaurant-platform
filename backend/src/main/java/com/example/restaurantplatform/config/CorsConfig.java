@@ -30,7 +30,10 @@ public class CorsConfig {
     @Bean
     public FilterRegistrationBean<Filter> corsFilter() {
         FilterRegistrationBean<Filter> bean = new FilterRegistrationBean<>();
-        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        List<String> origins = Arrays.stream(allowedOrigins.split(","))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .toList();
 
         bean.setFilter(new Filter() {
             @Override
@@ -41,9 +44,9 @@ public class CorsConfig {
 
                 String origin = request.getHeader("Origin");
                 if (origin != null && origins.contains(origin.trim())) {
-                    response.setHeader("Access-Control-Allow-Origin", origin);
+                    response.setHeader("Access-Control-Allow-Origin", origin.trim());
                     response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, PATCH");
-                    response.setHeader("Access-Control-Allow-Headers", "*");
+                    response.setHeader("Access-Control-Allow-Headers", "Authorization, Content-Type, Accept, Origin, X-Requested-With");
                     response.setHeader("Access-Control-Allow-Credentials", "true");
                     response.setHeader("Access-Control-Max-Age", "3600");
                 }

@@ -129,7 +129,8 @@
                         </div>
 
                         <!-- Actions -->
-                        <button pButton type="submit" label="Create Account"
+                        <button pButton type="submit" [label]="isLoading ? 'Creating Account...' : 'Create Account'"
+                            [disabled]="isLoading" [loading]="isLoading"
                             class="w-full bg-orange-500 hover:bg-orange-600 border-none"></button>
 
                         <button type="button" class="w-full text-sm text-gray-500 hover:underline"

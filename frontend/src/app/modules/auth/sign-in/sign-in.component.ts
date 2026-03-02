@@ -25,6 +25,7 @@ import { UserApiService, UserLoginPayload } from 'app/core/services/user-api.ser
 export class SignInComponent {
   loginForm: FormGroup;
   submitted = false;
+  isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -44,9 +45,11 @@ export class SignInComponent {
   onSubmit() {
     this.submitted = true;
 
-    if (this.loginForm.invalid) {
+    if (this.loginForm.invalid || this.isLoading) {
       return;
     }
+
+    this.isLoading = true;
 
     const data = this.loginForm.value;
 
@@ -60,8 +63,12 @@ export class SignInComponent {
         const token = res.token;
         localStorage.setItem('token', token);
         this.userApiService.getLoggedInUser().subscribe(()=> {
+          this.isLoading = false;
           this.router.navigate(['/dashboard'])
         });
+      },
+      error: () => {
+        this.isLoading = false;
       },
     });
   }
