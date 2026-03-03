@@ -10,6 +10,7 @@ import { MessageService } from 'primeng/api';
 import { SelectModule } from 'primeng/select';
 import { RestaurantApiService } from 'app/core/services/restaurant-api.service';
 import { RestaurantService } from 'app/core/services/restaurant.service';
+import { RestaurantFormComponent } from 'app/modules/shared/restaurant-form/restaurant-form.component';
 
 @Component({
   selector: 'app-create-restaurant',
@@ -22,6 +23,7 @@ import { RestaurantService } from 'app/core/services/restaurant.service';
     InputTextModule,
     SelectModule,
     ButtonModule,
+    RestaurantFormComponent,
   ],
 })
 export class CreateRestaurantComponent {
@@ -40,7 +42,7 @@ export class CreateRestaurantComponent {
     private fb: FormBuilder,
     private messageService: MessageService,
     private restaurantApiService: RestaurantApiService,
-    private restaurantService: RestaurantService
+    private restaurantService: RestaurantService,
   ) {
     this.restaurantForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -64,15 +66,7 @@ export class CreateRestaurantComponent {
     this.submitted = false;
   }
 
-  submitRestaurant() {
-    this.submitted = true;
-
-    if (this.restaurantForm.invalid) {
-      return;
-    }
-
-    const payload = this.restaurantForm.value;
-
+  createRestaurant(payload: any) {
     this.restaurantApiService.createRestaurant(payload).subscribe({
       next: () => {
         this.messageService.add({
@@ -80,6 +74,7 @@ export class CreateRestaurantComponent {
           summary: 'Restaurant Created',
           detail: `${payload.name} added successfully`,
         });
+
         this.restaurantService.refresh();
         this.closeDialog();
       },

@@ -13,6 +13,7 @@ import { ConfirmationService } from 'app/core/services/confirmation.service';
 import { Subject, takeUntil } from 'rxjs';
 import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate-text.component';
 import { Analytics } from 'app/core/services/analytic-api.service';
+import { UpdateRestaurantComponent } from './update-restaurant/update-restaurant.component';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -29,6 +30,7 @@ import { Analytics } from 'app/core/services/analytic-api.service';
     CreateRestaurantComponent,
     TruncateTextComponent,
     RouterModule,
+    UpdateRestaurantComponent
   ],
 })
 export class AdminDashboardComponent {
@@ -38,6 +40,9 @@ export class AdminDashboardComponent {
 
   @ViewChild(CreateRestaurantComponent) restaurantDialog!: CreateRestaurantComponent;
   private destroy$ = new Subject<void>();
+
+  @ViewChild(UpdateRestaurantComponent)
+  updateDialog!: UpdateRestaurantComponent;
 
   constructor(
     private restaurantService: RestaurantService,
@@ -67,8 +72,8 @@ export class AdminDashboardComponent {
   }
 
   editRestaurant(r: Restaurant) {
-    console.log('Edit clicked', r);
-    // open dialog, navigate to edit page, etc.
+    this.updateDialog.restaurant = r;
+    this.updateDialog.visible = true;
   }
 
   deleteRestaurant(r: Restaurant) {

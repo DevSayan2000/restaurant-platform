@@ -7,11 +7,17 @@ import { AnalyticsService } from 'app/core/services/analytics.service';
 import { RestaurantService } from 'app/core/services/restaurant.service';
 import { ThemeService } from 'app/core/services/theme.service';
 import { ButtonModule } from 'primeng/button';
+import { UserSettingsDialogComponent } from '../shared/user-settings-dialog/user-settings-dialog.component';
+import {
+  UpdateUserNamePayload,
+  UpdateUserPasswordPayload,
+  UserApiService,
+} from 'app/core/services/user-api.service';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  imports: [CommonModule, ButtonModule, RouterModule],
+  imports: [CommonModule, ButtonModule, RouterModule, UserSettingsDialogComponent],
 })
 export class NavbarComponent {
   constructor(
@@ -19,6 +25,7 @@ export class NavbarComponent {
     public theme: ThemeService,
     private restaurantService: RestaurantService,
     private analyticsService: AnalyticsService,
+    private userApiService: UserApiService,
   ) {}
 
   logout() {
@@ -55,5 +62,21 @@ export class NavbarComponent {
       default:
         return '';
     }
+  }
+
+  handleNameUpdate(newName: string) {
+    this.updateUserDetails({ name: newName });
+  }
+
+  handlePasswordUpdate(data: { currentPassword: string; newPassword: string }) {
+    this.updateUserDetails(data);
+  }
+
+  updateUserDetails(payload: UpdateUserNamePayload | UpdateUserPasswordPayload) {
+    this.userApiService.updateUser(payload).subscribe({
+      next: () => {
+        this.userApiService.getLoggedInUser().subscribe();
+      },
+    });
   }
 }
