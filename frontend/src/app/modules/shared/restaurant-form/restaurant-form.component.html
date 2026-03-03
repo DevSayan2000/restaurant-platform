@@ -1,0 +1,52 @@
+<form [formGroup]="restaurantForm" (ngSubmit)="submit()" class="space-y-4">
+
+    <!-- NAME -->
+    <div>
+        <label class="block text-sm font-medium mb-1">Restaurant Name</label>
+        <input pInputText type="text" formControlName="name" class="w-full" />
+        <p *ngIf="submitted && f['name']?.errors" class="text-red-500 text-xs mt-1">
+            Name is required (min 3 characters)
+        </p>
+    </div>
+
+    <!-- CITY -->
+    <div>
+        <label class="block text-sm font-medium mb-1">City</label>
+        <input pInputText type="text" formControlName="city" class="w-full" />
+        <p *ngIf="submitted && f['city']?.errors" class="text-red-500 text-xs mt-1">
+            City is required
+        </p>
+    </div>
+
+    <!-- CUISINE -->
+    <div>
+        <label class="block text-sm font-medium mb-1">Cuisine</label>
+        <input pInputText type="text" formControlName="cuisine" class="w-full" />
+        <p *ngIf="submitted && f['cuisine']?.errors" class="text-red-500 text-xs mt-1">
+            Cuisine is required
+        </p>
+    </div>
+
+    <!-- FOOD TYPE -->
+    <div>
+        <label class="block text-sm font-medium mb-1">Food Type</label>
+
+        <p-select formControlName="foodType" [options]="foodTypes" optionLabel="label" placeholder="Select type" optionValue="value"
+            class="w-full">
+        </p-select>
+
+        <p *ngIf="submitted && f['foodType']?.errors" class="text-red-500 text-xs mt-1">
+            Food type is required
+        </p>
+    </div>
+
+    <!-- ACTIONS -->
+    <div class="flex justify-end gap-2 pt-4">
+        <button pButton type="button" label="Cancel" class="p-button-text" (click)="cancel.emit()">
+        </button>
+
+        <button pButton type="submit" label="Save" [loading]="loading">
+        </button>
+    </div>
+
+</form>
