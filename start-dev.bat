@@ -1,5 +1,6 @@
 @echo off
-REM Quick start script for local development (PostgreSQL installed locally)
+setlocal enabledelayedexpansion
+REM Quick start script for local development
 
 echo.
 echo ============================================
@@ -7,46 +8,25 @@ echo  Restaurant Platform - Local Development
 echo ============================================
 echo.
 
-REM Default local PostgreSQL settings
-set LOCAL_DB_HOST=localhost
-set LOCAL_DB_PORT=5432
-set LOCAL_DB_NAME=restaurant_db
-set LOCAL_DB_USER=postgres
-set LOCAL_DB_PASS=password
+REM --- Read DB config from application.properties ---
+set PROPS_FILE=backend\src\main\resources\application.properties
 
-echo [1/5] Checking PostgreSQL connection...
-psql -U %LOCAL_DB_USER% -h %LOCAL_DB_HOST% -p %LOCAL_DB_PORT% -c "SELECT 1" >nul 2>&1
-if errorlevel 1 (
-    echo.
-    echo ERROR: Cannot connect to PostgreSQL on %LOCAL_DB_HOST%:%LOCAL_DB_PORT%
-    echo Make sure PostgreSQL is running and password is correct.
-    echo If your password is different, run this first:
-    echo   set SPRING_DATASOURCE_PASSWORD=your_password
-    echo Then re-run this script.
-    pause
-    exit /b 1
-)
-echo PostgreSQL is running.
+for /f "tokens=1,* delims==" %%A in ('findstr /C:"spring.datasource.url" "%PROPS_FILE%"') do set "RAW_URL=%%B"
+for /f "tokens=1,* delims==" %%A in ('findstr /C:"spring.datasource.username" "%PROPS_FILE%"') do set "RAW_USER=%%B"
+for /f "tokens=1,* delims==" %%A in ('findstr /C:"spring.datasource.password" "%PROPS_FILE%"') do set "RAW_PASS=%%B"
 
+REM Extract default values (text after the colon inside ${...:default})
+for /f "tokens=2 delims=:}" %%V in ("!RAW_URL!") do set "DB_URL=%%V"
+for /f "tokens=2 delims=:}" %%V in ("!RAW_USER!") do set "DB_USER=%%V"
+for /f "tokens=2 delims=:}" %%V in ("!RAW_PASS!") do set "DB_PASS=%%V"
+
+echo Using config from application.properties:
+echo   URL:      !DB_URL!
+echo   Username: !DB_USER!
+echo   Password: ****
 echo.
-echo [2/5] Checking database '%LOCAL_DB_NAME%'...
-psql -U %LOCAL_DB_USER% -h %LOCAL_DB_HOST% -p %LOCAL_DB_PORT% -tc "SELECT 1 FROM pg_database WHERE datname='%LOCAL_DB_NAME%'" 2>nul | findstr /C:"1" >nul
-if errorlevel 1 (
-    echo Database not found. Creating '%LOCAL_DB_NAME%'...
-    psql -U %LOCAL_DB_USER% -h %LOCAL_DB_HOST% -p %LOCAL_DB_PORT% -c "CREATE DATABASE %LOCAL_DB_NAME%;" 2>nul
-    if errorlevel 1 (
-        echo ERROR: Could not create database. Create it manually:
-        echo   psql -U postgres -c "CREATE DATABASE restaurant_db;"
-        pause
-        exit /b 1
-    )
-    echo Database created successfully!
-) else (
-    echo Database '%LOCAL_DB_NAME%' exists.
-)
 
-echo.
-echo [3/5] Building Backend...
+echo [1/3] Building Backend...
 cd backend
 call ..\mvnw.cmd clean package -DskipTests -q
 if errorlevel 1 (
@@ -59,7 +39,7 @@ echo Backend built successfully.
 cd ..
 
 echo.
-echo [4/5] Starting Backend on http://localhost:8080/api ...
+echo [2/3] Starting Backend on http://localhost:8080/api ...
 start "Restaurant Backend" cmd /c "cd backend && java -jar target\restaurant-platform-0.0.1-SNAPSHOT.jar"
 
 echo Waiting for backend to start...
@@ -69,8 +49,8 @@ timeout /t 3 /nobreak >nul
 set /a RETRIES+=1
 curl -s http://localhost:8080/api/actuator/health >nul 2>&1
 if errorlevel 1 (
-    if %RETRIES% LSS 10 (
-        echo   Still starting... (%RETRIES%/10)
+    if !RETRIES! LSS 10 (
+        echo   Still starting... (!RETRIES!/10)
         goto wait_backend
     ) else (
         echo WARNING: Backend may not have started yet. Continuing anyway...
@@ -80,7 +60,7 @@ if errorlevel 1 (
 )
 
 echo.
-echo [5/5] Starting Frontend...
+echo [3/3] Starting Frontend...
 cd frontend
 call npm install --silent 2>nul
 if errorlevel 1 (
