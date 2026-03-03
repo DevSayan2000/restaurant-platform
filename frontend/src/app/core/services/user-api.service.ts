@@ -26,6 +26,15 @@ export interface UserReview {
   createdDate: string;
 }
 
+export interface UpdateUserNamePayload {
+  name: string;
+}
+
+export interface UpdateUserPasswordPayload {
+  currentPassword: string;
+  newPassword: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -42,6 +51,10 @@ export class UserApiService {
 
   createUser(payload: CreateUserPayload): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(API_ENDPOINTS.users.list, payload);
+  }
+
+  updateUser(payload: UpdateUserNamePayload | UpdateUserPasswordPayload): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(API_ENDPOINTS.users.list, payload);
   }
 
   userLogin(payload: UserLoginPayload): Observable<{ token: string }> {

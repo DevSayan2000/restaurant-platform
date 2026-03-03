@@ -1,0 +1,74 @@
+<!-- User Menu -->
+<p-menu #menu [popup]="true" [model]="menuItems" styleClass="auto-width-menu"></p-menu>
+
+<div (click)="menu.toggle($event)">
+    <ng-content></ng-content>
+</div>
+
+<!-- Update Name Dialog -->
+<p-dialog header="Update User Name" [(visible)]="showNameDialog" [modal]="true" [style]="{ width: '350px' }">
+
+    <form [formGroup]="nameForm" class="flex flex-col gap-3">
+
+        <div>
+            <label class="text-sm">User Name</label>
+            <input pInputText formControlName="name" class="w-full" />
+
+            <small class="text-red-500"
+                *ngIf="nameForm.get('name')?.touched && nameForm.get('name')?.errors?.['required']">
+                Name is required
+            </small>
+
+            <small class="text-red-500" *ngIf="nameForm.get('name')?.errors?.['minlength']">
+                Minimum 3 characters required
+            </small>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-3">
+            <button pButton label="Cancel" class="p-button-text" (click)="showNameDialog=false"></button>
+
+            <button pButton label="Update" [disabled]="nameForm.invalid" (click)="submitName()"></button>
+        </div>
+
+    </form>
+</p-dialog>
+
+<!-- Change Password Dialog -->
+<p-dialog header="Change Password" [(visible)]="showPasswordDialog" [modal]="true" [style]="{ width: '400px' }">
+
+    <form [formGroup]="passwordForm" class="flex flex-col gap-3">
+
+        <div class="w-full">
+            <label class="text-sm">Current Password</label>
+            <p-password formControlName="currentPassword" [feedback]="false" toggleMask styleClass="w-full"
+                inputStyleClass="w-full">
+            </p-password>
+
+            <small class="text-red-500"
+                *ngIf="passwordForm.get('currentPassword')?.touched && passwordForm.get('currentPassword')?.invalid">
+                Current password is required
+            </small>
+        </div>
+
+        <div class="w-full">
+            <label class="text-sm">New Password</label>
+            <p-password formControlName="newPassword" [feedback]="false" toggleMask styleClass="w-full" inputStyleClass="w-full">
+            </p-password>
+
+            <small class="text-red-500" *ngIf="passwordForm.get('newPassword')?.errors?.['required']">
+                New password is required
+            </small>
+
+            <small class="text-red-500" *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">
+                Minimum 6 characters required
+            </small>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-3">
+            <button pButton label="Cancel" class="p-button-text" (click)="showPasswordDialog=false"></button>
+
+            <button pButton label="Update" [disabled]="passwordForm.invalid" (click)="submitPassword()"></button>
+        </div>
+
+    </form>
+</p-dialog>

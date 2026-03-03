@@ -58,6 +58,10 @@ export class RestaurantApiService {
     return this.http.post<{ message: string }>(API_ENDPOINTS.restaurants.list, body);
   }
 
+  updateRestaurant(restaurantId: number, body: RestaurantPayload): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(API_ENDPOINTS.restaurants.update(restaurantId), body);
+  }
+
   deleteRestaurant(id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(API_ENDPOINTS.restaurants.delete(id));
   }

@@ -23,28 +23,31 @@
 
         <!-- Logged In -->
         <ng-template #loggedIn>
-            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg
+            <app-user-settings-dialog *ngIf="auth.user" [userName]="auth.user.name"
+                (updateNameEvent)="handleNameUpdate($event)" (updatePasswordEvent)="handlePasswordUpdate($event)">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg
                bg-zinc-100 dark:bg-zinc-900
-               border border-zinc-200 dark:border-zinc-800" *ngIf="auth.user">
+               border border-zinc-200 dark:border-zinc-800 cursor-pointer" *ngIf="auth.user">
 
-                <i class="pi pi-user text-zinc-600 dark:text-zinc-400"></i>
+                    <i class="pi pi-user text-zinc-600 dark:text-zinc-400"></i>
 
-                <div class="text-sm leading-tight">
-                    <p class="font-medium text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
-                        {{ auth.user.name }}
+                    <div class="text-sm leading-tight">
+                        <p class="font-medium text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                            {{ auth.user.name }}
 
-                        <!-- Role Badge -->
-                        <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full uppercase"
-                            [ngClass]="getRoleClasses(auth.user.role)" *ngIf="auth.user.role">
-                            {{ getRoleLabel(auth.user.role) }}
-                        </span>
-                    </p>
+                            <!-- Role Badge -->
+                            <span class="px-2 py-0.5 text-[10px] font-semibold rounded-full uppercase"
+                                [ngClass]="getRoleClasses(auth.user.role)" *ngIf="auth.user.role">
+                                {{ getRoleLabel(auth.user.role) }}
+                            </span>
+                        </p>
 
-                    <p class="text-zinc-500">
-                        {{ auth.user.email }}
-                    </p>
+                        <p class="text-zinc-500">
+                            {{ auth.user.email }}
+                        </p>
+                    </div>
                 </div>
-            </div>
+            </app-user-settings-dialog>
 
             <button pButton icon="pi pi-sign-out" class="p-button-text text-zinc-500 hover:text-red-500"
                 (click)="logout()">
