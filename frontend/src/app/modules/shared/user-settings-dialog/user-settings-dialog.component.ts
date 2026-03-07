@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
@@ -56,7 +56,8 @@ export class UserSettingsDialogComponent {
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
       newPassword: ['', [Validators.required, Validators.minLength(6)]],
-    });
+      confirmNewPassword: ['', [Validators.required]],
+    }, { validators: this.passwordMatchValidator });
 
     this.nameForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -83,13 +84,26 @@ export class UserSettingsDialogComponent {
     this.showNameDialog = false;
   }
 
+  passwordMatchValidator(control: AbstractControl) {
+    const newPassword = control.get('newPassword')?.value;
+    const confirmNewPassword = control.get('confirmNewPassword')?.value;
+    return newPassword === confirmNewPassword ? null : { passwordMismatch: true };
+  }
+
+  get passwordsMatch(): boolean {
+    const newPassword = this.passwordForm.get('newPassword')?.value;
+    const confirmNewPassword = this.passwordForm.get('confirmNewPassword')?.value;
+    return newPassword && confirmNewPassword && newPassword === confirmNewPassword;
+  }
+
   submitPassword() {
     if (this.passwordForm.invalid) {
       this.passwordForm.markAllAsTouched();
       return;
     }
 
-    this.updatePasswordEvent.emit(this.passwordForm.value as any);
+    const { currentPassword, newPassword } = this.passwordForm.value;
+    this.updatePasswordEvent.emit({ currentPassword, newPassword });
     this.showPasswordDialog = false;
   }
 }
