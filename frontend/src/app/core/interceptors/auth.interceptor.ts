@@ -70,7 +70,7 @@ export const authInterceptor = (
             });
             // Only logout if not on auth endpoints (prevent redirect loop during login)
             if (!req.url.includes('/auth/')) {
-              authService.logout();
+              authService.logout('Your session has expired. Please sign in again.');
             }
             break;
           case 403:

@@ -13,6 +13,7 @@ import {
   UpdateUserPasswordPayload,
   UserApiService,
 } from 'app/core/services/user-api.service';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-navbar',
@@ -26,6 +27,7 @@ export class NavbarComponent {
     private restaurantService: RestaurantService,
     private analyticsService: AnalyticsService,
     private userApiService: UserApiService,
+    private messageService: MessageService,
   ) {}
 
   logout() {
@@ -65,17 +67,27 @@ export class NavbarComponent {
   }
 
   handleNameUpdate(newName: string) {
-    this.updateUserDetails({ name: newName });
+    this.userApiService.updateUser({ name: newName } as UpdateUserNamePayload).subscribe({
+      next: () => {
+        this.userApiService.getLoggedInUser().subscribe();
+      },
+    });
   }
 
   handlePasswordUpdate(data: { currentPassword: string; newPassword: string }) {
-    this.updateUserDetails(data);
-  }
-
-  updateUserDetails(payload: UpdateUserNamePayload | UpdateUserPasswordPayload) {
-    this.userApiService.updateUser(payload).subscribe({
+    this.userApiService.updateUser(data as UpdateUserPasswordPayload).subscribe({
       next: () => {
-        this.userApiService.getLoggedInUser().subscribe();
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Password Updated',
+          detail: 'Password changed successfully. Please sign in with your new password.',
+        });
+        // Wait briefly so the user can see the success message, then logout
+        setTimeout(() => {
+          this.restaurantService.clearAll();
+          this.analyticsService.clearAll();
+          this.auth.logout('Password changed successfully. Please sign in with your new password.');
+        }, 1500);
       },
     });
   }

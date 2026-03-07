@@ -1,17 +1,17 @@
 import { inject } from '@angular/core';
 import { CanActivateChildFn, CanActivateFn, Router } from '@angular/router';
+import { AuthService } from 'app/core/auth/auth.service';
 import { of } from 'rxjs';
 
 export const AuthGuard: CanActivateFn | CanActivateChildFn = (route, state) => {
   const router: Router = inject(Router);
-  const token = localStorage.getItem('token');
+  const authService = inject(AuthService);
 
-  // If the user is not authenticated...
-  if (!token) {
+  // isLoggedIn now also checks token expiry and auto-logouts if expired
+  if (!authService.isLoggedIn) {
     // Redirect to the sign-in page with a redirectUrl param
     const redirectURL = state.url === '/sign-out' ? '' : `redirectURL=${state.url}`;
     const urlTree = router.parseUrl(`sign-in?${redirectURL}`);
-    // const urlTree = router.parseUrl(urlTree);
 
     return of(urlTree);
   }

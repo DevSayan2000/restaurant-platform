@@ -98,6 +98,13 @@ public class UserServiceImpl implements UserService {
                 );
             }
 
+            if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+                throw new RestaurantPlatformException(
+                        ErrorCode.NEW_PASSWORD_SAME_AS_CURRENT,
+                        ErrorMessage.NEW_PASSWORD_SAME_AS_CURRENT
+                );
+            }
+
             user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         }
 
