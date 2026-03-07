@@ -54,24 +54,37 @@ public class UserServiceImpl implements UserService {
             throw new RestaurantPlatformException(ErrorCode.INVALID_ROLE, ErrorMessage.INVALID_ROLE);
         }
 
-        userRepository.findByEmail(request.getEmail())
-                .ifPresent(u -> {
-                    throw new RestaurantPlatformException(
-                            ErrorCode.USER_ALREADY_EXISTS,
-                            ErrorMessage.USER_ALREADY_EXISTS
-                    );
-                });
-
         String otp = generateOtp();
+        User user;
 
-        User user = new User();
-        user.setName(request.getName());
-        user.setEmail(request.getEmail());
-        user.setRole(request.getRole());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setEmailVerified(false);
-        user.setVerificationOtp(otp);
-        user.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+        var existingUser = userRepository.findByEmail(request.getEmail());
+        if (existingUser.isPresent()) {
+            User existing = existingUser.get();
+            if (existing.isEmailVerified()) {
+                // Verified user already exists — block duplicate registration
+                throw new RestaurantPlatformException(
+                        ErrorCode.USER_ALREADY_EXISTS,
+                        ErrorMessage.USER_ALREADY_EXISTS
+                );
+            }
+            // Unverified user — allow re-registration by updating their details & resending OTP
+            existing.setName(request.getName());
+            existing.setRole(request.getRole());
+            existing.setPassword(passwordEncoder.encode(request.getPassword()));
+            existing.setVerificationOtp(otp);
+            existing.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+            user = existing;
+        } else {
+            // Brand new user
+            user = new User();
+            user.setName(request.getName());
+            user.setEmail(request.getEmail());
+            user.setRole(request.getRole());
+            user.setPassword(passwordEncoder.encode(request.getPassword()));
+            user.setEmailVerified(false);
+            user.setVerificationOtp(otp);
+            user.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+        }
 
         userRepository.save(user);
 

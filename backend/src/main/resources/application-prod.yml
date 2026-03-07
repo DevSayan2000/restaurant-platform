@@ -53,7 +53,8 @@ app:
     url: ${KEEP_ALIVE_URL:https://restaurant-backend-qw6k.onrender.com/api/actuator/health}
   mail:
     enabled: ${MAIL_ENABLED:true}
-  resend:
-    api-key: ${RESEND_API_KEY}
-    from-email: ${RESEND_FROM_EMAIL:onboarding@resend.dev}
+  brevo:
+    api-key: ${BREVO_API_KEY}
+    from-email: ${BREVO_FROM_EMAIL}
+    from-name: ${BREVO_FROM_NAME:Restaurant Platform}
 
