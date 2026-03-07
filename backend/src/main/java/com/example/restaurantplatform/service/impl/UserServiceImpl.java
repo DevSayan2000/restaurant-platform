@@ -17,6 +17,7 @@ import com.example.restaurantplatform.repository.UserRepository;
 import com.example.restaurantplatform.service.interfaces.EmailService;
 import com.example.restaurantplatform.service.interfaces.UserService;
 import com.example.restaurantplatform.util.CommonUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -46,6 +47,9 @@ public class UserServiceImpl implements UserService {
     private final CommonUtils commonUtils;
     private final EmailService emailService;
 
+    @Value("${app.mail.enabled:true}")
+    private boolean mailEnabled;
+
     @Transactional
     public ResponseEntity<GenericResponse> createUser(CreateUserRequest request) {
 
@@ -54,7 +58,8 @@ public class UserServiceImpl implements UserService {
             throw new RestaurantPlatformException(ErrorCode.INVALID_ROLE, ErrorMessage.INVALID_ROLE);
         }
 
-        String otp = generateOtp();
+        boolean skipOtp = !mailEnabled;
+        String otp = skipOtp ? null : generateOtp();
         User user;
 
         var existingUser = userRepository.findByEmail(request.getEmail());
@@ -71,8 +76,9 @@ public class UserServiceImpl implements UserService {
             existing.setName(request.getName());
             existing.setRole(request.getRole());
             existing.setPassword(passwordEncoder.encode(request.getPassword()));
+            existing.setEmailVerified(skipOtp);
             existing.setVerificationOtp(otp);
-            existing.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+            existing.setOtpExpiresAt(skipOtp ? null : LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
             user = existing;
         } else {
             // Brand new user
@@ -81,18 +87,22 @@ public class UserServiceImpl implements UserService {
             user.setEmail(request.getEmail());
             user.setRole(request.getRole());
             user.setPassword(passwordEncoder.encode(request.getPassword()));
-            user.setEmailVerified(false);
+            user.setEmailVerified(skipOtp);
             user.setVerificationOtp(otp);
-            user.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+            user.setOtpExpiresAt(skipOtp ? null : LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
         }
 
         userRepository.save(user);
 
-        // Send verification OTP email asynchronously (does not block response)
-        emailService.sendVerificationOtp(user.getEmail(), user.getName(), otp);
+        if (!skipOtp) {
+            // Send verification OTP email asynchronously (does not block response)
+            emailService.sendVerificationOtp(user.getEmail(), user.getName(), otp);
+        }
 
-        GenericResponse genericResponse = new GenericResponse("Account created. Please check your email for the verification code.");
-        return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
+        String message = skipOtp
+                ? "Account created successfully. You can now log in."
+                : "Account created. Please check your email for the verification code.";
+        return new ResponseEntity<>(new GenericResponse(message), HttpStatus.CREATED);
     }
 
     @Transactional
