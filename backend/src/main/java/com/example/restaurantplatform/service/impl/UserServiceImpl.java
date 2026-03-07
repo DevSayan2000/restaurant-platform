@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     private final CommonUtils commonUtils;
     private final EmailService emailService;
 
-    @Value("${app.mail.enabled:true}")
+    @Value("${app.mail.enabled:false}")
     private boolean mailEnabled;
 
     @Transactional

@@ -45,7 +45,7 @@ public class EmailServiceImpl implements EmailService {
     @Value("${app.brevo.from-name:Restaurant Platform}")
     private String fromName;
 
-    @Value("${app.mail.enabled:true}")
+    @Value("${app.mail.enabled:false}")
     private boolean mailEnabled;
 
     @Async
