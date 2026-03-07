@@ -14,12 +14,12 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 
 /**
- * Resend HTTP API implementation of {@link EmailService}.
+ * Brevo (formerly Sendinblue) HTTP API implementation of {@link EmailService}.
  * <p>
- * Uses Resend's HTTPS-based API (port 443) instead of SMTP (port 587),
+ * Uses Brevo's HTTPS-based API (port 443) instead of SMTP (port 587),
  * which is required for Render's free tier where outbound SMTP is blocked.
  * <p>
- * Resend free tier: 100 emails/day, 3,000 emails/month — no expiry.
+ * Brevo free tier: 300 emails/day — no expiry, no domain verification needed.
  * <p>
  * Emails are sent asynchronously via {@code @Async} so that the
  * user-creation response is never delayed by email latency.
@@ -30,17 +30,20 @@ import java.time.Duration;
 public class EmailServiceImpl implements EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
-    private static final String RESEND_API_URL = "https://api.resend.com/emails";
+    private static final String BREVO_API_URL = "https://api.brevo.com/v3/smtp/email";
 
     private final HttpClient httpClient = HttpClient.newBuilder()
             .connectTimeout(Duration.ofSeconds(10))
             .build();
 
-    @Value("${app.resend.api-key:}")
-    private String resendApiKey;
+    @Value("${app.brevo.api-key:}")
+    private String brevoApiKey;
 
-    @Value("${app.resend.from-email:}")
+    @Value("${app.brevo.from-email:}")
     private String fromEmail;
+
+    @Value("${app.brevo.from-name:Restaurant Platform}")
+    private String fromName;
 
     @Value("${app.mail.enabled:true}")
     private boolean mailEnabled;
@@ -54,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
         if (!isConfigured()) {
-            log.warn("Resend is not configured — skipping verification OTP email to {}", toEmail);
+            log.warn("Brevo is not configured — skipping verification OTP email to {}", toEmail);
             return;
         }
 
@@ -74,7 +77,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
         if (!isConfigured()) {
-            log.warn("Resend is not configured — skipping welcome email to {}", toEmail);
+            log.warn("Brevo is not configured — skipping welcome email to {}", toEmail);
             return;
         }
 
@@ -86,20 +89,23 @@ public class EmailServiceImpl implements EmailService {
     }
 
     /**
-     * Sends an email using Resend's HTTP API (HTTPS port 443).
+     * Sends an email using Brevo's HTTP API (HTTPS port 443).
      * Uses Java's built-in HttpClient — no external library required.
+     *
+     * Brevo API docs: https://developers.brevo.com/reference/sendtransacemail
      */
     private void sendEmail(String toEmail, String subject, String textBody) {
         try {
             String jsonBody = String.format(
                     """
                     {
-                      "from": "%s",
-                      "to": ["%s"],
+                      "sender": { "name": "%s", "email": "%s" },
+                      "to": [{ "email": "%s" }],
                       "subject": "%s",
-                      "text": %s
+                      "textContent": %s
                     }
                     """,
+                    escapeJson(fromName),
                     escapeJson(fromEmail),
                     escapeJson(toEmail),
                     escapeJson(subject),
@@ -107,9 +113,10 @@ public class EmailServiceImpl implements EmailService {
             );
 
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(RESEND_API_URL))
-                    .header("Authorization", "Bearer " + resendApiKey)
+                    .uri(URI.create(BREVO_API_URL))
+                    .header("api-key", brevoApiKey)
                     .header("Content-Type", "application/json")
+                    .header("Accept", "application/json")
                     .timeout(Duration.ofSeconds(15))
                     .POST(HttpRequest.BodyPublishers.ofString(jsonBody))
                     .build();
@@ -119,15 +126,15 @@ public class EmailServiceImpl implements EmailService {
             if (response.statusCode() >= 200 && response.statusCode() < 300) {
                 log.info("Email sent successfully to {} (status={})", toEmail, response.statusCode());
             } else {
-                log.error("Resend email failed to {} (status={}): {}", toEmail, response.statusCode(), response.body());
+                log.error("Brevo email failed to {} (status={}): {}", toEmail, response.statusCode(), response.body());
             }
         } catch (Exception e) {
-            log.error("Failed to send email to {} via Resend: {}", toEmail, e.getMessage());
+            log.error("Failed to send email to {} via Brevo: {}", toEmail, e.getMessage());
         }
     }
 
     private boolean isConfigured() {
-        return resendApiKey != null && !resendApiKey.isBlank()
+        return brevoApiKey != null && !brevoApiKey.isBlank()
                 && fromEmail != null && !fromEmail.isBlank();
     }
 
