@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 @Component
@@ -25,22 +26,22 @@ public class KeepAliveScheduler {
     /**
      * Ping every 5 minutes via the EXTERNAL Render URL to prevent free-tier spin-down.
      * Render only counts external inbound HTTP requests as activity.
-     * A localhost self-ping does NOT prevent spin-down because Render sees no external traffic.
+     * Uses /actuator/health/liveness which is lightweight and ignores mail status.
      */
     @Scheduled(fixedRate = 5 * 60 * 1000, initialDelay = 60 * 1000)
     public void keepAlive() {
         try {
-            // Prefer external URL so Render counts it as inbound traffic
+            String url;
             if (externalUrl != null && !externalUrl.isBlank()) {
-                restTemplate.getForObject(externalUrl, String.class);
-                log.debug("Keep-alive ping to external URL successful: {}", externalUrl);
+                // Use liveness endpoint to avoid mail health check bringing status DOWN
+                url = externalUrl.replace("/actuator/health", "/actuator/health/liveness");
             } else {
-                // Fallback to localhost (won't prevent Render spin-down but keeps app responsive)
-                String url = "http://localhost:" + serverPort + "/api/actuator/health";
-                restTemplate.getForObject(url, String.class);
-                log.debug("Keep-alive ping to localhost successful (external URL not configured)");
+                url = "http://localhost:" + serverPort + "/api/actuator/health/liveness";
             }
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            log.debug("Keep-alive ping successful (status={}): {}", response.getStatusCode(), url);
         } catch (Exception e) {
+            // Even if the response is non-2xx, the inbound traffic still counts for Render
             log.warn("Keep-alive ping failed: {}", e.getMessage());
         }
     }
