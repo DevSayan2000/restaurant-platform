@@ -23,7 +23,11 @@ public enum ErrorMessage {
     CURRENT_PASSWORD_REQUIRED("Current Password required for update request."),
     RESTAURANT_NOT_ALLOWED_TO_BE_UPDATED("Restaurant is not allowed to be updated."),
     RATING_DOES_NOT_EXIST("User hasn't provided ratings for this restaurant."),
-    NEW_PASSWORD_SAME_AS_CURRENT("New password cannot be same as current password.");
+    NEW_PASSWORD_SAME_AS_CURRENT("New password cannot be same as current password."),
+    EMAIL_NOT_VERIFIED("Email is not verified. Please verify your email before logging in."),
+    INVALID_OTP("Invalid OTP. Please check and try again."),
+    OTP_EXPIRED("OTP has expired. Please request a new one."),
+    EMAIL_SENDING_FAILED("Failed to send verification email. Please try resending.");
 
     private final String message;
 

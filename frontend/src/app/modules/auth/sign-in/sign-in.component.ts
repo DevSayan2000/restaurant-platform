@@ -91,8 +91,21 @@ export class SignInComponent implements OnInit {
           }
         });
       },
-      error: () => {
+      error: (err) => {
         this.isLoading = false;
+        const errorCode = err?.error?.errorCode;
+        if (errorCode === 'RP-0018') {
+          // Email not verified — redirect to verify-email page
+          this.messageService.add({
+            severity: 'warn',
+            summary: 'Email Not Verified',
+            detail: 'Please verify your email before logging in.',
+            life: 5000,
+          });
+          this.router.navigate(['/verify-email'], {
+            queryParams: { email: data.email },
+          });
+        }
       },
     });
   }

@@ -93,7 +93,9 @@ export class SignUpComponent {
           summary: 'Success',
           detail: res.message,
         })
-        this.router.navigateByUrl('/sign-in');
+        this.router.navigate(['/verify-email'], {
+          queryParams: { email: data.email },
+        });
       },
       error: (err) => {
         this.isLoading = false;

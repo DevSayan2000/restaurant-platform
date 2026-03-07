@@ -1,0 +1,51 @@
+<div class="flex items-center justify-center min-h-screen bg-surface-ground">
+  <p-card class="w-full max-w-md mx-4" header="Verify Your Email">
+    <div class="flex flex-col gap-4">
+      <p class="text-center text-color-secondary">
+        We've sent a 6-digit verification code to <strong>{{ email }}</strong>.
+        Please enter it below.
+      </p>
+
+      <div class="flex flex-col gap-2">
+        <label for="otp" class="font-semibold">Verification Code</label>
+        <input
+          id="otp"
+          type="text"
+          pInputText
+          [(ngModel)]="otp"
+          maxlength="6"
+          placeholder="Enter 6-digit code"
+          class="text-center text-2xl tracking-widest"
+          (keydown.enter)="verify()"
+        />
+        <small *ngIf="errorMessage" class="text-red-500">{{ errorMessage }}</small>
+      </div>
+
+      <p-button
+        label="Verify Email"
+        [loading]="isVerifying"
+        (onClick)="verify()"
+        styleClass="w-full"
+        [disabled]="otp.length !== 6"
+      ></p-button>
+
+      <div class="text-center">
+        <span class="text-color-secondary">Didn't receive the code? </span>
+        <a
+          class="cursor-pointer text-primary font-semibold"
+          (click)="resend()"
+          *ngIf="!isResending && resendCountdown === 0"
+        >Resend</a>
+        <span *ngIf="resendCountdown > 0" class="text-color-secondary">
+          Resend in {{ resendCountdown }}s
+        </span>
+        <span *ngIf="isResending" class="text-color-secondary">Sending...</span>
+      </div>
+
+      <div class="text-center mt-2">
+        <a routerLink="/sign-up" class="text-primary cursor-pointer">← Back to Sign Up</a>
+      </div>
+    </div>
+  </p-card>
+</div>
+
