@@ -32,6 +32,15 @@ public class User
 
     private boolean active = true;
 
+    @Column(name = "email_verified", nullable = false)
+    private boolean emailVerified = false;
+
+    @Column(name = "verification_otp")
+    private String verificationOtp;
+
+    @Column(name = "otp_expires_at")
+    private LocalDateTime otpExpiresAt;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 

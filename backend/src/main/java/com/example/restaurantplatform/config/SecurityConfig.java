@@ -38,6 +38,8 @@ public class SecurityConfig {
                                 "/actuator/**")
                         .permitAll()
                         .requestMatchers(HttpMethod.POST, "/users").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/verify-email").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/users/resend-otp").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter,

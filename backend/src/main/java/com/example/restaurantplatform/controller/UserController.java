@@ -1,5 +1,7 @@
 package com.example.restaurantplatform.controller;
 
+import com.example.restaurantplatform.dto.auth.ResendOtpRequest;
+import com.example.restaurantplatform.dto.auth.VerifyOtpRequest;
 import com.example.restaurantplatform.dto.general.GenericResponse;
 import com.example.restaurantplatform.dto.restaurant.ListRestaurantResponse;
 import com.example.restaurantplatform.dto.user.CreateUserRequest;
@@ -60,6 +62,64 @@ public class UserController {
             @Valid @RequestBody CreateUserRequest request) {
 
         return userService.createUser(request);
+    }
+
+    // POST /api/users/verify-email
+    @Operation(
+            summary = "Verify email with OTP",
+            description = "Verifies user email using the OTP sent during registration"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Email verified successfully",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Invalid or expired OTP",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    @PostMapping("/verify-email")
+    public ResponseEntity<GenericResponse> verifyEmail(
+            @Valid @RequestBody VerifyOtpRequest request) {
+        return userService.verifyOtp(request.getEmail(), request.getOtp());
+    }
+
+    // POST /api/users/resend-otp
+    @Operation(
+            summary = "Resend verification OTP",
+            description = "Resends a new OTP to the user's email"
+    )
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "OTP resent successfully",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = GenericResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Error occurred",
+                    content = @Content(
+                            mediaType = MediaType.APPLICATION_JSON_VALUE,
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            )
+    })
+    @PostMapping("/resend-otp")
+    public ResponseEntity<GenericResponse> resendOtp(
+            @Valid @RequestBody ResendOtpRequest request) {
+        return userService.resendOtp(request.getEmail());
     }
 
     // PUT /api/users

@@ -53,6 +53,14 @@ export class UserApiService {
     return this.http.post<{ message: string }>(API_ENDPOINTS.users.list, payload);
   }
 
+  verifyEmail(email: string, otp: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(API_ENDPOINTS.users.verifyEmail, { email, otp });
+  }
+
+  resendOtp(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(API_ENDPOINTS.users.resendOtp, { email });
+  }
+
   updateUser(payload: UpdateUserNamePayload | UpdateUserPasswordPayload): Observable<{ message: string }> {
     return this.http.put<{ message: string }>(API_ENDPOINTS.users.list, payload);
   }

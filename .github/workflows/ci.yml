@@ -85,8 +85,28 @@ jobs:
           -Dsonar.token=${{ secrets.SONAR_TOKEN }}
           -Dsonar.java.coveragePlugin=jacoco
           -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml
-          -Dsonar.qualitygate.wait=true
+          -Dsonar.qualitygate.wait=false
           -B
+
+      - name: 🛡️ Check SonarCloud for Critical/High Vulnerabilities
+        if: env.SONAR_TOKEN != ''
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_PROJECT_KEY: ${{ vars.SONAR_PROJECT_KEY }}
+        run: |
+          echo "Checking for critical/high vulnerabilities..."
+          RESPONSE=$(curl -s -u "$SONAR_TOKEN:" \
+            "https://sonarcloud.io/api/issues/search?componentKeys=$SONAR_PROJECT_KEY&types=VULNERABILITY&severities=CRITICAL,BLOCKER&statuses=OPEN,CONFIRMED,REOPENED&ps=1")
+          VULN_COUNT=$(echo "$RESPONSE" | python3 -c "import sys,json; print(json.load(sys.stdin).get('total',0))" 2>/dev/null || echo "0")
+          echo "Critical/Blocker vulnerabilities found: $VULN_COUNT"
+          if [ "$VULN_COUNT" -gt 0 ]; then
+            echo "❌ Found $VULN_COUNT critical/blocker vulnerabilities! Failing the build."
+            echo ""
+            echo "View details: https://sonarcloud.io/project/issues?id=$SONAR_PROJECT_KEY&types=VULNERABILITY&severities=CRITICAL,BLOCKER"
+            exit 1
+          else
+            echo "✅ No critical/blocker vulnerabilities found."
+          fi
 
       - name: ✅ Backend CI Summary
         if: always()

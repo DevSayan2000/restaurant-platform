@@ -15,6 +15,7 @@ export const routes: Routes = [
         loadChildren: () => import('app/modules/auth/sign-in/sign-in.routes'),
       },
       { path: 'sign-up', loadChildren: () => import('app/modules/auth/sign-up/sign-up.routes') },
+      { path: 'verify-email', loadChildren: () => import('app/modules/auth/verify-email/verify-email.routes') },
     ],
   },
   {

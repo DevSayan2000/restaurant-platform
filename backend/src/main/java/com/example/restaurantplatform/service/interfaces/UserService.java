@@ -12,6 +12,10 @@ public interface UserService {
 
     ResponseEntity<GenericResponse> createUser(CreateUserRequest request);
 
+    ResponseEntity<GenericResponse> verifyOtp(String email, String otp);
+
+    ResponseEntity<GenericResponse> resendOtp(String email);
+
     ResponseEntity<ListUserResponse> getUsers();
 
     ResponseEntity<ListRestaurantResponse> getAllRestaurantsForUsers();

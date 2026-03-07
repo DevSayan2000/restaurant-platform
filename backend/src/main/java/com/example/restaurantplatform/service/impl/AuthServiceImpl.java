@@ -32,6 +32,10 @@ public class AuthServiceImpl implements AuthService {
         User user = userRepository
                 .findByEmail(request.getEmail()).orElseThrow(() -> new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND));
 
+        if (!user.isEmailVerified()) {
+            throw new RestaurantPlatformException(ErrorCode.EMAIL_NOT_VERIFIED, ErrorMessage.EMAIL_NOT_VERIFIED);
+        }
+
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(

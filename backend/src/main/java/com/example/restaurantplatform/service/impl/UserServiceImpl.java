@@ -14,6 +14,7 @@ import com.example.restaurantplatform.mapper.ReviewMapper;
 import com.example.restaurantplatform.repository.RatingRepository;
 import com.example.restaurantplatform.repository.RestaurantRepository;
 import com.example.restaurantplatform.repository.UserRepository;
+import com.example.restaurantplatform.service.interfaces.EmailService;
 import com.example.restaurantplatform.service.interfaces.UserService;
 import com.example.restaurantplatform.util.CommonUtils;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -32,11 +35,16 @@ import java.util.Map;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
+    private static final int OTP_LENGTH = 6;
+    private static final int OTP_EXPIRY_MINUTES = 10;
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+
     private final UserRepository userRepository;
     private final RatingRepository ratingRepository;
     private final RestaurantRepository restaurantRepository;
     private final PasswordEncoder passwordEncoder;
     private final CommonUtils commonUtils;
+    private final EmailService emailService;
 
     @Transactional
     public ResponseEntity<GenericResponse> createUser(CreateUserRequest request) {
@@ -54,16 +62,76 @@ public class UserServiceImpl implements UserService {
                     );
                 });
 
+        String otp = generateOtp();
+
         User user = new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setRole(request.getRole());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-
+        user.setEmailVerified(false);
+        user.setVerificationOtp(otp);
+        user.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
 
         userRepository.save(user);
-        GenericResponse genericResponse = new GenericResponse("User created successfully");
+
+        // Send verification OTP email asynchronously (does not block response)
+        emailService.sendVerificationOtp(user.getEmail(), user.getName(), otp);
+
+        GenericResponse genericResponse = new GenericResponse("Account created. Please check your email for the verification code.");
         return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
+    }
+
+    @Transactional
+    public ResponseEntity<GenericResponse> verifyOtp(String email, String otp) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND));
+
+        if (user.isEmailVerified()) {
+            return new ResponseEntity<>(new GenericResponse("Email is already verified."), HttpStatus.OK);
+        }
+
+        if (user.getOtpExpiresAt() == null || LocalDateTime.now().isAfter(user.getOtpExpiresAt())) {
+            throw new RestaurantPlatformException(ErrorCode.OTP_EXPIRED, ErrorMessage.OTP_EXPIRED);
+        }
+
+        if (!otp.equals(user.getVerificationOtp())) {
+            throw new RestaurantPlatformException(ErrorCode.INVALID_OTP, ErrorMessage.INVALID_OTP);
+        }
+
+        user.setEmailVerified(true);
+        user.setVerificationOtp(null);
+        user.setOtpExpiresAt(null);
+        userRepository.save(user);
+
+        // Send welcome email asynchronously after successful verification
+        emailService.sendWelcomeEmail(user.getEmail(), user.getName());
+
+        return new ResponseEntity<>(new GenericResponse("Email verified successfully. You can now log in."), HttpStatus.OK);
+    }
+
+    @Transactional
+    public ResponseEntity<GenericResponse> resendOtp(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RestaurantPlatformException(ErrorCode.USER_NOT_FOUND, ErrorMessage.USER_NOT_FOUND));
+
+        if (user.isEmailVerified()) {
+            return new ResponseEntity<>(new GenericResponse("Email is already verified."), HttpStatus.OK);
+        }
+
+        String otp = generateOtp();
+        user.setVerificationOtp(otp);
+        user.setOtpExpiresAt(LocalDateTime.now().plusMinutes(OTP_EXPIRY_MINUTES));
+        userRepository.save(user);
+
+        emailService.sendVerificationOtp(user.getEmail(), user.getName(), otp);
+
+        return new ResponseEntity<>(new GenericResponse("A new verification code has been sent to your email."), HttpStatus.OK);
+    }
+
+    private String generateOtp() {
+        int otp = SECURE_RANDOM.nextInt((int) Math.pow(10, OTP_LENGTH));
+        return String.format("%0" + OTP_LENGTH + "d", otp);
     }
 
     @Transactional
