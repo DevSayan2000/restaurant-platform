@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -34,7 +34,7 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     private router: Router,
     private userApiService: UserApiService,
     private messageService: MessageService,
-    private ngZone: NgZone
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -102,19 +102,16 @@ export class VerifyEmailComponent implements OnInit, OnDestroy {
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
-    this.ngZone.runOutsideAngular(() => {
-      this.countdownInterval = setInterval(() => {
-        this.ngZone.run(() => {
-          this.resendCountdown--;
-          if (this.resendCountdown <= 0) {
-            if (this.countdownInterval) {
-              clearInterval(this.countdownInterval);
-              this.countdownInterval = null;
-            }
-          }
-        });
-      }, 1000);
-    });
+    this.countdownInterval = setInterval(() => {
+      this.resendCountdown--;
+      this.cdr.detectChanges();
+      if (this.resendCountdown <= 0) {
+        if (this.countdownInterval) {
+          clearInterval(this.countdownInterval);
+          this.countdownInterval = null;
+        }
+      }
+    }, 1000);
   }
 }
 
