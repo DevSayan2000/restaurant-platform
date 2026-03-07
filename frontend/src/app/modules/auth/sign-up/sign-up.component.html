@@ -126,6 +126,9 @@
                             <small *ngIf="submitted && signUpForm.errors?.['passwordMismatch']" class="text-red-500">
                                 Passwords do not match
                             </small>
+                            <small *ngIf="passwordsMatch" class="text-green-500 flex items-center gap-1">
+                                <i class="pi pi-check-circle"></i> Passwords match
+                            </small>
                         </div>
 
                         <!-- Actions -->

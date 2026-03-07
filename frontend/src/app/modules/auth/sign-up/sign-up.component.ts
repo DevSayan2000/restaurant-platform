@@ -67,6 +67,12 @@ export class SignUpComponent {
     return password === confirmPassword ? null : { passwordMismatch: true };
   }
 
+  get passwordsMatch(): boolean {
+    const password = this.signUpForm.get('password')?.value;
+    const confirmPassword = this.signUpForm.get('confirmPassword')?.value;
+    return password && confirmPassword && password === confirmPassword;
+  }
+
   onSubmit() {
     this.submitted = true;
 

@@ -64,6 +64,21 @@
             </small>
         </div>
 
+        <div class="w-full">
+            <label class="text-sm">Confirm New Password</label>
+            <p-password formControlName="confirmNewPassword" [feedback]="false" toggleMask styleClass="w-full" inputStyleClass="w-full">
+            </p-password>
+
+            <small class="text-red-500"
+                *ngIf="passwordForm.get('confirmNewPassword')?.touched && passwordForm.errors?.['passwordMismatch']">
+                Passwords do not match
+            </small>
+
+            <small class="text-green-500 flex items-center gap-1" *ngIf="passwordsMatch">
+                <i class="pi pi-check-circle"></i> Passwords match
+            </small>
+        </div>
+
         <div class="flex justify-end gap-2 mt-3">
             <button pButton label="Cancel" class="p-button-text" (click)="showPasswordDialog=false"></button>
 
