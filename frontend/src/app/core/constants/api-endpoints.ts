@@ -20,7 +20,9 @@ export const API_ENDPOINTS = {
     details: (id: string) => `/restaurants/${id}`,
     reviews: (id: string) => `/restaurants/${id}/ratings/reviews`,
     addReview: (id: string) => `/restaurants/${id}/ratings`,
-    deleteReview: (id: string) => `/restaurants/${id}/ratings`
+    deleteReview: (id: string) => `/restaurants/${id}/ratings`,
+    menu: (id: string | number) => `/restaurants/${id}/menu`,
+    menuItem: (restaurantId: string | number, menuItemId: number) => `/restaurants/${restaurantId}/menu/${menuItemId}`,
   },
   analytics: {
     analytics: '/analytics',

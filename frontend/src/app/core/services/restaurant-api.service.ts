@@ -6,6 +6,7 @@ import { Role } from '../enums/role.enum';
 import { body } from '@primeuix/themes/aura/card';
 import { AuthService, User } from '../auth/auth.service';
 import { FoodType } from '../enums/food-type.enum';
+import { MenuCategory } from '../enums/menu-category.enum';
 
 export interface Restaurant {
   id: number;
@@ -38,6 +39,41 @@ export interface RestaurantPayload {
 export interface RestaurantReviewPayload {
   rating: number;
   review: string;
+}
+
+export interface MenuItemResponse {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  category: MenuCategory;
+  vegetarian: boolean;
+  available: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MenuResponse {
+  menu: Record<string, MenuItemResponse[]>;
+  totalItems: number;
+}
+
+export interface CreateMenuItemPayload {
+  name: string;
+  description?: string;
+  price: number;
+  category: MenuCategory;
+  vegetarian: boolean;
+  available: boolean;
+}
+
+export interface UpdateMenuItemPayload {
+  name?: string;
+  description?: string;
+  price?: number;
+  category?: MenuCategory;
+  vegetarian?: boolean;
+  available?: boolean;
 }
 
 @Injectable({
@@ -80,5 +116,29 @@ export class RestaurantApiService {
 
   deleteRestaurantReview(id: string): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(API_ENDPOINTS.restaurants.deleteReview(id));
+  }
+
+  // ─── Menu APIs ───
+
+  getMenu(restaurantId: string | number): Observable<MenuResponse> {
+    return this.http.get<MenuResponse>(API_ENDPOINTS.restaurants.menu(restaurantId));
+  }
+
+  getMenuByCategory(restaurantId: string | number, category: string): Observable<MenuResponse> {
+    return this.http.get<MenuResponse>(API_ENDPOINTS.restaurants.menu(restaurantId), {
+      params: { category },
+    });
+  }
+
+  addMenuItem(restaurantId: string | number, payload: CreateMenuItemPayload): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(API_ENDPOINTS.restaurants.menu(restaurantId), payload);
+  }
+
+  updateMenuItem(restaurantId: string | number, menuItemId: number, payload: UpdateMenuItemPayload): Observable<{ message: string }> {
+    return this.http.put<{ message: string }>(API_ENDPOINTS.restaurants.menuItem(restaurantId, menuItemId), payload);
+  }
+
+  deleteMenuItem(restaurantId: string | number, menuItemId: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(API_ENDPOINTS.restaurants.menuItem(restaurantId, menuItemId));
   }
 }

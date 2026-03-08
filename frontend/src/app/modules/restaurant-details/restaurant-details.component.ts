@@ -4,6 +4,7 @@ import { DialogModule } from 'primeng/dialog';
 import { RestaurantInfoCardComponent } from './components/restaurant-info-card/restaurant-info-card.component';
 import { ReviewItemComponent } from './components/review-item/review-item.component';
 import { ReviewFormComponent } from './components/review-form/review-form.component';
+import { MenuSectionComponent } from './components/menu-section/menu-section.component';
 import {
   Restaurant,
   RestaurantApiService,
@@ -25,6 +26,7 @@ import { Subject, takeUntil } from 'rxjs';
     RestaurantInfoCardComponent,
     ReviewItemComponent,
     ReviewFormComponent,
+    MenuSectionComponent,
     ButtonModule,
   ],
   templateUrl: './restaurant-details.component.html',
@@ -56,6 +58,13 @@ export class RestaurantDetailsComponent implements OnDestroy {
     this.auth.user$.pipe(takeUntil(this.destroy$)).subscribe((value) => {
       this.user = value;
     });
+  }
+
+  get isMenuOwner(): boolean {
+    if (!this.user || !this.restaurant) return false;
+    return (
+      this.user.role === Role.RESTAURANT_ADMIN && this.restaurant.createdBy === this.user.email
+    );
   }
 
   ngOnDestroy() {

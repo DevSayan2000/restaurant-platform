@@ -5,6 +5,14 @@
         [restaurant]="restaurant">
     </app-restaurant-info-card>
 
+    <!-- Menu Section -->
+    <app-menu-section
+        [restaurantId]="restaurantId"
+        [isOwner]="isMenuOwner">
+    </app-menu-section>
+
+    <!-- Divider -->
+    <hr class="border-zinc-200 dark:border-zinc-700" />
 
     <!-- Reviews Header -->
     <div class="flex items-center justify-between mt-6">
@@ -14,7 +22,7 @@
 
         <!-- Only user can add review -->
         <button *ngIf="user.role === role.USER"
-                pButton 
+                pButton
                 label="Add Review"
                 icon="pi pi-plus"
                 class="p-button-primary"
