@@ -27,7 +27,14 @@ public enum ErrorMessage {
     EMAIL_NOT_VERIFIED("Email is not verified. Please verify your email before logging in."),
     INVALID_OTP("Invalid OTP. Please check and try again."),
     OTP_EXPIRED("OTP has expired. Please request a new one."),
-    EMAIL_SENDING_FAILED("Failed to send verification email. Please try resending.");
+    EMAIL_SENDING_FAILED("Failed to send verification email. Please try resending."),
+    MENU_ITEM_NOT_FOUND("Menu item does not exist."),
+    MENU_ITEM_ALREADY_EXISTS("Menu item '%s' already exists in this restaurant."),
+    MENU_ITEM_NOT_BELONGS_TO_RESTAURANT("Menu item does not belong to this restaurant."),
+    MENU_NOT_ALLOWED("You are not allowed to manage menu for this restaurant."),
+    INVALID_MENU_CATEGORY("Invalid menu category. Valid values: APPETIZER, MAIN_COURSE, DESSERT.");
+
+
 
     private final String message;
 

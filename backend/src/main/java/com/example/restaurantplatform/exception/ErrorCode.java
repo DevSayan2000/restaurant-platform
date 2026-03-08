@@ -25,7 +25,13 @@ public enum ErrorCode {
     EMAIL_NOT_VERIFIED("RP-0018"),
     INVALID_OTP("RP-0019"),
     OTP_EXPIRED("RP-0020"),
-    EMAIL_SENDING_FAILED("RP-0021");
+    EMAIL_SENDING_FAILED("RP-0021"),
+    MENU_ITEM_NOT_FOUND("RP-0022"),
+    MENU_ITEM_ALREADY_EXISTS("RP-0023"),
+    INVALID_MENU_CATEGORY("RP-0024");
+
+
+
 
 
     private final String code;

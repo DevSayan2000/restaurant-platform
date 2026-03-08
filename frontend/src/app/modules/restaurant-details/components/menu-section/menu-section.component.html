@@ -1,0 +1,96 @@
+<div class="space-y-4">
+
+  <!-- Menu Header -->
+  <div class="flex items-center justify-between">
+    <h3 class="text-xl font-semibold text-zinc-800 dark:text-zinc-200">
+      Menu ({{ totalItems }})
+    </h3>
+
+    <button *ngIf="isOwner"
+            pButton
+            label="Add Menu Item"
+            icon="pi pi-plus"
+            class="p-button-primary"
+            size="small" [raised]="true"
+            (click)="showAddDialog = true">
+    </button>
+  </div>
+
+  <!-- Menu Categories -->
+  <div *ngIf="menuCategories.length > 0" class="space-y-6">
+    <div *ngFor="let category of menuCategories">
+      <!-- Category Header -->
+      <div class="border-b border-zinc-200 dark:border-zinc-700 pb-2 mb-3">
+        <h4 class="text-lg font-semibold text-zinc-700 dark:text-zinc-300">
+          {{ category }}
+        </h4>
+      </div>
+
+      <!-- Menu Items Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div *ngFor="let item of menuData[category]"
+             class="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 p-4 flex flex-col gap-2 hover:shadow-md transition-shadow">
+
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <div class="flex items-center gap-2">
+                <span class="font-medium text-zinc-800 dark:text-zinc-200">{{ item.name }}</span>
+                <p-tag *ngIf="item.vegetarian" value="Veg" severity="success" [rounded]="true" class="text-xs" />
+                <p-tag *ngIf="!item.available" value="Unavailable" severity="danger" [rounded]="true" class="text-xs" />
+              </div>
+              <p *ngIf="item.description" class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                {{ item.description }}
+              </p>
+            </div>
+            <span class="font-semibold text-zinc-800 dark:text-zinc-200 whitespace-nowrap ml-4">
+              {{ item.price | currency:'INR':'symbol':'1.2-2' }}
+            </span>
+          </div>
+
+          <!-- Admin Actions -->
+          <div *ngIf="isOwner" class="flex gap-2 mt-1 justify-end">
+            <button pButton icon="pi pi-pencil" class="p-button-text p-button-sm p-button-secondary"
+                    (click)="openEditDialog(item)"></button>
+            <button pButton icon="pi pi-trash" class="p-button-text p-button-sm p-button-danger"
+                    (click)="confirmDelete(item)"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="menuCategories.length === 0"
+       class="text-center py-12 text-zinc-500 dark:text-zinc-400">
+    <div class="flex justify-center mb-4">
+      <div class="w-16 h-16 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center">
+        <i class="pi pi-book text-3xl opacity-60"></i>
+      </div>
+    </div>
+    <p class="text-lg font-semibold">No menu items yet</p>
+    <p *ngIf="isOwner" class="text-sm mt-1">Add menu items for your customers to see.</p>
+  </div>
+
+  <!-- Add Menu Item Dialog -->
+  <p-dialog [(visible)]="showAddDialog" header="Add Menu Item" [modal]="true" [style]="{width: '450px'}">
+    <app-menu-item-form
+      [editItem]="null"
+      (submitForm)="onAddItem($event)"
+      (cancel)="showAddDialog = false">
+    </app-menu-item-form>
+  </p-dialog>
+
+  <!-- Edit Menu Item Dialog -->
+  <p-dialog [(visible)]="showEditDialog" header="Edit Menu Item" [modal]="true" [style]="{width: '450px'}">
+    <app-menu-item-form
+      [editItem]="editingItem"
+      (submitForm)="onUpdateItem($event)"
+      (cancel)="showEditDialog = false">
+    </app-menu-item-form>
+  </p-dialog>
+
+  <!-- Confirm Delete -->
+  <p-confirmDialog />
+
+</div>
+
