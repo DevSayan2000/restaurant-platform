@@ -94,6 +94,7 @@ export class SignUpComponent {
     this.userApiService.createUser(payload).subscribe({
       next: (res) => {
         this.isLoading = false;
+        sessionStorage.setItem('isNewUser', 'true');
         this.messageService.add({
           severity: 'success',
           summary: 'Success',

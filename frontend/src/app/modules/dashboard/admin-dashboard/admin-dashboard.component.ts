@@ -14,6 +14,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { TruncateTextComponent } from 'app/modules/shared/truncate-text/truncate-text.component';
 import { Analytics } from 'app/core/services/analytic-api.service';
 import { UpdateRestaurantComponent } from './update-restaurant/update-restaurant.component';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -30,13 +31,15 @@ import { UpdateRestaurantComponent } from './update-restaurant/update-restaurant
     CreateRestaurantComponent,
     TruncateTextComponent,
     RouterModule,
-    UpdateRestaurantComponent
+    UpdateRestaurantComponent,
+    TooltipModule
   ],
 })
 export class AdminDashboardComponent {
   restaurants: Restaurant[] = [];
   recentReviews: RestaurantReview[] = [];
   analytics: Analytics | null = null;
+  isNewUser = false;
 
   @ViewChild(CreateRestaurantComponent) restaurantDialog!: CreateRestaurantComponent;
   private destroy$ = new Subject<void>();
@@ -62,6 +65,12 @@ export class AdminDashboardComponent {
   }
 
   ngOnInit() {
+    // Check if this is a first-time user (just signed up)
+    this.isNewUser = sessionStorage.getItem('isNewUser') === 'true';
+    if (this.isNewUser) {
+      sessionStorage.removeItem('isNewUser');
+    }
+
     this.restaurantService.refresh();
     this.restaurantService.getRecentReviews();
   }

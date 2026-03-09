@@ -53,8 +53,8 @@ public class RestaurantServiceImpl implements RestaurantService {
         restaurant.setFoodType(request.getFoodType());
         restaurant.setCuisine(request.getCuisine());
 
-        restaurantRepository.save(restaurant);
-        GenericResponse genericResponse = new GenericResponse("Restaurant created successfully");
+        Restaurant saved = restaurantRepository.save(restaurant);
+        GenericResponse genericResponse = new GenericResponse("Restaurant created successfully", saved.getId());
         return new ResponseEntity<>(genericResponse, HttpStatus.CREATED);
     }
 

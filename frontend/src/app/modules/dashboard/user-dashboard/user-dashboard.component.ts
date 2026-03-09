@@ -30,6 +30,7 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   restaurants: Restaurant[] = [];
   analytics: Analytics | null = null;
   popularRestaurants: Restaurant[] = [];
+  isNewUser = false;
 
   private destroy$ = new Subject<void>();
 
@@ -39,6 +40,11 @@ export class UserDashboardComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    // Check if this is a first-time user (just signed up)
+    this.isNewUser = sessionStorage.getItem('isNewUser') === 'true';
+    if (this.isNewUser) {
+      sessionStorage.removeItem('isNewUser');
+    }
     this.restaurantApiService.getUserRestaurants().pipe(takeUntil(this.destroy$)).subscribe({
       next: (response) => {
         this.restaurants = response.restaurantResponses;
