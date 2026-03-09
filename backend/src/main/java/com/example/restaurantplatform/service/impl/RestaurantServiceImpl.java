@@ -186,7 +186,7 @@ public class RestaurantServiceImpl implements RestaurantService {
         // Determine ownership: compare token email with restaurant creator email from DB
         boolean isOwner = role.equals(Role.ROLE_RESTAURANT_ADMIN.name())
             && restaurant.getEmail().equals(email);
-        response.setIsOwner(isOwner);
+        response.setOwner(isOwner);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

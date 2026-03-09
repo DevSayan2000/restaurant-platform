@@ -17,7 +17,7 @@ export interface Restaurant {
   avgRating: number;
   createdBy: string;
   createdDate: string; // ISO string
-  isOwner?: boolean;
+  owner?: boolean;
 }
 
 export interface RestaurantReview {

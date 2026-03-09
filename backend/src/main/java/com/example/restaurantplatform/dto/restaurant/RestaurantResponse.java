@@ -22,7 +22,7 @@ public class RestaurantResponse {
     private Double avgRating;
     private String createdBy;
     private LocalDateTime createdDate;
-    private Boolean isOwner;
+    private Boolean owner;
 
     public RestaurantResponse(Long id, String name, String city, FoodType foodType,
                               String cuisine, Double avgRating, String createdBy,
