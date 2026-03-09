@@ -62,9 +62,7 @@ export class RestaurantDetailsComponent implements OnDestroy {
 
   get isMenuOwner(): boolean {
     if (!this.user || !this.restaurant) return false;
-    return (
-      this.user.role === Role.RESTAURANT_ADMIN && this.restaurant.createdBy === this.user.email
-    );
+    return this.restaurant.isOwner === true;
   }
 
   ngOnDestroy() {

@@ -179,10 +179,15 @@ public class RestaurantServiceImpl implements RestaurantService {
             throw new RestaurantPlatformException(ErrorCode.FORBIDDEN, ErrorMessage.UNAUTHORIZED);
         }
 
-        RestaurantResponse response = role.equals(Role.ROLE_RESTAURANT_ADMIN.name()) 
-            ? toResponse(restaurant) 
+        RestaurantResponse response = role.equals(Role.ROLE_RESTAURANT_ADMIN.name())
+            ? toResponse(restaurant)
             : toResponseForSA(restaurant);
-            
+
+        // Determine ownership: compare token email with restaurant creator email from DB
+        boolean isOwner = role.equals(Role.ROLE_RESTAURANT_ADMIN.name())
+            && restaurant.getEmail().equals(email);
+        response.setIsOwner(isOwner);
+
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
