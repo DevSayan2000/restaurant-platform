@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
@@ -43,6 +44,7 @@ export class CreateRestaurantComponent {
     private messageService: MessageService,
     private restaurantApiService: RestaurantApiService,
     private restaurantService: RestaurantService,
+    private router: Router,
   ) {
     this.restaurantForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -68,15 +70,20 @@ export class CreateRestaurantComponent {
 
   createRestaurant(payload: any) {
     this.restaurantApiService.createRestaurant(payload).subscribe({
-      next: () => {
+      next: (response) => {
         this.messageService.add({
           severity: 'success',
           summary: 'Restaurant Created',
-          detail: `${payload.name} added successfully`,
+          detail: `${payload.name} added successfully. You can now add menu items.`,
         });
 
         this.restaurantService.refresh();
         this.closeDialog();
+
+        // Navigate to restaurant details so admin can add menu items
+        if (response.id) {
+          this.router.navigate(['/restaurants', response.id]);
+        }
       },
     });
   }

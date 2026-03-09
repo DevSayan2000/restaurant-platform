@@ -90,8 +90,8 @@ export class RestaurantApiService {
     return this.http.get<{ restaurantResponses: Restaurant[] }>(API_ENDPOINTS.restaurants.userList);
   }
 
-  createRestaurant(body: RestaurantPayload): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(API_ENDPOINTS.restaurants.list, body);
+  createRestaurant(body: RestaurantPayload): Observable<{ message: string; id?: number }> {
+    return this.http.post<{ message: string; id?: number }>(API_ENDPOINTS.restaurants.list, body);
   }
 
   updateRestaurant(restaurantId: number, body: RestaurantPayload): Observable<{ message: string }> {
