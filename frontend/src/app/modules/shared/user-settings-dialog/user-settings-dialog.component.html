@@ -52,21 +52,37 @@
 
         <div class="w-full">
             <label class="text-sm">New Password</label>
-            <p-password formControlName="newPassword" [feedback]="false" toggleMask styleClass="w-full" inputStyleClass="w-full">
+            <!-- <p-password formControlName="newPassword" [feedback]="false" toggleMask styleClass="w-full"
+                inputStyleClass="w-full">
+            </p-password> -->
+
+            <p-password formControlName="newPassword" toggleMask [feedback]="true" [strongRegex]="passwordRegex.source"
+                styleClass="w-full" inputStyleClass="w-full" placeholder="Enter your password">
+                <ng-template pTemplate="footer">
+                    <p-divider></p-divider>
+                    <p class="mt-2 text-xs font-semibold">Requirements:</p>
+                    <ul class="pl-2 ml-2 mt-0 text-xs list-disc" style="line-height: 1.5">
+                        <li>At least one lowercase & one uppercase</li>
+                        <li>At least one number & one special character</li>
+                        <li>Minimum 8 characters</li>
+                    </ul>
+                </ng-template>
             </p-password>
 
             <small class="text-red-500" *ngIf="passwordForm.get('newPassword')?.errors?.['required']">
                 New password is required
             </small>
 
-            <small class="text-red-500" *ngIf="passwordForm.get('newPassword')?.errors?.['minlength']">
-                Minimum 6 characters required
+            <small class="text-red-500" *ngIf="passwordForm.get('newPassword')?.errors?.['pattern']">
+                Password is too weak. It must include uppercase, lowercase, numbers, and special
+                characters.
             </small>
         </div>
 
         <div class="w-full">
             <label class="text-sm">Confirm New Password</label>
-            <p-password formControlName="confirmNewPassword" [feedback]="false" toggleMask styleClass="w-full" inputStyleClass="w-full">
+            <p-password formControlName="confirmNewPassword" [feedback]="false" toggleMask styleClass="w-full"
+                inputStyleClass="w-full">
             </p-password>
 
             <small class="text-red-500"

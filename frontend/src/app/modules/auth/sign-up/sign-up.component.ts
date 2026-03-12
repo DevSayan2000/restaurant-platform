@@ -11,6 +11,8 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { CreateUserPayload, UserApiService } from 'app/core/services/user-api.service';
 import { Role } from 'app/core/enums/role.enum';
 import { MessageService } from 'primeng/api';
+import { STRONG_PASSWORD_REGEX } from 'app/utils/password';
+import { Divider } from 'primeng/divider';
 
 @Component({
   selector: 'app-sign-up',
@@ -24,6 +26,7 @@ import { MessageService } from 'primeng/api';
     CardModule,
     RouterModule,
     SelectButtonModule,
+    Divider
   ],
 })
 export class SignUpComponent {
@@ -38,6 +41,7 @@ export class SignUpComponent {
 
   Role = Role;
   selectedRole: Role | null = null;
+  passwordRegex = STRONG_PASSWORD_REGEX;
 
   constructor(
     private fb: FormBuilder,
@@ -50,7 +54,7 @@ export class SignUpComponent {
         role: ['', Validators.required],
         name: ['', [Validators.required, Validators.minLength(3)]],
         email: ['', [Validators.required, Validators.email]],
-        password: ['', [Validators.required, Validators.minLength(6)]],
+        password: ['', [Validators.required, Validators.pattern(STRONG_PASSWORD_REGEX)]],
         confirmPassword: ['', Validators.required],
       },
       { validators: this.passwordMatchValidator }

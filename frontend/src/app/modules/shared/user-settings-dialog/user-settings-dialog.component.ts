@@ -7,6 +7,8 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
+import { Divider } from 'primeng/divider';
+import { STRONG_PASSWORD_REGEX } from 'app/utils/password';
 
 @Component({
   selector: 'app-user-settings-dialog',
@@ -19,6 +21,7 @@ import { MenuItem } from 'primeng/api';
     PasswordModule,
     ButtonModule,
     MenuModule,
+    Divider
   ],
   templateUrl: './user-settings-dialog.component.html',
 })
@@ -39,6 +42,8 @@ export class UserSettingsDialogComponent {
 
   nameForm: FormGroup;
 
+  passwordRegex = STRONG_PASSWORD_REGEX;
+
   constructor(private fb: FormBuilder) {
     this.menuItems = [
       {
@@ -55,7 +60,7 @@ export class UserSettingsDialogComponent {
 
     this.passwordForm = this.fb.group({
       currentPassword: ['', [Validators.required]],
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.pattern(STRONG_PASSWORD_REGEX)]],
       confirmNewPassword: ['', [Validators.required]],
     }, { validators: this.passwordMatchValidator });
 
