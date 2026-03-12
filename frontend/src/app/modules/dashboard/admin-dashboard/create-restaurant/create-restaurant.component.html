@@ -5,8 +5,7 @@
 <ng-content select="[dialogTrigger]"></ng-content>
 
 <!-- DIALOG -->
-<p-dialog [(visible)]="showDialog" header="Create Restaurant" [modal]="true" [style]="{ width: '450px' }"
-    (onHide)="closeDialog()">
+<p-dialog [(visible)]="showDialog" header="Create Restaurant" [modal]="true" [style]="{ width: '450px' }" (onHide)="onDialogHide()">
 
     <app-restaurant-form (formSubmit)="createRestaurant($event)" (cancel)="closeDialog()">
     </app-restaurant-form>

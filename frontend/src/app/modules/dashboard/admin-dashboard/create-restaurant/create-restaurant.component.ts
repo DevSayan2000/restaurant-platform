@@ -39,6 +39,8 @@ export class CreateRestaurantComponent {
     { label: 'VEGAN', value: 'VEGAN' },
   ];
 
+  private redirectId?: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     private messageService: MessageService,
@@ -78,13 +80,17 @@ export class CreateRestaurantComponent {
         });
 
         this.restaurantService.refresh();
-        this.closeDialog();
 
-        // Navigate to restaurant details so admin can add menu items
-        if (response.id) {
-          this.router.navigate(['/restaurants', response.id]);
-        }
+        this.redirectId = response.id;
+        this.showDialog = false; // triggers onHide
       },
     });
+  }
+
+  onDialogHide() {
+    if (this.redirectId) {
+      this.router.navigate(['/restaurants', this.redirectId]);
+      this.redirectId = null;
+    }
   }
 }
