@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AuthService } from 'app/core/auth/auth.service';
 import { Role } from 'app/core/enums/role.enum';
 import { AnalyticsService } from 'app/core/services/analytics.service';
+import { ConfirmationService } from 'app/core/services/confirmation.service';
 import { RestaurantService } from 'app/core/services/restaurant.service';
 import { ThemeService } from 'app/core/services/theme.service';
 import { ButtonModule } from 'primeng/button';
@@ -28,12 +29,19 @@ export class NavbarComponent {
     private analyticsService: AnalyticsService,
     private userApiService: UserApiService,
     private messageService: MessageService,
+    private confirm: ConfirmationService,
   ) {}
 
   logout() {
-    this.restaurantService.clearAll();
-    this.analyticsService.clearAll();
-    this.auth.logout();
+    this.confirm
+      .confirmWarning('Sign Out?', 'Are you sure you want to sign out?')
+      .subscribe((yes) => {
+        if (yes) {
+          this.restaurantService.clearAll();
+          this.analyticsService.clearAll();
+          this.auth.logout();
+        }
+      });
   }
 
   toggleTheme() {

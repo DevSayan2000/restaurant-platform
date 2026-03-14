@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { InputTextModule } from 'primeng/inputtext';
 import { SelectModule } from 'primeng/select';
 import { ButtonModule } from 'primeng/button';
+import { INDIAN_CITIES } from 'app/core/constants/indian-cities';
 
 @Component({
   selector: 'app-restaurant-form',
@@ -18,6 +19,8 @@ export class RestaurantFormComponent implements OnChanges {
   @Output() cancel = new EventEmitter<void>();
 
   submitted = false;
+
+  indianCities = INDIAN_CITIES;
 
   foodTypes = [
     { label: 'VEG', value: 'VEG' },

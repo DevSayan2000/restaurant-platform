@@ -12,7 +12,9 @@
     <!-- CITY -->
     <div>
         <label class="block text-sm font-medium mb-1">City</label>
-        <input pInputText type="text" formControlName="city" class="w-full" />
+        <p-select formControlName="city" [options]="indianCities" optionLabel="label" optionValue="value"
+            [filter]="true" filterBy="label" placeholder="Select city" class="w-full">
+        </p-select>
         <p *ngIf="submitted && f['city']?.errors" class="text-red-500 text-xs mt-1">
             City is required
         </p>
